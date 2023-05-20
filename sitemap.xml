@@ -5,4 +5,14 @@
          <lastmod>2023-05-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
+    <url>
+         <loc>https://nymath.github.io/torchquantum/introduction/</loc>
+         <lastmod>2023-05-20</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://nymath.github.io/torchquantum/navigate/</loc>
+         <lastmod>2023-05-20</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
 </urlset>
