@@ -5,9 +5,9 @@ site_url: https://nymath.github.io/torchquantum
 repo_url: https://github.com/nymath/torchquantum
 
 nav:
-  - Home: index.md
+  - Home: navigate.md
   - TorchQuantum:
-    - Introduction: index.md
+    - Introduction: introduction.md
   - WorldQuant:
     - Datasets: index.md
     - Operators:

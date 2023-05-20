@@ -1,13 +1,17 @@
-from torchquantum.quant.utils import Calendar
-from torchquantum.quant.visualization import ColorGenerator
-from torchquantum.quant.universe import StaticUniverse
-from torchquantum.quant.backtest import BackTestEnv, QuickBackTesting01
+from quant.utils import Calendar
+from quant.visualization import ColorGenerator
+from quant.universe import StaticUniverse
+from quant.backtest import BackTestEnv, QuickBackTesting01
 
-import torchquantum.quant.op as op
-import torchquantum.quant.op.functional as F
+import quant.op as op
+import quant.op.functional as F
 import matplotlib.pyplot as plt
 import time
 import pickle
+import torch.nn as nn
+import os
+import numpy as np
+
 
 tt0 = time.time()
 testdata = {}
@@ -16,7 +20,7 @@ trade_dates = calendar.trade_dates
 _ = calendar.create_weekly_groups()
 rebalance_dates = [x[-1] for x in _.values()]
 
-with open("./example/data/adata.pkl", "rb") as f:
+with open("./data/adata.pkl", "rb") as f:
     dfs = pickle.load(f)
 
 t0 = time.time()
