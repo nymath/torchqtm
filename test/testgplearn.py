@@ -18,10 +18,10 @@ if __name__ == '__main__':
     y_ture = X[:, :, -1]
 
     m = fitness.make_fitness(function=score_func_basic,
-                             greater_is_better=True,
+                             greater_is_better=False,
                              wrap=False)
-    symbolic_model = SymbolicRegressor(population_size=40,
-                                       generations=3,
+    symbolic_model = SymbolicRegressor(population_size=200,
+                                       generations=6,
                                        tournament_size=20,
                                        metric=m,
                                        function_set=('add', 'sub'),
@@ -44,6 +44,3 @@ if __name__ == '__main__':
                                        random_state=0)
 
     symbolic_model.fit(X, y_ture)
-    print(symbolic_model._program)
-    fig, ax, *_ = symbolic_model.summary().plot_()
-    fig.show()

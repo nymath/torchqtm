@@ -1,13 +1,14 @@
 site_name: TorchQuantum
 site_description: PyTorch and WorldQuant's Operator Framework
-site_author: Your Name
-site_url: https://nymath.github.io/torchquantum
+site_author: NyMath
+site_url: https://nymath.github.io/torchquantum/navigate
 repo_url: https://github.com/nymath/torchquantum
 
 nav:
   - Home: navigate.md
   - TorchQuantum:
     - Introduction: introduction.md
+    - Features: index.md
   - WorldQuant:
     - Datasets: index.md
     - Operators:
@@ -19,7 +20,10 @@ nav:
       - Transformational Operators: index.md
       - Group Operators: index.md
       - Special Operators: index.md
-
+  - AutoAlpha:
+      - gplearn: index.md
+      - cnn: index.md
+      - boost: index.md
 
 theme:
   name: material

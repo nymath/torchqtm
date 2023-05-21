@@ -2,19 +2,22 @@ from quant.bt.rebalance import Calendar
 from quant.visualization.visualization import ColorGenerator
 from quant.bt.universe import StaticUniverse
 from quant.bt.backtest import BackTestEnv, QuickBackTesting01, QuickBackTesting02
-
+from quant.bt.universe import IndexComponents
 import quant.op as op
 import quant.op.functional as F
 import matplotlib.pyplot as plt
 import time
 import pickle
+import numpy as np
 
 tt0 = time.time()
-testdata = {}
-calendar = Calendar('20170101', '20230101')
+start = '20170101'
+end = '20230101'
+calendar = Calendar(start, end)
 trade_dates = calendar.trade_dates
 _ = calendar.create_weekly_groups()
 rebalance_dates = sorted([x[-1] for x in _.values()])
+universe = StaticUniverse(IndexComponents('000905.SH', start).data)
 
 
 class Timer(object):
@@ -32,7 +35,7 @@ with open("largedata/Stocks.pkl", "rb") as f:
 
 BtEnv = BackTestEnv(dfs=dfs,
                     dates=rebalance_dates,
-                    symbols=dfs['Close'].columns)
+                    symbols=universe.symbols)
 
 
 class NeutralizePE(op.Fundamental):
@@ -42,9 +45,10 @@ class NeutralizePE(op.Fundamental):
 
     def operate(self, *args, **kwargs):
 
-        self.data = 1 / self.factor
+        # self.data =
+        self.data = np.divide(1, self.env.PE)
         timer.tick()
-        self.data = F.winsorize(self.data, 'quantile', 0.05)
+        self.data = F.winsorize(self.data, 'std', 4)
         timer.tick('winsorize')
         self.data = F.normalize(self.data)
         timer.tick('normalize')
@@ -58,16 +62,14 @@ class NeutralizePE(op.Fundamental):
 if __name__ == '__main__':
     timer = Timer()
 
-    alphas = NeutralizePE(BtEnv, dfs['pe'])
+    alphas = NeutralizePE(BtEnv, dfs['PE'])
     alphas.operate()
 
     bt = QuickBackTesting01(env=BtEnv,
-                            universe=StaticUniverse(dfs['Close'].columns),
+                            universe=universe,
                             n_groups=10)
 
     bt.run_backtest(alphas.data)
-
-    timer.tick()
 
     fig = plt.figure(figsize=(20, 8))
     ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])

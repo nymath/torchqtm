@@ -135,7 +135,7 @@ class QuickBackTesting01(BaseTest):
         self.env['modified_factor'] = modified_factor
         labels = ["group_" + str(i + 1) for i in range(self.n_groups)]
         returns = []
-        for i in range(len(self.env['modified_factor'])):
+        for i in range(len(self.env['modified_factor'])-1):
             # If you are confused about concat series, you apply use the following way
             # 1. series.unsqueeze(1) to generate an additional axes
             # 2. concat these series along axis1
@@ -158,6 +158,7 @@ class QuickBackTesting01(BaseTest):
 
             group_return = temp_data.groupby('group').apply(temp)
             returns.append(group_return)
+        returns.append(pd.Series(np.repeat(0, self.n_groups), index=group_return.index))
         self.returns = pd.concat(returns, axis=1).T
         # Here we need to transpose the return, since the rows are stocks.
         self.returns.index = self.rebalance_dates
