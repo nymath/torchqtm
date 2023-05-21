@@ -2,6 +2,64 @@ import numpy as np
 import pandas as pd
 import quant.op.functional as F
 from typing import Optional
+import matplotlib.pyplot as plt
+
+
+class RiskEvaluator(object):
+    def __init__(self,
+                 returns: pd.Series,
+                 weights: pd.DataFrame = None,
+                 freq=None,
+                 rfr=0,
+                 benchmark=None):
+        self.returns = returns
+        self.weights = weights
+        self.freq = freq
+        self.rfr = rfr
+        self.benchmark = benchmark
+        self.perf = {}
+
+    def _sharpe(self):
+        return sharpe(self.returns, self.freq, self.rfr)
+
+    def _max_draw_down(self):
+        series, val, longest_time = drawdown(self.returns)
+        return series, val, longest_time
+
+    def _turn_over(self):
+        assert self.weights is not None
+        return turnover(self.weights)
+
+    def _beta(self):
+        assert self.benchmark is not None
+        pass
+
+    def _alpha(self):
+        assert self.benchmark is not None
+        pass
+
+    def _monthly_returns(self):
+        pass
+
+    def _yearly_returns(self):
+        pass
+
+    def _annualized_mean(self):
+        pass
+
+    def _annualized_volatility(self):
+        pass
+
+
+class FactorEvaluator(object):
+    def __init__(self,
+                 factor_scores: pd.DataFrame,
+                 forward_returns: pd.DataFrame):
+        self.factor_scores = factor_scores
+        self.forward_returns = forward_returns
+
+    def _ic(self):
+        return ic(self.factor_scores, self.forward_returns)
 
 
 def ic(factor_scores: pd.DataFrame, forward_returns: pd.DataFrame, method='pearson') -> pd.Series:

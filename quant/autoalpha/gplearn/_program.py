@@ -358,7 +358,8 @@ class _Program(object):
         # Check for single-node programs
         node = self.program[0]
         if isinstance(node, float):
-            return np.repeat(node, X.shape[:-1])
+        # TODO: 非常需要改
+            return np.repeat(node, X.shape[-2])
         if isinstance(node, int):
             return X[..., node]
 

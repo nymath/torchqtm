@@ -1,23 +1,26 @@
 from abc import ABCMeta, abstractmethod
-from quant.bt.universe import StaticUniverse
+from quant.vbt.universe import Universe
 import pandas as pd
 import numpy as np
 from .dataset import QuantDataFrame
 from multiprocessing import Pool, cpu_count
-
+from typing import Iterable, Optional, Union, Dict, Hashable
+from quant.vbt.utils import datetime
+import quant.op.functional as F
 
 # TODO: convert all the data type to the QuantDataFrame
 class BackTestEnv(object):
     """
-    回测环境, 作为字典的拓展, dfs和env都可以拓展为BackTestEnv
     # We can create two different BackTestEnvs
     # 1. For Op, we create env with trade_dates
     # 2. For backtest, we create env with rebalance_dates
     """
 
-    def __init__(self, dfs, dates=None, symbols=None):
+    def __init__(self,
+                 dfs: Dict[Hashable, pd.DataFrame],
+                 dates: Iterable[Union[datetime, pd.Timestamp]] = None,
+                 symbols: Iterable[str] = None):
         """
-
         :param dfs:
         :param dates:
         :param symbols: 构造的表的columns, 和Universe的概念不同, 我们的因子可以在更大的范围内计算, 但是只在universe上进行回测
@@ -97,13 +100,13 @@ class BackTestEnv(object):
 class BaseTest(object, metaclass=ABCMeta):
     def __init__(self,
                  env: BackTestEnv = None,
-                 universe: StaticUniverse = None,
+                 universe: Universe = None,
                  *args, **kwargs):
         self.returns = None
         self.env = env
         self._check_env()
         self.universe = universe
-        if isinstance(universe, StaticUniverse):
+        if isinstance(universe, Universe):
             self.symbols = universe.get_symbols()
         self.rebalance_dates = env.dates
 
@@ -123,8 +126,8 @@ class BaseTest(object, metaclass=ABCMeta):
 
 class QuickBackTesting01(BaseTest):
     def __init__(self,
-                 env: BackTestEnv = None,
-                 universe: StaticUniverse = None,
+                 env: BackTestEnv,
+                 universe: Universe,
                  n_groups: int = 5):
         super().__init__(env, universe)
         self.n_groups = n_groups
@@ -169,7 +172,7 @@ class QuickBackTesting01(BaseTest):
 class QuickBackTesting02(BaseTest):
     def __init__(self,
                  env: BackTestEnv = None,
-                 universe: StaticUniverse = None,
+                 universe: Universe = None,
                  n_groups: int = 5):
         super().__init__(env, universe)
         self.n_groups = n_groups
@@ -205,3 +208,18 @@ class QuickBackTesting02(BaseTest):
         self.returns.index = self.rebalance_dates
         self.returns.index.name = "trade_date"
         self.returns.columns.name = "group"
+
+
+class GPTestingIC(BaseTest):
+    def __init__(self,
+                 env: BackTestEnv,
+                 universe: Universe):
+        super().__init__(env, universe)
+
+    def run_backtest(self, modified_factor) -> float:
+        modified_factor = pd.DataFrame(modified_factor, index=self.env._FutureReturn.index, columns=self.env._FutureReturn.columns)
+        rlt = F.cs_corr(modified_factor, self.env._FutureReturn, 'spearman')
+        if rlt.std() == 0:
+            return -1
+        else:
+            return np.abs(rlt.mean() / rlt.std())

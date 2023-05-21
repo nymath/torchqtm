@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from ..bt.backtest import BackTestEnv
+from ..vbt.backtest import BackTestEnv
 
 
 class Parameters(object, metaclass=ABCMeta):

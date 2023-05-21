@@ -4,6 +4,12 @@ from sklearn.linear_model import LinearRegression
 
 from ..config import __OP_MODE__
 
+# Arithmetic Operators
+
+
+def divide(X, Y):
+    return X / Y
+
 
 # CrossSectionalOperators
 def cs_corr(X, Y, method="pearson"):

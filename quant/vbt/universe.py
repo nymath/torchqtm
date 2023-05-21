@@ -1,12 +1,25 @@
+import pandas as pd
 import tushare as ts
 import numpy as np
 from quant.config import __TS_API__
-from quant.bt.utils import relativedelta, datetime
+from quant.vbt.utils import relativedelta, datetime
 pro = ts.pro_api(__TS_API__)
+from typing import Iterable, Union, List
+from abc import abstractmethod, ABCMeta
 
 
-class StaticUniverse(object):
-    def __init__(self, symbols):
+class Universe(object, metaclass=ABCMeta):
+    def __init__(self):
+        pass
+
+    @abstractmethod
+    def get_symbols(self, trade_date: Union[str, datetime, pd.Timestamp]):
+        raise NotImplementedError
+
+
+class StaticUniverse(Universe):
+    def __init__(self, symbols: Iterable[str]):
+        super().__init__()
         self.symbols = symbols
 
     def get_symbols(self, trade_date=None):
@@ -18,12 +31,14 @@ class DynamicUniverse(object):
 
 
 class IndexComponents(object):
-    def __init__(self, index_code, in_date):
+    def __init__(self,
+                 index_code: str,
+                 in_date: str):
         self.index_code = index_code
         self.in_date = in_date
         self.data = self._get_components()
 
-    def _get_components(self):
+    def _get_components(self) -> List[str]:
         end = datetime.strptime(self.in_date, "%Y%m%d")
         start = end - relativedelta(months=1)
         df = pro.index_weight(index_code='399300.SZ', start_date=start.strftime("%Y%m%d"), end_date=end.strftime("%Y%m%d"))
