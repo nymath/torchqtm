@@ -1,11 +1,12 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 from sklearn.linear_model import LinearRegression
-from scipy.stats.mstats import winsorize as Winsorize
+
+from ..config import __OP_MODE__
 
 
 # CrossSectionalOperators
-def cs_corr(X, Y, method='pearson'):
+def cs_corr(X, Y, method="pearson"):
     assert isinstance(X, pd.DataFrame)
     assert isinstance(Y, pd.DataFrame)
     assert X.shape == Y.shape
@@ -42,16 +43,34 @@ def regression_neut(Y, others):
     if not isinstance(others, list):
         return _regression_neut(Y, others)
     else:
-        return _regression_neuts(Y, others)
+        if __OP_MODE__ == "STABLE":
+            return _regression_neuts(Y, others)
+        else:
+            pass
 
 
 def regression_proj(Y, others):
     return Y - regression_neut(Y, others)
 
 
-def winsorize(X, alpha=0.05):
+def winsorize(X, method='quantile', param=0.05):
     assert isinstance(X, pd.DataFrame)
-    return X.apply(lambda x: Winsorize(x, limits=[alpha, alpha]), axis=0)
+
+    def winsorize_series(series):
+        if method == 'quantile':
+            lower_bound = series.quantile(param)
+            upper_bound = series.quantile(1 - param)
+        elif method == 'std':
+            mean = np.nanmean(series)
+            std = np.nanstd(series)
+            lower_bound = mean - std * param
+            upper_bound = mean + std * param
+        else:
+            raise ValueError('method should be either "quantile" or "std"')
+        series[:] = np.where(series < lower_bound, lower_bound,
+                                     np.where(series > upper_bound, upper_bound, series))
+        return series
+    return X.apply(winsorize_series, axis=1)
 
 
 def normalize(X, useStd=True):
@@ -90,6 +109,27 @@ def group_min(x, group):
     pass
 
 
+def _group(x, group, agg_func):
+    """
+    agg_func should be robust against nan.
+    """
+    if np.sum(np.isnan(x))+np.sum(np.isnan(group)):
+        nan_mask = np.isnan(x) | np.isnan(group)
+
+        x_copy = np.where(nan_mask, 0, x)
+        group_copy = np.where(nan_mask, '0', group)
+
+        labels, indices = np.unique(group_copy, return_inverse=True)
+        grouped_val = np.array([agg_func(x_copy[group_copy == label]) for label in labels])
+        rlt = grouped_val[indices]
+        rlt = np.where(nan_mask, np.nan, rlt)
+    else:
+        labels, indices = np.unique(group, return_inverse=True)
+        grouped_val = np.array([agg_func(x[group == label]) for label in labels])
+        rlt = grouped_val[indices]
+    return rlt
+
+
 def _group_neutralize_df(X, Groups):
     # Flatten the dataframes and create a new dataframe with three columns: 'values', 'groups', 'original_index'
     df = pd.DataFrame({
@@ -122,13 +162,23 @@ def _group_neutralize_single(x, group):
 
 
 def group_neutralize(X, groups):
-    assert isinstance(X, pd.DataFrame)
+    assert type(X) == type(groups)
     assert X.shape == groups.shape
     result = []
-    for i in range(len(X)):
-        x, group = X.iloc[i], groups.iloc[i]
-        result.append(x - x.groupby(group).transform('mean'))
-    return pd.DataFrame(np.array(result), index=X.index, columns=X.columns)
+    if isinstance(X, pd.DataFrame):
+        for i in range(len(X)):
+            x, group = X.iloc[i], groups.iloc[i]
+            result.append(x - x.groupby(group).transform('mean'))
+        return pd.DataFrame(np.array(result), index=X.index, columns=X.columns)
+    elif isinstance(X, np.ndarray):
+        X = pd.DataFrame(X)
+        groups = pd.DataFrame(groups)
+        for i in range(len(X)):
+            # x, group = X[i], groups[i]
+            # result.append(x - _group(x, group, np.nanmean))
+            x, group = X.iloc[i], groups.iloc[i]
+            result.append(x - x.groupby(group).transform('mean'))
+        return np.array(result)
 
 
 def group_rank(x, group):
@@ -141,5 +191,3 @@ def group_sum(x, group):
 
 def group_zscore(x, group):
     pass
-
-

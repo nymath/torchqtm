@@ -109,3 +109,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+largedata
+
+# others
+.DS_Store

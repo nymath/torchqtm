@@ -31,13 +31,13 @@ class Weekly(object):
         self.start_date = start_date
         self.end_date = end_date
         self.args = args
-        self.trade_dates = None
+        self.rebalance_dates = None
         self._create_trade_dates()
 
     def _create_trade_dates(self):
         calendar = Calendar(self.start_date, self.end_date)
-        self.trade_dates = calendar.create_weekly_groups()
-        self.trade_dates = [x[i] for x in self.trade_dates.items() for i in self.args]
+        temp = calendar.create_weekly_groups()
+        self.rebalance_dates = sorted([x[i] for x in temp.items() for i in self.args])
 
 
 class Monthly(object):
@@ -45,11 +45,11 @@ class Monthly(object):
         self.start_date = start_date
         self.end_date = end_date
         self.args = args
-        self.trade_dates = None
+        self.rebalance_dates = None
         self._create_trade_dates()
 
     def _create_trade_dates(self):
         calendar = Calendar(self.start_date, self.end_date)
-        self.trade_dates = calendar.create_monthly_groups()
-        self.trade_dates = [x[i] for x in self.trade_dates.items() for i in self.args]
+        temp = calendar.create_monthly_groups()
+        self.rebalance_dates = sorted([x[i] for x in temp.items() for i in self.args])
 

@@ -14,3 +14,8 @@ class StaticUniverse(object):
 
 class DynamicUniverse(object):
     pass
+
+
+class UniverseGenerator(object):
+    pass
+
