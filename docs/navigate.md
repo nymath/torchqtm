@@ -9,7 +9,7 @@
     $$
 
 === "Riesz  Representation Theorem"
-    > Suppose $\varphi$ is a **bounded** linear functional on a Hilbert sapce V. Then there exists
+    > Suppose $\varphi$ is a **bounded** linear functional on a Hilbert space V. Then there exists
     > a unique $h \in V$ such that
     > $$ \varphi(f) = \langle f, h \rangle$$
     > for all $f \in V$. Furthermore, $\Vert \varphi \Vert = \Vert h \Vert$.
