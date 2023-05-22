@@ -1,6 +1,6 @@
 # torchquantum
 
-
+![logo](https://github.com/nymath/torchquantum/blob/main/src/fig/logo.png)
 
 TorchQuantum is a backtesting framework that integrates
 the structure of PyTorch and WorldQuant's Operator for
