@@ -8,6 +8,7 @@ from typing import Iterable, Optional, Union, Dict, Hashable
 from quant.vbt.utils import datetime
 import quant.op.functional as F
 
+
 # TODO: convert all the data type to the QuantDataFrame
 class BackTestEnv(object):
     """
