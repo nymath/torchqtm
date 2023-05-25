@@ -1,5 +1,4 @@
-<img src="https://github.com/nymath/torchquantum/blob/main/src/fig/logo.png" align="right" width="144" />
-
+<img src="https://github.com/nymath/torchquantum/blob/main/src/fig/logo.png" align="right" width="196" />
 # torchquantum
 
 TorchQuantum is a backtesting framework that integrates
@@ -9,8 +8,8 @@ efficient quantitative financial analysis.
 ## Contents
 
 - [Installation](#installation)
-- [Contribution](#contribution)
 - [Features](#features)
+- [Contribution](#contribution)
 
 
 ## Installation

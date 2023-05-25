@@ -2,11 +2,12 @@ from abc import ABCMeta, abstractmethod
 from quant.vbt.universe import Universe
 import pandas as pd
 import numpy as np
-from .dataset import QuantDataFrame
 from multiprocessing import Pool, cpu_count
-from typing import Iterable, Optional, Union, Dict, Hashable
+from typing import Iterable, Optional, Union, Dict, Hashable, Sized
 from quant.vbt.utils import datetime
 import quant.op.functional as F
+from .dataset import TqFrame
+import backtrader
 
 
 # TODO: convert all the data type to the QuantDataFrame
@@ -19,8 +20,8 @@ class BackTestEnv(object):
 
     def __init__(self,
                  dfs: Dict[Hashable, pd.DataFrame],
-                 dates: Iterable[Union[datetime, pd.Timestamp]] = None,
-                 symbols: Iterable[str] = None):
+                 dates,
+                 symbols):
         """
         :param dfs:
         :param dates:
@@ -31,6 +32,7 @@ class BackTestEnv(object):
         self._check_dfs()
         self.symbols = symbols
         self.dates = dates
+        self.shape = (len(self.symbols), len(self.dates))
         self.Open = None
         self.High = None
         self.Low = None
@@ -84,6 +86,7 @@ class BackTestEnv(object):
         :param item:
         :return:
         """
+        assert isinstance(value, pd.DataFrame)
         self.datas[item] = value
         setattr(self, item, value)
 
