@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from ..vbt.backtest import BackTestEnv
+from quant.vbt.backtest import BackTestEnv
 
 
 class Parameters(object, metaclass=ABCMeta):

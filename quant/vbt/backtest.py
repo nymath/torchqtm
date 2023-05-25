@@ -5,9 +5,6 @@ import numpy as np
 from multiprocessing import Pool, cpu_count
 from typing import Iterable, Optional, Union, Dict, Hashable, Sized
 from quant.vbt.utils import datetime
-import quant.op.functional as F
-from .dataset import TqFrame
-import backtrader
 
 
 # TODO: convert all the data type to the QuantDataFrame

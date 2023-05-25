@@ -39,6 +39,10 @@ class Weekly(object):
         temp = calendar.create_weekly_groups()
         self.rebalance_dates = sorted([x[i] for x in temp.values() for i in self.args])
 
+    @property
+    def data(self):
+        return self.rebalance_dates
+
 
 class Monthly(object):
     def __init__(self, start_date, end_date, *args):
@@ -53,3 +57,6 @@ class Monthly(object):
         temp = calendar.create_monthly_groups()
         self.rebalance_dates = sorted([x[i] for x in temp.values() for i in self.args])
 
+    @property
+    def data(self):
+        return self.rebalance_dates

@@ -25,6 +25,10 @@ class StaticUniverse(Universe):
     def get_symbols(self, trade_date=None):
         return self.symbols
 
+    @property
+    def data(self):
+        return self.symbols
+
 
 class DynamicUniverse(object):
     pass
