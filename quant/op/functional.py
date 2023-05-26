@@ -5,6 +5,7 @@ from sklearn.linear_model import LinearRegression
 from ..config import __OP_MODE__
 from typing import overload
 from .algos import rank_1d, rank_2d
+import talib
 # Arithmetic Operators
 
 

@@ -1,0 +1,12 @@
+pandas~=2.0.0
+numpy~=1.24.2
+graphviz~=2.50.0
+gplearn~=0.4.2
+scikit-learn~=1.0.2
+matplotlib~=3.5.2
+python-dateutil~=2.8.2
+tushare~=1.2.89
+joblib~=1.1.0
+scipy~=1.9.1
+setuptools~=63.4.1
+cython~=0.29.34
