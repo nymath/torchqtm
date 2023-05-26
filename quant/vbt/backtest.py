@@ -159,7 +159,7 @@ class QuickBackTesting01(BaseTest):
                 # weights.append(weight)
                 ret = x['_FutureReturn']
                 return (weight * ret).sum()
-
+            pd.DataFrame.groupby
             group_return = temp_data.groupby('group').apply(temp)
             returns.append(group_return)
         returns.append(pd.Series(np.repeat(0, self.n_groups), index=group_return.index))

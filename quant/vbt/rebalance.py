@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 from pandas_market_calendars import get_calendar
 import itertools
 from collections import defaultdict
+from typing import Sized, Iterable
 
 
 class Calendar(object, metaclass=ABCMeta):
@@ -27,17 +28,17 @@ class Calendar(object, metaclass=ABCMeta):
 
 
 class Weekly(object):
-    def __init__(self, start_date, end_date, *args):
+    def __init__(self, start_date, end_date, days: Iterable[int]):
         self.start_date = start_date
         self.end_date = end_date
-        self.args = args
+        self.days = days
         self.rebalance_dates = None
         self._create_trade_dates()
 
     def _create_trade_dates(self):
         calendar = Calendar(self.start_date, self.end_date)
         temp = calendar.create_weekly_groups()
-        self.rebalance_dates = sorted([x[i] for x in temp.values() for i in self.args])
+        self.rebalance_dates = sorted([x[i] for x in temp.values() for i in self.days])
 
     @property
     def data(self):
@@ -45,17 +46,17 @@ class Weekly(object):
 
 
 class Monthly(object):
-    def __init__(self, start_date, end_date, *args):
+    def __init__(self, start_date, end_date, days: Iterable[int]):
         self.start_date = start_date
         self.end_date = end_date
-        self.args = args
+        self.days = days
         self.rebalance_dates = None
         self._create_trade_dates()
 
     def _create_trade_dates(self):
         calendar = Calendar(self.start_date, self.end_date)
-        temp = calendar.create_monthly_groups()
-        self.rebalance_dates = sorted([x[i] for x in temp.values() for i in self.args])
+        temp = calendar.create_weekly_groups()
+        self.rebalance_dates = sorted([x[i] for x in temp.values() for i in self.days])
 
     @property
     def data(self):

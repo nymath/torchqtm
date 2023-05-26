@@ -56,10 +56,10 @@ class CSTester(object):
         with Timer():
             print(corr(X_d, X_d**2))
 
-        # with Timer():
-        #     print(cs_corr(X_d, X_d**2))
+        with Timer():
+            print(cs_corr(X_n, X_n**3, method='spearman'))
 
 
-CSTester.t_cs_corr_0()
+CSTester.t_cs_corr_1()
 
 

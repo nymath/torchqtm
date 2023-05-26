@@ -8,10 +8,10 @@ import quant.op.functional as F
 import matplotlib.pyplot as plt
 import time
 import pickle
-tt0 = time.time()
+
 start = '20170101'
 end = '20230101'
-rebalance = Weekly(start, end, -1)
+rebalance = Weekly(start, end, [-1])
 benchmark = BenchMark('000905.SH', start, end)
 universe = StaticUniverse(IndexComponents('000905.SH', start).data)
 
@@ -34,14 +34,14 @@ if __name__ == '__main__':
     with open("largedata/Stocks.pkl", "rb") as f:
         dfs = pickle.load(f)
     # Create the backtest environment
-    BtEnv = BackTestEnv(dfs=dfs,
+    btEnv = BackTestEnv(dfs=dfs,
                         dates=rebalance.rebalance_dates,
                         symbols=universe.symbols)
     # Create alpha
-    alphas = NeutralizePE(env=BtEnv)
-    alphas.operate(BtEnv.match_env(dfs['PE']))
+    alphas = NeutralizePE(env=btEnv)
+    alphas.operate(btEnv.match_env(dfs['PE']))
     # run backtest
-    bt = QuickBackTesting01(env=BtEnv,
+    bt = QuickBackTesting01(env=btEnv,
                             universe=universe,
                             n_groups=10)
     bt.run_backtest(alphas.data)

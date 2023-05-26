@@ -3,9 +3,16 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 
 from ..config import __OP_MODE__
-
-
+from typing import overload
+from .algos import rank_1d, rank_2d
 # Arithmetic Operators
+
+
+@overload
+def abs(x: pd.DataFrame) -> pd.DataFrame: ...
+@overload
+def abs(x: np.ndarray) -> np.ndarray: ...
+
 
 def abs(x):
     """absolute value of x"""
@@ -50,6 +57,7 @@ def nan_out(X, lower=-0.1, upper=0.1):
         return rlt
     elif isinstance(rlt, pd.DataFrame):
         return pd.DataFrame(rlt, index=X.index, columns=X.columns)
+
 
 def purify(X):
     rlt = np.where(np.isinf(X), np.nan, X)
@@ -131,12 +139,20 @@ def _cs_corr(X, Y):
     return np.nanmean((X - mean_x) / std_x * (Y - mean_y) / std_y, axis=1)
 
 
+@overload
+def cs_corr(X: pd.DataFrame, Y: pd.DataFrame, method: str = "pearson") -> pd.Series: ...
+@overload
+def cs_corr(X: np.ndarray, Y: np.ndarray, method: str = "pearson") -> np.ndarray: ...
+
+
 def cs_corr(X, Y, method="pearson"):
     if method == "pearson":
         rlt = _cs_corr(X, Y)
     elif method == "spearman":
-        temp_X = pd.DataFrame(X).rank(axis=1)
-        temp_Y = pd.DataFrame(Y).rank(axis=1)
+        # temp_X = pd.DataFrame(X).rank(axis=1)
+        # temp_Y = pd.DataFrame(Y).rank(axis=1)
+        temp_X = rank_2d(X, axis=1)
+        temp_Y = rank_2d(Y, axis=1)
         temp_X = temp_X / np.nanmax(temp_X, axis=1, keepdims=True)
         temp_Y = temp_Y / np.nanmax(temp_Y, axis=1, keepdims=True)
         rlt = _cs_corr(temp_X, temp_Y)
@@ -208,12 +224,25 @@ def winsorize(X, method='quantile', param=0.05):
     return X.apply(winsorize_series, axis=1)
 
 
+@overload
+def normalize(X: pd.DataFrame, useStd: bool = True) -> pd.DataFrame: ...
+@overload
+def normalize(X: np.ndarray, useStd: bool = True) -> np.ndarray: ...
+
+
 def normalize(X, useStd=True):
-    assert isinstance(X, pd.DataFrame)
-    if useStd:
-        return X.apply(lambda x: (x - x.mean()) / x.std(), axis=1)
-    else:
-        return X.apply(lambda x: (x - x.mean()), axis=1)
+    if isinstance(X, pd.DataFrame):
+        if useStd:
+            return X.apply(lambda x: (x - x.mean()) / x.std(), axis=1)
+        else:
+            return X.apply(lambda x: (x - x.mean()), axis=1)
+    elif isinstance(X, np.ndarray):
+        x_mean = np.nanmean(X, axis=1, keepdims=True)
+        s_std = np.nanstd(X, axis=1, keepdims=True)
+        if useStd:
+            return (X - x_mean) / s_std
+        else:
+            return X - x_mean
 
 
 # # Group Operators
@@ -247,6 +276,29 @@ def group_min(x, group):
 def _group(x, group, agg_func):
     """
     agg_func should be robust against nan.
+    import numpy as np
+    import pandas as pd
+
+    def _group(x, group, agg_func):
+        # Masking nan values
+        nan_mask_x = np.isnan(x)
+        nan_mask_group = np.isnan(group)
+
+        # Replacing nan values
+        x_copy = np.where(nan_mask_x, 0, x)
+        group_copy = np.where(nan_mask_group, '0', group)
+
+        # Using pandas for efficient grouping and aggregation
+        df = pd.DataFrame({'x': x_copy, 'group': group_copy})
+        grouped_df = df.groupby('group').agg(agg_func)
+
+        # Mapping aggregated values back to original data
+        df['rlt'] = df['group'].map(grouped_df['x'])
+
+        # Restoring nan values
+        rlt = np.where(nan_mask_x | nan_mask_group, np.nan, df['rlt'].values)
+
+        return rlt
     """
     if np.sum(np.isnan(x))+np.sum(np.isnan(group)):
         nan_mask = np.isnan(x) | np.isnan(group)
