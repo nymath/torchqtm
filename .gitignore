@@ -4,8 +4,8 @@ __pycache__/
 *.pyo
 *.pyd
 
-# C extensions
-*.so
+## C extensions
+#*.so
 
 # Distribution / packaging
 .Python
