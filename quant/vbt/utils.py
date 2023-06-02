@@ -11,7 +11,7 @@ class Timer(object):
     ...     x = np.random.normal(0, 1, (1000000, 100))
     ...     np.mean(x, axis=1)
     """
-    def __init__(self, program: str):
+    def __init__(self, program: str = None):
         self.program = program
         self.start = None
 

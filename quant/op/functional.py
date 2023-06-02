@@ -318,25 +318,6 @@ def _group(x, group, agg_func):
     return rlt
 
 
-def _group_neutralize_df(X, Groups):
-    # Flatten the dataframes and create a new dataframe with three columns: 'values', 'groups', 'original_index'
-    df = pd.DataFrame({
-        'values': X.values.flatten(),
-        'groups': Groups.values.flatten(),
-        'original_index': np.arange(X.size)  # Keep track of the original index
-    })
-
-    # Calculate group means
-    group_means = df.groupby('groups')['values'].transform('mean')
-    # Subtract the group mean from the values
-    df['values'] = df['values'] - group_means
-
-    # Reshape the neutralized values to the original shape and convert back to a dataframe
-    neutralized_X = pd.DataFrame(df['values'].values.reshape(X.shape), index=X.index, columns=X.columns)
-
-    return neutralized_X
-
-
 def _group_neutralize_single(x, group):
     # Ensure x and group have same length
     assert len(x) == len(group), "Series x and group must have same length."
@@ -344,13 +325,12 @@ def _group_neutralize_single(x, group):
     # Calculate the mean of each group
     group_means = x.groupby(group).transform('mean')
     # Subtract the mean of each group from the corresponding elements in x
-    neutralized_values = x - group.map(group_means)
+    neutralized_values = x - group_means
 
     return neutralized_values
 
 
 def group_neutralize(X, groups):
-    assert type(X) == type(groups)
     assert X.shape == groups.shape
     result = []
     if isinstance(X, pd.DataFrame):
