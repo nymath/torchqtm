@@ -29,6 +29,19 @@ Now you can run examples
 python ./examples/main.py
 ```
 
+If you are not downloading the dataset, then you should
+```shell
+cd ./examples
+mkdir largedata
+cd ./largedata
+wget https://github.com/nymath/torchquantum/releases/download/V0.1/Stocks.pkl.zip
+unzip Stocks.pkl.zip
+rm Stocks.pkl.zip
+cd ../
+cd ../
+```
+
+
 
 ## Features
 

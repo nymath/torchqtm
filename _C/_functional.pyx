@@ -1,9 +1,18 @@
 # cython: language_level=3
+# https://cython.readthedocs.io/en/stable/src/userguide/numpy_tutorial.html
+cimport numpy
 import numpy as np
 cimport cython
 import pandas as pd
 from quant.config import __OP_MODE__
 from sklearn.linear_model import LinearRegression
+
+ctypedef fused ArrayType:
+    float
+    double
+    long long
+    pd.DataFrame
+
 
 
 @cython.wraparound(False)
@@ -20,6 +29,8 @@ def _regression_neut(Y, X):
     return pd.DataFrame(np.array(result), index=Y.index, columns=Y.columns)
 
 
+@cython.wraparound(False)
+@cython.boundscheck(False)
 def _regression_neuts(Y, others):
     result = []
     for i in range(len(Y)):
@@ -33,6 +44,8 @@ def _regression_neuts(Y, others):
     return pd.DataFrame(np.array(result), index=Y.index, columns=Y.columns)
 
 
+@cython.wraparound(False)
+@cython.boundscheck(False)
 def regression_neut(Y, others):
     assert isinstance(Y, pd.DataFrame)
     if not isinstance(others, list):
@@ -42,3 +55,5 @@ def regression_neut(Y, others):
             return _regression_neuts(Y, others)
         else:
             pass
+
+
