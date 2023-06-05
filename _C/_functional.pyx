@@ -11,7 +11,6 @@ ctypedef fused ArrayType:
     float
     double
     long long
-    pd.DataFrame
 
 
 
