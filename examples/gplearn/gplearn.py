@@ -1,15 +1,15 @@
 import os
 import numpy as np
-from quant.autoalpha.gplearn import fitness
-from quant.vbt.rebalance import Calendar, Weekly
-from quant.autoalpha.gplearn.genetic import SymbolicRegressor, SymbolicTransformer
-from quant.vbt.rebalance import Calendar, Weekly
-from quant.visualization.visualization import ColorGenerator
-from quant.vbt.universe import StaticUniverse, IndexComponents
-from quant.vbt.benchmark import BenchMark
-from quant.vbt.backtest import BackTestEnv, GPTestingIC
-import quant.op as op
-import quant.op.functional as F
+from torchqtm.autoalpha.gplearn import fitness
+from torchqtm.vbt.rebalance import Calendar, Weekly
+from torchqtm.autoalpha.gplearn.genetic import SymbolicRegressor, SymbolicTransformer
+from torchqtm.vbt.rebalance import Calendar, Weekly
+from torchqtm.visualization.visualization import ColorGenerator
+from torchqtm.vbt.universe import StaticUniverse, IndexComponents
+from torchqtm.vbt.benchmark import BenchMark
+from torchqtm.vbt.backtest import BackTestEnv, GPTestingIC
+import torchqtm.op as op
+import torchqtm.op.functional as F
 import matplotlib.pyplot as plt
 import time
 import graphviz

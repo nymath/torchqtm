@@ -30,7 +30,7 @@ from .functions import _function_map, _Function, sig1 as sigmoid
 from .utils import _partition_estimators
 from .utils import check_random_state
 import copy
-from quant.vbt.backtest import BaseTest
+from torchqtm.vbt.backtest import BaseTest
 
 __all__ = ['SymbolicRegressor', 'SymbolicClassifier', 'SymbolicTransformer']
 
@@ -852,7 +852,7 @@ class SymbolicRegressor(BaseSymbolic, RegressorMixin):
         return self._program.__str__()
 
     def predict(self, X):
-        """Perform regression on test vectors X.
+        """Perform regression on mytest.ipynb vectors X.
 
         Parameters
         ----------
@@ -1027,7 +1027,7 @@ class SymbolicClassifier(BaseSymbolic, ClassifierMixin):
         If not given, all classes are supposed to have weight one.
 
         The "balanced" mode uses the values of y to automatically adjust
-        weights inversely proportional to class frequencies in the input data
+        weights inversely proportional to class frequencies in the input rawdata
         as ``n_samples / (n_classes * np.bincount(y))``
 
     feature_names : list, optional (default=None)
@@ -1146,7 +1146,7 @@ class SymbolicClassifier(BaseSymbolic, ClassifierMixin):
         return {'binary_only': True}
 
     def predict_proba(self, X):
-        """Predict probabilities on test vectors X.
+        """Predict probabilities on mytest.ipynb vectors X.
 
         Parameters
         ----------
@@ -1178,7 +1178,7 @@ class SymbolicClassifier(BaseSymbolic, ClassifierMixin):
         return proba
 
     def predict(self, X):
-        """Predict classes on test vectors X.
+        """Predict classes on mytest.ipynb vectors X.
 
         Parameters
         ----------
@@ -1506,7 +1506,7 @@ class SymbolicTransformer(BaseSymbolic, TransformerMixin):
         return X_new
 
     def fit_transform(self, X, y, sample_weight=None):
-        """Fit to data, then transform it.
+        """Fit to rawdata, then transform it.
 
         Parameters
         ----------

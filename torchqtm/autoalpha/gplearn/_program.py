@@ -1,4 +1,4 @@
-"""The underlying data structure used in gplearn.
+"""The underlying rawdata structure used in gplearn.
 
 The :mod:`gplearn._program` module contains the underlying representation of a
 computer program. It is used for creating and evolving programs used in the
@@ -22,7 +22,7 @@ class _Program(object):
 
     """A program-like representation of the evolved program.
 
-    This is the underlying data-structure used by the public classes in the
+    This is the underlying rawdata-structure used by the public classes in the
     :mod:`gplearn.genetic` module. It should not be used directly by the user.
 
     Parameters
@@ -108,7 +108,7 @@ class _Program(object):
 
     parents : dict, or None
         If None, this is a naive random program from the initial population.
-        Otherwise it includes meta-data about the program's parent(s) as well
+        Otherwise it includes meta-rawdata about the program's parent(s) as well
         as the genetic operations performed to yield the current program. This
         is set outside this class by the controlling evolution loops.
 

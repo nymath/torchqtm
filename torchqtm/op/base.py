@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from quant.vbt.backtest import BackTestEnv
+from torchqtm.vbt.backtest import BackTestEnv
 
 
 class Parameters(object, metaclass=ABCMeta):
@@ -20,7 +20,7 @@ class Alpha(object, metaclass=ABCMeta):
 
     @abstractmethod
     def operate(self, *args, **kwargs):
-        """assign self.data and return"""
+        """assign self.rawdata and return"""
         raise NotImplementedError
 
     def __call__(self, *args, **kwargs):
@@ -34,7 +34,7 @@ class Fundamental(Alpha):
 
     @abstractmethod
     def operate(self, *args, **kwargs):
-        """assign self.data and return"""
+        """assign self.rawdata and return"""
         raise NotImplementedError
 
 
@@ -45,7 +45,7 @@ class Momentum(Alpha):
 
     @abstractmethod
     def operate(self, *args, **kwargs):
-        """assign self.data and return"""
+        """assign self.rawdata and return"""
         raise NotImplementedError
 
 
@@ -56,7 +56,7 @@ class Reversion(Alpha):
 
     @abstractmethod
     def operate(self, *args, **kwargs):
-        """assign self.data and return"""
+        """assign self.rawdata and return"""
         raise NotImplementedError
 
 # # You can use the following format to create your own alpha
@@ -65,11 +65,11 @@ class Reversion(Alpha):
 #         super().__init__(env, *args, **kwargs)
 #
 #     def operate(self, *args, **kwargs):
-#         self.data = F.winsorize(self.env.PE, 0.05)
-#         self.data = F.normalize(self.data)
-#         self.data = F.group_neutralize(self.data, self.env.Sector)
-#         self.data = F.regression_neut(self.data, self.env.MktVal)
-#         return self.data
+#         self.rawdata = F.winsorize(self.env.PE, 0.05)
+#         self.rawdata = F.normalize(self.rawdata)
+#         self.rawdata = F.group_neutralize(self.rawdata, self.env.Sector)
+#         self.rawdata = F.regression_neut(self.rawdata, self.env.MktVal)
+#         return self.rawdata
 
 
 

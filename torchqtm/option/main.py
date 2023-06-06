@@ -1,5 +1,5 @@
-import quant.option.functional as F
-from quant.vbt.utils import Timer
+import torchqtm.option.functional as F
+from torchqtm.utils import Timer
 
 S = 100
 K = 100

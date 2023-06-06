@@ -1,20 +1,15 @@
 import os
 import sys
 
-from quant.vbt.rebalance import Calendar, Weekly
-from quant.visualization.visualization import ColorGenerator
-from quant.vbt.universe import StaticUniverse, IndexComponents
-from quant.vbt.benchmark import BenchMark
-from quant.vbt.backtest import BackTestEnv, QuickBackTesting01
-import quant.op as op
-import quant.op.functional as F
-import numpy as np
+from torchqtm.vbt.rebalance import Weekly
+from torchqtm.visualization.visualization import ColorGenerator
+from torchqtm.vbt.universe import StaticUniverse, IndexComponents
+from torchqtm.vbt.benchmark import BenchMark
+from torchqtm.vbt.backtest import BackTestEnv, QuickBackTesting01
+import torchqtm.op as op
+import torchqtm.op.functional as F
 import matplotlib.pyplot as plt
-import time
-from quant.vbt.utils import Timer
 import pickle
-import pyximport
-import _C._functional as CF
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(BASE_DIR)
@@ -43,7 +38,7 @@ class NeutralizePE(op.Fundamental):
 
 
 if __name__ == '__main__':
-    # Load the data
+    # Load the rawdata
     with open(f"{BASE_DIR}/largedata/Stocks.pkl", "rb") as f:
         dfs = pickle.load(f)
     # Create the backtest environment

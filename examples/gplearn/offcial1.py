@@ -1,4 +1,4 @@
-from quant.autoalpha.gplearn.genetic import SymbolicRegressor
+from torchqtm.autoalpha.gplearn.genetic import SymbolicRegressor
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.utils import check_random_state

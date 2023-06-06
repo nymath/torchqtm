@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import quant.op.functional as F
+import torchqtm.op.functional as F
 from typing import Optional
 import matplotlib.pyplot as plt
 
@@ -89,7 +89,7 @@ def drawdown(returns: pd.Series) -> (pd.Series, float, int):
 
 def turnover(weights: pd.DataFrame) -> pd.Series:
     """
-    calculate the amount traded at each rebalance data as fraction of portfolio size.
+    calculate the amount traded at each rebalance rawdata as fraction of portfolio size.
     """
     weights.fillna(0, inplace=True)
     forward_weights = weights.shift(1)
@@ -108,12 +108,12 @@ def sharpe(returns, freq=None, rfr=0):
         pandas series indexed by date with returns for each period as fraction of previous value
         (i.e. not in percent)
     freq : {'A', 'Q', 'M', 'D', or None}, optional, default None
-        The frequency of the data. If not None will annualize the result by multiplying by
+        The frequency of the rawdata. If not None will annualize the result by multiplying by
         :math:`\sqrt{N}`
         where :math:`N` is the number of periods per year for the respective frequency
         (e.g. 252 for daily, 12 for monthly, 60 for weekly, etc.)
     rfr : float or pandas time series, default 0.
-        Risk free rate, scaled to match returns data frequency (i.e. annual if annual returns
+        Risk free rate, scaled to match returns rawdata frequency (i.e. annual if annual returns
         are provided, etc.)
 
     """

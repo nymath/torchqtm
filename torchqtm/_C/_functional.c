@@ -4,12 +4,12 @@
 {
     "distutils": {
         "depends": [],
-        "name": "_C._functional",
+        "name": "torchqtm._C._functional",
         "sources": [
-            "_C/_functional.pyx"
+            "torchqtm/_C/_functional.pyx"
         ]
     },
-    "module_name": "_C._functional"
+    "module_name": "torchqtm._C._functional"
 }
 END: Cython Metadata */
 
@@ -751,8 +751,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE___C___functional
-#define __PYX_HAVE_API___C___functional
+#define __PYX_HAVE__torchqtm___C___functional
+#define __PYX_HAVE_API__torchqtm___C___functional
 /* Early includes */
 #include <string.h>
 #include <stdio.h>
@@ -995,7 +995,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "_C/_functional.pyx",
+  "torchqtm/_C/_functional.pyx",
   "__init__.pxd",
   "type.pxd",
 };
@@ -1806,12 +1806,12 @@ static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 
 /* Module declarations from 'cython' */
 
-/* Module declarations from '_C._functional' */
-#define __Pyx_MODULE_NAME "_C._functional"
-extern int __pyx_module_is_main__C___functional;
-int __pyx_module_is_main__C___functional = 0;
+/* Module declarations from 'torchqtm._C._functional' */
+#define __Pyx_MODULE_NAME "torchqtm._C._functional"
+extern int __pyx_module_is_main_torchqtm___C___functional;
+int __pyx_module_is_main_torchqtm___C___functional = 0;
 
-/* Implementation of '_C._functional' */
+/* Implementation of 'torchqtm._C._functional' */
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_ImportError;
 static const char __pyx_k_X[] = "X";
@@ -1850,19 +1850,17 @@ static const char __pyx_k_DataFrame[] = "DataFrame";
 static const char __pyx_k_residuals[] = "residuals";
 static const char __pyx_k_ImportError[] = "ImportError";
 static const char __pyx_k_concatenate[] = "concatenate";
-static const char __pyx_k_quant_config[] = "quant.config";
-static const char __pyx_k_C__functional[] = "_C._functional";
 static const char __pyx_k_regression_neut[] = "_regression_neut";
+static const char __pyx_k_torchqtm_config[] = "torchqtm.config";
 static const char __pyx_k_LinearRegression[] = "LinearRegression";
 static const char __pyx_k_regression_neuts[] = "_regression_neuts";
-static const char __pyx_k_C__functional_pyx[] = "_C/_functional.pyx";
 static const char __pyx_k_regression_neut_2[] = "regression_neut";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_sklearn_linear_model[] = "sklearn.linear_model";
+static const char __pyx_k_torchqtm__C__functional[] = "torchqtm._C._functional";
+static const char __pyx_k_torchqtm__C__functional_pyx[] = "torchqtm/_C/_functional.pyx";
 static const char __pyx_k_numpy_core_multiarray_failed_to[] = "numpy.core.multiarray failed to import";
 static const char __pyx_k_numpy_core_umath_failed_to_impor[] = "numpy.core.umath failed to import";
-static PyObject *__pyx_n_s_C__functional;
-static PyObject *__pyx_kp_s_C__functional_pyx;
 static PyObject *__pyx_n_s_DataFrame;
 static PyObject *__pyx_n_s_ImportError;
 static PyObject *__pyx_n_s_LinearRegression;
@@ -1892,7 +1890,6 @@ static PyObject *__pyx_n_s_others;
 static PyObject *__pyx_n_s_pandas;
 static PyObject *__pyx_n_s_pd;
 static PyObject *__pyx_n_s_predict;
-static PyObject *__pyx_n_s_quant_config;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_regression_neut;
 static PyObject *__pyx_n_s_regression_neut_2;
@@ -1902,15 +1899,18 @@ static PyObject *__pyx_n_s_residuals;
 static PyObject *__pyx_n_s_result;
 static PyObject *__pyx_n_s_sklearn_linear_model;
 static PyObject *__pyx_n_s_test;
+static PyObject *__pyx_n_s_torchqtm__C__functional;
+static PyObject *__pyx_kp_s_torchqtm__C__functional_pyx;
+static PyObject *__pyx_n_s_torchqtm_config;
 static PyObject *__pyx_n_s_values;
 static PyObject *__pyx_n_s_x;
 static PyObject *__pyx_n_s_x_demean;
 static PyObject *__pyx_n_s_y;
 static PyObject *__pyx_n_s_y_demean;
 static PyObject *__pyx_n_s_y_pred;
-static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_X); /* proto */
-static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_others); /* proto */
-static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_others); /* proto */
+static PyObject *__pyx_pf_8torchqtm_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_X); /* proto */
+static PyObject *__pyx_pf_8torchqtm_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_others); /* proto */
+static PyObject *__pyx_pf_8torchqtm_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_others); /* proto */
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_neg_1;
 static PyObject *__pyx_tuple_;
@@ -1924,7 +1924,7 @@ static PyObject *__pyx_codeobj__7;
 static PyObject *__pyx_codeobj__9;
 /* Late includes */
 
-/* "_C/_functional.pyx":19
+/* "torchqtm/_C/_functional.pyx":19
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def _regression_neut(Y, X):             # <<<<<<<<<<<<<<
@@ -1933,9 +1933,9 @@ static PyObject *__pyx_codeobj__9;
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2_C_11_functional_1_regression_neut(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_2_C_11_functional_1_regression_neut = {"_regression_neut", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_2_C_11_functional_1_regression_neut, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_2_C_11_functional_1_regression_neut(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8torchqtm_2_C_11_functional_1_regression_neut(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8torchqtm_2_C_11_functional_1_regression_neut = {"_regression_neut", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8torchqtm_2_C_11_functional_1_regression_neut, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8torchqtm_2_C_11_functional_1_regression_neut(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_Y = 0;
   PyObject *__pyx_v_X = 0;
   int __pyx_lineno = 0;
@@ -1986,18 +1986,18 @@ static PyObject *__pyx_pw_2_C_11_functional_1_regression_neut(PyObject *__pyx_se
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("_regression_neut", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 19, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("_C._functional._regression_neut", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("torchqtm._C._functional._regression_neut", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2_C_11_functional__regression_neut(__pyx_self, __pyx_v_Y, __pyx_v_X);
+  __pyx_r = __pyx_pf_8torchqtm_2_C_11_functional__regression_neut(__pyx_self, __pyx_v_Y, __pyx_v_X);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_X) {
+static PyObject *__pyx_pf_8torchqtm_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_X) {
   PyObject *__pyx_v_result = NULL;
   Py_ssize_t __pyx_v_i;
   PyObject *__pyx_v_y = NULL;
@@ -2020,7 +2020,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_regression_neut", 0);
 
-  /* "_C/_functional.pyx":20
+  /* "torchqtm/_C/_functional.pyx":20
  * @cython.boundscheck(False)
  * def _regression_neut(Y, X):
  *     result = []             # <<<<<<<<<<<<<<
@@ -2032,7 +2032,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
   __pyx_v_result = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "_C/_functional.pyx":21
+  /* "torchqtm/_C/_functional.pyx":21
  * def _regression_neut(Y, X):
  *     result = []
  *     for i in range(len(Y)):             # <<<<<<<<<<<<<<
@@ -2044,7 +2044,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
   for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
 
-    /* "_C/_functional.pyx":22
+    /* "torchqtm/_C/_functional.pyx":22
  *     result = []
  *     for i in range(len(Y)):
  *         y = Y.values[i]             # <<<<<<<<<<<<<<
@@ -2059,7 +2059,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
     __Pyx_XDECREF_SET(__pyx_v_y, __pyx_t_5);
     __pyx_t_5 = 0;
 
-    /* "_C/_functional.pyx":23
+    /* "torchqtm/_C/_functional.pyx":23
  *     for i in range(len(Y)):
  *         y = Y.values[i]
  *         y_demean = y - np.nanmean(y)             # <<<<<<<<<<<<<<
@@ -2092,7 +2092,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
     __Pyx_XDECREF_SET(__pyx_v_y_demean, __pyx_t_6);
     __pyx_t_6 = 0;
 
-    /* "_C/_functional.pyx":24
+    /* "torchqtm/_C/_functional.pyx":24
  *         y = Y.values[i]
  *         y_demean = y - np.nanmean(y)
  *         x = X.values[i]             # <<<<<<<<<<<<<<
@@ -2107,7 +2107,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
     __Pyx_XDECREF_SET(__pyx_v_x, __pyx_t_5);
     __pyx_t_5 = 0;
 
-    /* "_C/_functional.pyx":25
+    /* "torchqtm/_C/_functional.pyx":25
  *         y_demean = y - np.nanmean(y)
  *         x = X.values[i]
  *         x_demean = x - np.nanmean(x)             # <<<<<<<<<<<<<<
@@ -2140,7 +2140,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
     __Pyx_XDECREF_SET(__pyx_v_x_demean, __pyx_t_1);
     __pyx_t_1 = 0;
 
-    /* "_C/_functional.pyx":26
+    /* "torchqtm/_C/_functional.pyx":26
  *         x = X.values[i]
  *         x_demean = x - np.nanmean(x)
  *         residuals = y_demean - (np.nanmean(y_demean * x_demean) / np.nanvar(x_demean)) * x_demean             # <<<<<<<<<<<<<<
@@ -2203,7 +2203,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
     __Pyx_XDECREF_SET(__pyx_v_residuals, __pyx_t_7);
     __pyx_t_7 = 0;
 
-    /* "_C/_functional.pyx":27
+    /* "torchqtm/_C/_functional.pyx":27
  *         x_demean = x - np.nanmean(x)
  *         residuals = y_demean - (np.nanmean(y_demean * x_demean) / np.nanvar(x_demean)) * x_demean
  *         result.append(residuals)             # <<<<<<<<<<<<<<
@@ -2213,7 +2213,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
     __pyx_t_8 = __Pyx_PyList_Append(__pyx_v_result, __pyx_v_residuals); if (unlikely(__pyx_t_8 == ((int)-1))) __PYX_ERR(0, 27, __pyx_L1_error)
   }
 
-  /* "_C/_functional.pyx":28
+  /* "torchqtm/_C/_functional.pyx":28
  *         residuals = y_demean - (np.nanmean(y_demean * x_demean) / np.nanvar(x_demean)) * x_demean
  *         result.append(residuals)
  *     return pd.DataFrame(np.array(result), index=Y.index, columns=Y.columns)             # <<<<<<<<<<<<<<
@@ -2270,7 +2270,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_C/_functional.pyx":19
+  /* "torchqtm/_C/_functional.pyx":19
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def _regression_neut(Y, X):             # <<<<<<<<<<<<<<
@@ -2284,7 +2284,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_AddTraceback("_C._functional._regression_neut", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("torchqtm._C._functional._regression_neut", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_result);
@@ -2298,7 +2298,7 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
   return __pyx_r;
 }
 
-/* "_C/_functional.pyx":33
+/* "torchqtm/_C/_functional.pyx":33
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def _regression_neuts(Y, others):             # <<<<<<<<<<<<<<
@@ -2307,9 +2307,9 @@ static PyObject *__pyx_pf_2_C_11_functional__regression_neut(CYTHON_UNUSED PyObj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2_C_11_functional_3_regression_neuts(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_2_C_11_functional_3_regression_neuts = {"_regression_neuts", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_2_C_11_functional_3_regression_neuts, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_2_C_11_functional_3_regression_neuts(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8torchqtm_2_C_11_functional_3_regression_neuts(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8torchqtm_2_C_11_functional_3_regression_neuts = {"_regression_neuts", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8torchqtm_2_C_11_functional_3_regression_neuts, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8torchqtm_2_C_11_functional_3_regression_neuts(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_Y = 0;
   PyObject *__pyx_v_others = 0;
   int __pyx_lineno = 0;
@@ -2360,18 +2360,18 @@ static PyObject *__pyx_pw_2_C_11_functional_3_regression_neuts(PyObject *__pyx_s
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("_regression_neuts", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 33, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("_C._functional._regression_neuts", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("torchqtm._C._functional._regression_neuts", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2_C_11_functional_2_regression_neuts(__pyx_self, __pyx_v_Y, __pyx_v_others);
+  __pyx_r = __pyx_pf_8torchqtm_2_C_11_functional_2_regression_neuts(__pyx_self, __pyx_v_Y, __pyx_v_others);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_others) {
+static PyObject *__pyx_pf_8torchqtm_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_others) {
   PyObject *__pyx_v_result = NULL;
   Py_ssize_t __pyx_v_i;
   PyObject *__pyx_v_y = NULL;
@@ -2399,7 +2399,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_regression_neuts", 0);
 
-  /* "_C/_functional.pyx":34
+  /* "torchqtm/_C/_functional.pyx":34
  * @cython.boundscheck(False)
  * def _regression_neuts(Y, others):
  *     result = []             # <<<<<<<<<<<<<<
@@ -2411,7 +2411,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
   __pyx_v_result = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "_C/_functional.pyx":35
+  /* "torchqtm/_C/_functional.pyx":35
  * def _regression_neuts(Y, others):
  *     result = []
  *     for i in range(len(Y)):             # <<<<<<<<<<<<<<
@@ -2423,7 +2423,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
   for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
 
-    /* "_C/_functional.pyx":36
+    /* "torchqtm/_C/_functional.pyx":36
  *     result = []
  *     for i in range(len(Y)):
  *         y = Y.values[i]             # <<<<<<<<<<<<<<
@@ -2438,7 +2438,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
     __Pyx_XDECREF_SET(__pyx_v_y, __pyx_t_5);
     __pyx_t_5 = 0;
 
-    /* "_C/_functional.pyx":37
+    /* "torchqtm/_C/_functional.pyx":37
  *     for i in range(len(Y)):
  *         y = Y.values[i]
  *         X = np.concatenate([x.values[i].reshape(-1, 1) for x in others], axis=1)             # <<<<<<<<<<<<<<
@@ -2532,7 +2532,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
     __Pyx_XDECREF_SET(__pyx_v_X, __pyx_t_10);
     __pyx_t_10 = 0;
 
-    /* "_C/_functional.pyx":38
+    /* "torchqtm/_C/_functional.pyx":38
  *         y = Y.values[i]
  *         X = np.concatenate([x.values[i].reshape(-1, 1) for x in others], axis=1)
  *         model = LinearRegression()             # <<<<<<<<<<<<<<
@@ -2559,7 +2559,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
     __Pyx_XDECREF_SET(__pyx_v_model, __pyx_t_10);
     __pyx_t_10 = 0;
 
-    /* "_C/_functional.pyx":39
+    /* "torchqtm/_C/_functional.pyx":39
  *         X = np.concatenate([x.values[i].reshape(-1, 1) for x in others], axis=1)
  *         model = LinearRegression()
  *         model.fit(X, y)             # <<<<<<<<<<<<<<
@@ -2615,7 +2615,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
 
-    /* "_C/_functional.pyx":40
+    /* "torchqtm/_C/_functional.pyx":40
  *         model = LinearRegression()
  *         model.fit(X, y)
  *         y_pred = model.predict(X)             # <<<<<<<<<<<<<<
@@ -2642,7 +2642,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
     __Pyx_XDECREF_SET(__pyx_v_y_pred, __pyx_t_10);
     __pyx_t_10 = 0;
 
-    /* "_C/_functional.pyx":41
+    /* "torchqtm/_C/_functional.pyx":41
  *         model.fit(X, y)
  *         y_pred = model.predict(X)
  *         residuals = y - y_pred             # <<<<<<<<<<<<<<
@@ -2654,7 +2654,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
     __Pyx_XDECREF_SET(__pyx_v_residuals, __pyx_t_10);
     __pyx_t_10 = 0;
 
-    /* "_C/_functional.pyx":42
+    /* "torchqtm/_C/_functional.pyx":42
  *         y_pred = model.predict(X)
  *         residuals = y - y_pred
  *         result.append(residuals)             # <<<<<<<<<<<<<<
@@ -2664,7 +2664,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
     __pyx_t_12 = __Pyx_PyList_Append(__pyx_v_result, __pyx_v_residuals); if (unlikely(__pyx_t_12 == ((int)-1))) __PYX_ERR(0, 42, __pyx_L1_error)
   }
 
-  /* "_C/_functional.pyx":43
+  /* "torchqtm/_C/_functional.pyx":43
  *         residuals = y - y_pred
  *         result.append(residuals)
  *     return pd.DataFrame(np.array(result), index=Y.index, columns=Y.columns)             # <<<<<<<<<<<<<<
@@ -2721,7 +2721,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "_C/_functional.pyx":33
+  /* "torchqtm/_C/_functional.pyx":33
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def _regression_neuts(Y, others):             # <<<<<<<<<<<<<<
@@ -2736,7 +2736,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_AddTraceback("_C._functional._regression_neuts", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("torchqtm._C._functional._regression_neuts", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_result);
@@ -2751,7 +2751,7 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
   return __pyx_r;
 }
 
-/* "_C/_functional.pyx":48
+/* "torchqtm/_C/_functional.pyx":48
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def regression_neut(Y, others):             # <<<<<<<<<<<<<<
@@ -2760,9 +2760,9 @@ static PyObject *__pyx_pf_2_C_11_functional_2_regression_neuts(CYTHON_UNUSED PyO
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_2_C_11_functional_5regression_neut(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_2_C_11_functional_5regression_neut = {"regression_neut", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_2_C_11_functional_5regression_neut, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_2_C_11_functional_5regression_neut(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8torchqtm_2_C_11_functional_5regression_neut(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8torchqtm_2_C_11_functional_5regression_neut = {"regression_neut", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8torchqtm_2_C_11_functional_5regression_neut, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8torchqtm_2_C_11_functional_5regression_neut(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_Y = 0;
   PyObject *__pyx_v_others = 0;
   int __pyx_lineno = 0;
@@ -2813,18 +2813,18 @@ static PyObject *__pyx_pw_2_C_11_functional_5regression_neut(PyObject *__pyx_sel
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("regression_neut", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 48, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("_C._functional.regression_neut", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("torchqtm._C._functional.regression_neut", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_2_C_11_functional_4regression_neut(__pyx_self, __pyx_v_Y, __pyx_v_others);
+  __pyx_r = __pyx_pf_8torchqtm_2_C_11_functional_4regression_neut(__pyx_self, __pyx_v_Y, __pyx_v_others);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_others) {
+static PyObject *__pyx_pf_8torchqtm_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_Y, PyObject *__pyx_v_others) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2839,7 +2839,7 @@ static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("regression_neut", 0);
 
-  /* "_C/_functional.pyx":49
+  /* "torchqtm/_C/_functional.pyx":49
  * @cython.boundscheck(False)
  * def regression_neut(Y, others):
  *     assert isinstance(Y, pd.DataFrame)             # <<<<<<<<<<<<<<
@@ -2862,7 +2862,7 @@ static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObj
   }
   #endif
 
-  /* "_C/_functional.pyx":50
+  /* "torchqtm/_C/_functional.pyx":50
  * def regression_neut(Y, others):
  *     assert isinstance(Y, pd.DataFrame)
  *     if not isinstance(others, list):             # <<<<<<<<<<<<<<
@@ -2873,7 +2873,7 @@ static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObj
   __pyx_t_4 = ((!(__pyx_t_3 != 0)) != 0);
   if (__pyx_t_4) {
 
-    /* "_C/_functional.pyx":51
+    /* "torchqtm/_C/_functional.pyx":51
  *     assert isinstance(Y, pd.DataFrame)
  *     if not isinstance(others, list):
  *         return _regression_neut(Y, others)             # <<<<<<<<<<<<<<
@@ -2932,7 +2932,7 @@ static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObj
     __pyx_t_2 = 0;
     goto __pyx_L0;
 
-    /* "_C/_functional.pyx":50
+    /* "torchqtm/_C/_functional.pyx":50
  * def regression_neut(Y, others):
  *     assert isinstance(Y, pd.DataFrame)
  *     if not isinstance(others, list):             # <<<<<<<<<<<<<<
@@ -2941,7 +2941,7 @@ static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObj
  */
   }
 
-  /* "_C/_functional.pyx":53
+  /* "torchqtm/_C/_functional.pyx":53
  *         return _regression_neut(Y, others)
  *     else:
  *         if __OP_MODE__ == "STABLE":             # <<<<<<<<<<<<<<
@@ -2955,7 +2955,7 @@ static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObj
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (__pyx_t_4) {
 
-      /* "_C/_functional.pyx":54
+      /* "torchqtm/_C/_functional.pyx":54
  *     else:
  *         if __OP_MODE__ == "STABLE":
  *             return _regression_neuts(Y, others)             # <<<<<<<<<<<<<<
@@ -3014,7 +3014,7 @@ static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObj
       __pyx_t_2 = 0;
       goto __pyx_L0;
 
-      /* "_C/_functional.pyx":53
+      /* "torchqtm/_C/_functional.pyx":53
  *         return _regression_neut(Y, others)
  *     else:
  *         if __OP_MODE__ == "STABLE":             # <<<<<<<<<<<<<<
@@ -3023,7 +3023,7 @@ static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObj
  */
     }
 
-    /* "_C/_functional.pyx":56
+    /* "torchqtm/_C/_functional.pyx":56
  *             return _regression_neuts(Y, others)
  *         else:
  *             pass             # <<<<<<<<<<<<<<
@@ -3034,7 +3034,7 @@ static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObj
     }
   }
 
-  /* "_C/_functional.pyx":48
+  /* "torchqtm/_C/_functional.pyx":48
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def regression_neut(Y, others):             # <<<<<<<<<<<<<<
@@ -3050,7 +3050,7 @@ static PyObject *__pyx_pf_2_C_11_functional_4regression_neut(CYTHON_UNUSED PyObj
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_AddTraceback("_C._functional.regression_neut", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("torchqtm._C._functional.regression_neut", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -4121,8 +4121,6 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_s_C__functional, __pyx_k_C__functional, sizeof(__pyx_k_C__functional), 0, 0, 1, 1},
-  {&__pyx_kp_s_C__functional_pyx, __pyx_k_C__functional_pyx, sizeof(__pyx_k_C__functional_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_DataFrame, __pyx_k_DataFrame, sizeof(__pyx_k_DataFrame), 0, 0, 1, 1},
   {&__pyx_n_s_ImportError, __pyx_k_ImportError, sizeof(__pyx_k_ImportError), 0, 0, 1, 1},
   {&__pyx_n_s_LinearRegression, __pyx_k_LinearRegression, sizeof(__pyx_k_LinearRegression), 0, 0, 1, 1},
@@ -4152,7 +4150,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_pandas, __pyx_k_pandas, sizeof(__pyx_k_pandas), 0, 0, 1, 1},
   {&__pyx_n_s_pd, __pyx_k_pd, sizeof(__pyx_k_pd), 0, 0, 1, 1},
   {&__pyx_n_s_predict, __pyx_k_predict, sizeof(__pyx_k_predict), 0, 0, 1, 1},
-  {&__pyx_n_s_quant_config, __pyx_k_quant_config, sizeof(__pyx_k_quant_config), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_regression_neut, __pyx_k_regression_neut, sizeof(__pyx_k_regression_neut), 0, 0, 1, 1},
   {&__pyx_n_s_regression_neut_2, __pyx_k_regression_neut_2, sizeof(__pyx_k_regression_neut_2), 0, 0, 1, 1},
@@ -4162,6 +4159,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_result, __pyx_k_result, sizeof(__pyx_k_result), 0, 0, 1, 1},
   {&__pyx_n_s_sklearn_linear_model, __pyx_k_sklearn_linear_model, sizeof(__pyx_k_sklearn_linear_model), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
+  {&__pyx_n_s_torchqtm__C__functional, __pyx_k_torchqtm__C__functional, sizeof(__pyx_k_torchqtm__C__functional), 0, 0, 1, 1},
+  {&__pyx_kp_s_torchqtm__C__functional_pyx, __pyx_k_torchqtm__C__functional_pyx, sizeof(__pyx_k_torchqtm__C__functional_pyx), 0, 0, 1, 0},
+  {&__pyx_n_s_torchqtm_config, __pyx_k_torchqtm_config, sizeof(__pyx_k_torchqtm_config), 0, 0, 1, 1},
   {&__pyx_n_s_values, __pyx_k_values, sizeof(__pyx_k_values), 0, 0, 1, 1},
   {&__pyx_n_s_x, __pyx_k_x, sizeof(__pyx_k_x), 0, 0, 1, 1},
   {&__pyx_n_s_x_demean, __pyx_k_x_demean, sizeof(__pyx_k_x_demean), 0, 0, 1, 1},
@@ -4182,7 +4182,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "_C/_functional.pyx":37
+  /* "torchqtm/_C/_functional.pyx":37
  *     for i in range(len(Y)):
  *         y = Y.values[i]
  *         X = np.concatenate([x.values[i].reshape(-1, 1) for x in others], axis=1)             # <<<<<<<<<<<<<<
@@ -4215,7 +4215,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
-  /* "_C/_functional.pyx":19
+  /* "torchqtm/_C/_functional.pyx":19
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def _regression_neut(Y, X):             # <<<<<<<<<<<<<<
@@ -4225,9 +4225,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__4 = PyTuple_Pack(9, __pyx_n_s_Y, __pyx_n_s_X, __pyx_n_s_result, __pyx_n_s_i, __pyx_n_s_y, __pyx_n_s_y_demean, __pyx_n_s_x, __pyx_n_s_x_demean, __pyx_n_s_residuals); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
-  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(2, 0, 9, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_C__functional_pyx, __pyx_n_s_regression_neut, 19, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __pyx_codeobj__5 = (PyObject*)__Pyx_PyCode_New(2, 0, 9, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__4, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_torchqtm__C__functional_pyx, __pyx_n_s_regression_neut, 19, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__5)) __PYX_ERR(0, 19, __pyx_L1_error)
 
-  /* "_C/_functional.pyx":33
+  /* "torchqtm/_C/_functional.pyx":33
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def _regression_neuts(Y, others):             # <<<<<<<<<<<<<<
@@ -4237,9 +4237,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__6 = PyTuple_Pack(10, __pyx_n_s_Y, __pyx_n_s_others, __pyx_n_s_result, __pyx_n_s_i, __pyx_n_s_y, __pyx_n_s_X, __pyx_n_s_model, __pyx_n_s_y_pred, __pyx_n_s_residuals, __pyx_n_s_x); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
-  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(2, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_C__functional_pyx, __pyx_n_s_regression_neuts, 33, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_codeobj__7 = (PyObject*)__Pyx_PyCode_New(2, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__6, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_torchqtm__C__functional_pyx, __pyx_n_s_regression_neuts, 33, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__7)) __PYX_ERR(0, 33, __pyx_L1_error)
 
-  /* "_C/_functional.pyx":48
+  /* "torchqtm/_C/_functional.pyx":48
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def regression_neut(Y, others):             # <<<<<<<<<<<<<<
@@ -4249,7 +4249,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_tuple__8 = PyTuple_Pack(2, __pyx_n_s_Y, __pyx_n_s_others); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
-  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_C__functional_pyx, __pyx_n_s_regression_neut_2, 48, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_torchqtm__C__functional_pyx, __pyx_n_s_regression_neut_2, 48, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -4570,14 +4570,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main__C___functional) {
+  if (__pyx_module_is_main_torchqtm___C___functional) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "_C._functional")) {
-      if (unlikely(PyDict_SetItemString(modules, "_C._functional", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "torchqtm._C._functional")) {
+      if (unlikely(PyDict_SetItemString(modules, "torchqtm._C._functional", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -4598,7 +4598,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "_C/_functional.pyx":4
+  /* "torchqtm/_C/_functional.pyx":4
  * # https://cython.readthedocs.io/en/stable/src/userguide/numpy_tutorial.html
  * cimport numpy
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -4610,11 +4610,11 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "_C/_functional.pyx":6
+  /* "torchqtm/_C/_functional.pyx":6
  * import numpy as np
  * cimport cython
  * import pandas as pd             # <<<<<<<<<<<<<<
- * from quant.config import __OP_MODE__
+ * from torchqtm.config import __OP_MODE__
  * from sklearn.linear_model import LinearRegression
  */
   __pyx_t_1 = __Pyx_Import(__pyx_n_s_pandas, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 6, __pyx_L1_error)
@@ -4622,10 +4622,10 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_pd, __pyx_t_1) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "_C/_functional.pyx":7
+  /* "torchqtm/_C/_functional.pyx":7
  * cimport cython
  * import pandas as pd
- * from quant.config import __OP_MODE__             # <<<<<<<<<<<<<<
+ * from torchqtm.config import __OP_MODE__             # <<<<<<<<<<<<<<
  * from sklearn.linear_model import LinearRegression
  * 
  */
@@ -4634,7 +4634,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_INCREF(__pyx_n_s_OP_MODE);
   __Pyx_GIVEREF(__pyx_n_s_OP_MODE);
   PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_OP_MODE);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_quant_config, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_torchqtm_config, __pyx_t_1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_OP_MODE); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 7, __pyx_L1_error)
@@ -4643,9 +4643,9 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "_C/_functional.pyx":8
+  /* "torchqtm/_C/_functional.pyx":8
  * import pandas as pd
- * from quant.config import __OP_MODE__
+ * from torchqtm.config import __OP_MODE__
  * from sklearn.linear_model import LinearRegression             # <<<<<<<<<<<<<<
  * 
  * ctypedef fused ArrayType:
@@ -4664,43 +4664,43 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "_C/_functional.pyx":19
+  /* "torchqtm/_C/_functional.pyx":19
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def _regression_neut(Y, X):             # <<<<<<<<<<<<<<
  *     result = []
  *     for i in range(len(Y)):
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2_C_11_functional_1_regression_neut, NULL, __pyx_n_s_C__functional); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 19, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8torchqtm_2_C_11_functional_1_regression_neut, NULL, __pyx_n_s_torchqtm__C__functional); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_regression_neut, __pyx_t_1) < 0) __PYX_ERR(0, 19, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "_C/_functional.pyx":33
+  /* "torchqtm/_C/_functional.pyx":33
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def _regression_neuts(Y, others):             # <<<<<<<<<<<<<<
  *     result = []
  *     for i in range(len(Y)):
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2_C_11_functional_3_regression_neuts, NULL, __pyx_n_s_C__functional); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8torchqtm_2_C_11_functional_3_regression_neuts, NULL, __pyx_n_s_torchqtm__C__functional); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_regression_neuts, __pyx_t_1) < 0) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "_C/_functional.pyx":48
+  /* "torchqtm/_C/_functional.pyx":48
  * @cython.wraparound(False)
  * @cython.boundscheck(False)
  * def regression_neut(Y, others):             # <<<<<<<<<<<<<<
  *     assert isinstance(Y, pd.DataFrame)
  *     if not isinstance(others, list):
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_2_C_11_functional_5regression_neut, NULL, __pyx_n_s_C__functional); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8torchqtm_2_C_11_functional_5regression_neut, NULL, __pyx_n_s_torchqtm__C__functional); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_regression_neut_2, __pyx_t_1) < 0) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "_C/_functional.pyx":1
+  /* "torchqtm/_C/_functional.pyx":1
  * # cython: language_level=3             # <<<<<<<<<<<<<<
  * # https://cython.readthedocs.io/en/stable/src/userguide/numpy_tutorial.html
  * cimport numpy
@@ -4726,11 +4726,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init _C._functional", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init torchqtm._C._functional", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init _C._functional");
+    PyErr_SetString(PyExc_ImportError, "init torchqtm._C._functional");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

@@ -293,7 +293,7 @@ def _group(x, group, agg_func):
         df = pd.DataFrame({'x': x_copy, 'group': group_copy})
         grouped_df = df.groupby('group').agg(agg_func)
 
-        # Mapping aggregated values back to original data
+        # Mapping aggregated values back to original rawdata
         df['rlt'] = df['group'].map(grouped_df['x'])
 
         # Restoring nan values

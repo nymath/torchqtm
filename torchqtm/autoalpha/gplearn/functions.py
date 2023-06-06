@@ -12,7 +12,7 @@ own custom functions.
 import numpy as np
 import pandas as pd
 from joblib import wrap_non_picklable_objects
-import quant.op.functional as F
+import torchqtm.op.functional as F
 import functools
 
 __all__ = ['make_function']

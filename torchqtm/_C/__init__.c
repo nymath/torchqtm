@@ -3,12 +3,12 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
-        "name": "_C.__init__",
+        "name": "torchqtm._C.__init__",
         "sources": [
-            "_C/__init__.pyx"
+            "torchqtm/_C/__init__.pyx"
         ]
     },
-    "module_name": "_C.__init__"
+    "module_name": "torchqtm._C.__init__"
 }
 END: Cython Metadata */
 
@@ -750,8 +750,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE___C____init__
-#define __PYX_HAVE_API___C____init__
+#define __PYX_HAVE__torchqtm___C____init__
+#define __PYX_HAVE_API__torchqtm___C____init__
 /* Early includes */
 #ifdef _OPENMP
 #include <omp.h>
@@ -962,7 +962,7 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "_C/__init__.pyx",
+  "torchqtm/_C/__init__.pyx",
 };
 
 /*--- Type declarations ---*/
@@ -1167,22 +1167,22 @@ static int __Pyx_check_binary_version(void);
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
-/* Module declarations from '_C.__init__' */
-#define __Pyx_MODULE_NAME "_C.__init__"
-extern int __pyx_module_is_main__C____init__;
-int __pyx_module_is_main__C____init__ = 0;
+/* Module declarations from 'torchqtm._C.__init__' */
+#define __Pyx_MODULE_NAME "torchqtm._C.__init__"
+extern int __pyx_module_is_main_torchqtm___C____init__;
+int __pyx_module_is_main_torchqtm___C____init__ = 0;
 
-/* Implementation of '_C.__init__' */
+/* Implementation of 'torchqtm._C.__init__' */
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
-static const char __pyx_k_C___init[] = "_C.__init__";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static PyObject *__pyx_kp_u_C___init;
+static const char __pyx_k_torchqtm__C___init[] = "torchqtm._C.__init__";
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_test;
+static PyObject *__pyx_kp_u_torchqtm__C___init;
 /* Late includes */
 
 static PyMethodDef __pyx_methods[] = {
@@ -1231,11 +1231,11 @@ static struct PyModuleDef __pyx_moduledef = {
 #endif
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_kp_u_C___init, __pyx_k_C___init, sizeof(__pyx_k_C___init), 0, 1, 0, 0},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
+  {&__pyx_kp_u_torchqtm__C___init, __pyx_k_torchqtm__C___init, sizeof(__pyx_k_torchqtm__C___init), 0, 1, 0, 0},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
@@ -1492,17 +1492,17 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main__C____init__) {
+  if (__pyx_module_is_main_torchqtm___C____init__) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   if (!CYTHON_PEP489_MULTI_PHASE_INIT) {
-    if (unlikely(__Pyx_SetPackagePathFromImportLib(__pyx_kp_u_C___init) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (unlikely(__Pyx_SetPackagePathFromImportLib(__pyx_kp_u_torchqtm__C___init) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "_C")) {
-      if (unlikely(PyDict_SetItemString(modules, "_C", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "torchqtm._C")) {
+      if (unlikely(PyDict_SetItemString(modules, "torchqtm._C", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -1523,7 +1523,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "_C/__init__.pyx":1
+  /* "torchqtm/_C/__init__.pyx":1
              # <<<<<<<<<<<<<<
  */
   __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -1538,11 +1538,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init _C.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init torchqtm._C.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init _C.__init__");
+    PyErr_SetString(PyExc_ImportError, "init torchqtm._C.__init__");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

@@ -5,6 +5,7 @@
     <orderEntry type="jdk" jdkName="$USER_HOME$/opt/anaconda3" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="cython" />
+    <orderEntry type="module" module-name="amt_vol" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />

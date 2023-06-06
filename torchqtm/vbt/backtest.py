@@ -1,13 +1,12 @@
 from abc import ABCMeta, abstractmethod
-from quant.vbt.universe import Universe
+from torchqtm.vbt.universe import Universe
 import pandas as pd
 import numpy as np
-from multiprocessing import Pool, cpu_count
-from typing import Iterable, Optional, Union, Dict, Hashable, Sized
-from quant.vbt.utils import datetime
+from multiprocessing import Pool
+from typing import Dict, Hashable
 
 
-# TODO: convert all the data type to the QuantDataFrame
+# TODO: convert all the rawdata type to the QuantDataFrame
 class BackTestEnv(object):
     """
     # We can create two different BackTestEnvs
@@ -159,7 +158,6 @@ class QuickBackTesting01(BaseTest):
                 # weights.append(weight)
                 ret = x['_FutureReturn']
                 return (weight * ret).sum()
-            pd.DataFrame.groupby
             group_return = temp_data.groupby('group').apply(temp)
             returns.append(group_return)
         returns.append(pd.Series(np.repeat(0, self.n_groups), index=group_return.index))

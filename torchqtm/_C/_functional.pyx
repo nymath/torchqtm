@@ -4,7 +4,7 @@ cimport numpy
 import numpy as np
 cimport cython
 import pandas as pd
-from quant.config import __OP_MODE__
+from torchqtm.config import __OP_MODE__
 from sklearn.linear_model import LinearRegression
 
 ctypedef fused ArrayType:

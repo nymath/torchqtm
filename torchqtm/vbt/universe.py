@@ -1,8 +1,8 @@
 import pandas as pd
 import tushare as ts
 import numpy as np
-from quant.config import __TS_API__
-from quant.vbt.utils import relativedelta, datetime
+from torchqtm.config import __TS_API__
+from torchqtm.utils import relativedelta, datetime
 pro = ts.pro_api(__TS_API__)
 from typing import Iterable, Union, List
 from abc import abstractmethod, ABCMeta

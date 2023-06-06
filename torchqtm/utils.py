@@ -7,7 +7,7 @@ import time
 class Timer(object):
     """
     >>> import numpy as np
-    >>> with Timer("test np.mean") as f:
+    >>> with Timer("mytest.ipynb np.mean") as f:
     ...     x = np.random.normal(0, 1, (1000000, 100))
     ...     np.mean(x, axis=1)
     """

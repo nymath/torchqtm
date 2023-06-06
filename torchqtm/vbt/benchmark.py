@@ -1,7 +1,7 @@
 import tushare as ts
 import pandas as pd
 import numpy as np
-from quant.config import __TS_API__
+from torchqtm.config import __TS_API__
 pro = ts.pro_api(__TS_API__)
 
 

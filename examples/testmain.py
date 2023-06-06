@@ -5,19 +5,14 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 sys.path.append(BASE_DIR)
 sys.path.append(ROOT_DIR)
 
-from quant.vbt.rebalance import Calendar, Weekly
-from quant.visualization.visualization import ColorGenerator
-from quant.vbt.universe import StaticUniverse, IndexComponents
-from quant.vbt.benchmark import BenchMark
-from quant.vbt.backtest import BackTestEnv, QuickBackTesting01
-import quant.op as op
-import quant.op.functional as F
-import numpy as np
-import matplotlib.pyplot as plt
-import time
-from quant.vbt.utils import Timer
+from torchqtm.vbt.rebalance import Weekly
+from torchqtm.vbt.universe import StaticUniverse, IndexComponents
+from torchqtm.vbt.benchmark import BenchMark
+from torchqtm.vbt.backtest import BackTestEnv
+import torchqtm.op as op
+import torchqtm.op.functional as F
+from torchqtm.utils import Timer
 import pickle
-import pyximport
 import _C._functional as CF
 
 start = '20170101'
@@ -33,10 +28,10 @@ class NeutralizePE(op.Fundamental):
 
     def operate(self, factor):
         self.data = F.divide(1, factor)
-        # self.data = F.winsorize(self.data, 'std', 4)
-        # self.data = F.normalize(self.data)
-        # self.data = F.group_neutralize(self.data, self.env.Sector)
-        # self.data = F.regression_neut(self.data, self.env.MktVal)
+        # self.rawdata = F.winsorize(self.rawdata, 'std', 4)
+        # self.rawdata = F.normalize(self.rawdata)
+        # self.rawdata = F.group_neutralize(self.rawdata, self.env.Sector)
+        # self.rawdata = F.regression_neut(self.rawdata, self.env.MktVal)
         with Timer():
             F.regression_neut(self.data, self.env.Sector)
         with Timer():
@@ -45,7 +40,7 @@ class NeutralizePE(op.Fundamental):
 
 
 if __name__ == '__main__':
-    # Load the data
+    # Load the rawdata
     with open("examples/largedata/Stocks.pkl", "rb") as f:
         dfs = pickle.load(f)
     # Create the backtest environment
@@ -59,11 +54,11 @@ if __name__ == '__main__':
     # bt = QuickBackTesting01(env=btEnv,
     #                         universe=universe,
     #                         n_groups=10)
-    # bt.run_backtest(alphas.data)
+    # bt.run_backtest(alphas.rawdata)
     #
     # #
-    # # from quant.vbt.stats import ic
-    # # icSeries = ic(alphas.data, BtEnv._FutureReturn, method='spearman')
+    # # from torchqtm.vbt.stats import ic
+    # # icSeries = ic(alphas.rawdata, BtEnv._FutureReturn, method='spearman')
     #
     # # plot the result
     # fig = plt.figure(figsize=(20, 12))
@@ -72,7 +67,7 @@ if __name__ == '__main__':
     # colors = color_generator()
     # for i in range(10):
     #     ax.plot((1+bt.returns.iloc[:, i]).cumprod(), label=f'group_{i+1}', color=colors[i])
-    # # temp = benchmark.data.loc[rebalance.rebalance_dates]['Close'].pct_change()
+    # # temp = benchmark.rawdata.loc[rebalance.rebalance_dates]['Close'].pct_change()
     # # temp.fillna(0, inplace=True)
     # # ax.plot(temp.cumsum(), label='benchmark', color='blue')
     # # ax.plot((bt.returns['group_10']).cumsum()-temp.cumsum(), label='excess', color='orange')

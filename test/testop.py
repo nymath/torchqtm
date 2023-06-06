@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from quant.op.functional import *
+from torchqtm.op.functional import *
 import time
 X_n = np.random.normal(0, 1, (252, 50))
 X_n[0, [1, 3, 5]] = np.nan
