@@ -5,13 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="66349cf0-fbe3-4040-b5c9-360c62ed966e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/examples/test0.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/test0.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/testRolling.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/testFunctional.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/testFunctional.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_rolling.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/_C/__init__.cpython-39-darwin.so" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/_C/__init__.cpython-39-darwin.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torchqtm/_C/_functional.c" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/_C/_functional.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/_C/_functional.cpython-39-darwin.so" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/_C/_functional.cpython-39-darwin.so" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torchqtm/_C/_functional.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/_C/_functional.pyx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torchqtm/core/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/core/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/torchqtm/_C/_rolling.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/_C/_rolling.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/torchqtm/_C/_rolling.cpython-39-darwin.so" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/_C/_rolling.cpython-39-darwin.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/torchqtm/_C/_rolling.pyx" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/_C/_rolling.pyx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/torchqtm/core/window/rolling.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/core/window/rolling.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/op/functional.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/op/functional.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,12 +56,12 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="main" />
-                    <option name="lastUsedInstant" value="1686206737" />
+                    <option name="branchName" value="dev" />
+                    <option name="lastUsedInstant" value="1686218514" />
                   </RecentBranch>
                   <RecentBranch>
-                    <option name="branchName" value="dev" />
-                    <option name="lastUsedInstant" value="1686012574" />
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1686206737" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="stable" />
@@ -89,22 +93,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "MATLAB_INTERPRETER": "/Applications/MATLAB_R2023a.app/bin/matlab",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/nymath/pymodules/nytrader/torchquantum/torchqtm/_C",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "leetcode.id",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;MATLAB_INTERPRETER&quot;: &quot;/Applications/MATLAB_R2023a.app/bin/matlab&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/nymath/pymodules/nytrader/torchquantum/torchqtm/_C&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;leetcode.id&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/torchqtm/_C" />
@@ -173,28 +177,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="torchquantum" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/examples" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/examples/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="test0" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="torchquantum" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -239,13 +221,35 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="testRolling" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="torchquantum" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/testRolling.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.testFunctional" />
+        <item itemvalue="Python.testRolling" />
         <item itemvalue="Python.test0" />
         <item itemvalue="Python.alphas" />
         <item itemvalue="Python.__init__" />
-        <item itemvalue="Python.main" />
       </list>
     </recent_temporary>
   </component>
@@ -265,7 +269,7 @@
       <workItem from="1685363212410" duration="598000" />
       <workItem from="1685527541383" duration="39866000" />
       <workItem from="1686036751162" duration="2623000" />
-      <workItem from="1686039680602" duration="53328000" />
+      <workItem from="1686039680602" duration="68860000" />
     </task>
     <servers />
   </component>
@@ -302,14 +306,24 @@
           <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$USER_HOME$/opt/anaconda3/lib/python3.9/site-packages/pandas/core/window/rolling.py</url>
-          <line>1385</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test/testFunctional.py</url>
           <line>8</line>
           <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/opt/anaconda3/lib/python3.9/site-packages/pandas/core/groupby/groupby.py</url>
+          <line>1362</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/opt/anaconda3/lib/python3.9/site-packages/pandas/core/frame.py</url>
+          <line>9262</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$USER_HOME$/opt/anaconda3/lib/python3.9/site-packages/pandas/core/groupby/groupby.py</url>
+          <line>1529</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -334,7 +348,8 @@
     <SUITE FILE_PATH="coverage/torchquantum$functional.coverage" NAME="functional Coverage Results" MODIFIED="1684608285579" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/quant/op" />
     <SUITE FILE_PATH="coverage/torchquantum$backtest.coverage" NAME="backtest Coverage Results" MODIFIED="1685021407960" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/quant/vbt" />
     <SUITE FILE_PATH="coverage/torchquantum$main.coverage" NAME="main Coverage Results" MODIFIED="1686156842743" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples" />
-    <SUITE FILE_PATH="coverage/torchquantum$testFunctional.coverage" NAME="testFunctional Coverage Results" MODIFIED="1686218052958" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
+    <SUITE FILE_PATH="coverage/torchquantum$testRolling.coverage" NAME="testRolling Coverage Results" MODIFIED="1686238749738" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
+    <SUITE FILE_PATH="coverage/torchquantum$testFunctional.coverage" NAME="testFunctional Coverage Results" MODIFIED="1686238999820" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/torchquantum$_func_pyx.coverage" NAME="_func.pyx Coverage Results" MODIFIED="1685207324844" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/quant/op" />
     <SUITE FILE_PATH="coverage/torchquantum$gplearn.coverage" NAME="gplearn Coverage Results" MODIFIED="1684684026329" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/example" />
   </component>

@@ -5,12 +5,17 @@ from sklearn.linear_model import LinearRegression
 from ..config import __OP_MODE__
 from typing import overload
 from .algos import rank_1d, rank_2d
+from scipy.stats import norm
 import talib
+
+
 # Arithmetic Operators
 
 
 @overload
 def abs(x: pd.DataFrame) -> pd.DataFrame: ...
+
+
 @overload
 def abs(x: np.ndarray) -> np.ndarray: ...
 
@@ -33,14 +38,53 @@ def floor(X):
 
 
 def divide(X, Y):
-    return X / Y
+    return np.divide(X, Y)
 
 
-def exp(X):
-    if isinstance(X, np.ndarray):
-        return np.exp(X)
-    elif isinstance(X, pd.DataFrame):
-        return X.apply(np.exp, axis=1)
+# TODO: Revise it
+
+def add(X, Y):
+    return np.add(X, Y)
+
+
+def sub(X, Y):
+    return np.subtract(X, Y)
+
+
+def mul(X, Y):
+    np.multiply(X, Y)
+
+
+def pow(X, p):
+    return np.power(X, p)
+
+
+def less(X, Y):
+    return np.less(X, Y)
+
+
+def more(X, Y):
+    return np.greater(X, Y)
+
+
+def leq(X, Y):
+    return np.less_equal(X, Y)
+
+
+def geq(X, Y):
+    return np.greater_equal(X, Y)
+
+
+def eq(X, Y):
+    return np.equal(X, Y)
+
+
+
+# def exp(X):
+#     if isinstance(X, np.ndarray):
+#         return np.exp(X)
+#     elif isinstance(X, pd.DataFrame):
+#         return X.apply(np.exp, axis=1)
 
 
 def inverse(X):
@@ -125,6 +169,9 @@ from torchqtm.core.window.rolling import (
     roll_apply,
     roll_apply_max,
     roll_apply_min,
+    roll_apply_mean,
+    roll_apply_sum,
+    roll_apply_rank,
 )
 
 
@@ -136,42 +183,51 @@ def ts_apply(x, d, func):
 
 
 def ts_mean(x, d):
-    if len(x.shape) == 1:
-        if isinstance(x, pd.DataFrame) or isinstance(x, pd.Series):
-            return x.rolling(d).mean()
-    elif isinstance(x, np.ndarray):
-        return pd.DataFrame(x).rolling(d).mean().values
-    else:
-        # talib.SMA(x, d)
-        raise TypeError("Input should be a pandas DataFrame, Series or a numpy ndarray.")
+    def aux_fun(array, window_size):
+        return roll_apply_mean(array, window_size)
+
+    if isinstance(x, np.ndarray):
+        return aux_fun(x, d)
+    elif isinstance(x, pd.Series):
+        return pd.Series(aux_fun(x.values, d), index=x.index, name=x.name)
+    elif isinstance(x, pd.DataFrame):
+        return pd.DataFrame(aux_fun(x.values, d), index=x.index, columns=x.columns)
 
 
 def ts_max(x, d):
-    if len(x.shape) == 1:
-        if isinstance(x, pd.Series):
-            return x.rolling(d).max()
-        elif isinstance(x, np.ndarray):
-            return roll_apply_max(x, d)
-    else:
-        if isinstance(x, pd.DataFrame):
-            rlt = roll_apply_max(x, d)
-            return pd.DataFrame(rlt, index=x.index, columns=x.columns)
-        elif isinstance(x, np.ndarray):
-            return roll_apply_max(x, d)
+    def aux_fun(array, window_size):
+        return roll_apply_max(array, window_size)
+
+    if isinstance(x, np.ndarray):
+        return aux_fun(x, d)
+    elif isinstance(x, pd.Series):
+        return pd.Series(aux_fun(x.values, d), index=x.index, name=x.name)
+    elif isinstance(x, pd.DataFrame):
+        return pd.DataFrame(aux_fun(x.values, d), index=x.index, columns=x.columns)
 
 
 def ts_min(x, d):
-    if len(x.shape) == 1:
-        if isinstance(x, pd.Series):
-            return x.rolling(d).min()
-        elif isinstance(x, np.ndarray):
-            return roll_apply_min(x, d)
-    else:
-        if isinstance(x, pd.DataFrame):
-            rlt = roll_apply_min(x, d)
-            return pd.DataFrame(rlt, index=x.index, columns=x.columns)
-        elif isinstance(x, np.ndarray):
-            return roll_apply_min(x, d)
+    def aux_fun(array, window_size):
+        return roll_apply_min(array, window_size)
+
+    if isinstance(x, np.ndarray):
+        return aux_fun(x, d)
+    elif isinstance(x, pd.Series):
+        return pd.Series(aux_fun(x.values, d), index=x.index, name=x.name)
+    elif isinstance(x, pd.DataFrame):
+        return pd.DataFrame(aux_fun(x.values, d), index=x.index, columns=x.columns)
+
+
+def ts_sum(x, d):
+    def aux_func(array, window_size):
+        return roll_apply_sum(array, window_size, method=mode)
+
+    if isinstance(x, np.ndarray):
+        return aux_func(x, d)
+    elif isinstance(x, pd.Series):
+        return pd.Series(aux_func(x.values, d), index=x.index, name=x.name)
+    elif isinstance(x, pd.DataFrame):
+        return pd.DataFrame(aux_func(x.values, d), index=x.index, columns=x.columns)
 
 
 def ts_delay(x, d):
@@ -181,6 +237,247 @@ def ts_delay(x, d):
         return pd.DataFrame(x).shift(d).values
     else:
         raise TypeError("Input should be a pandas DataFrame, Series or a numpy ndarray.")
+
+
+def ts_delta(x, d):
+    return sub(x, ts_delay(x, d))
+
+
+def days_from_last_change(x, d):
+    pass
+
+
+def ts_weighted_delay(x, k=0.5):
+    pass
+
+
+def hump(x, hump=0.01):
+    pass
+
+
+def hump_decay(x, p=0):
+    pass
+
+
+def inst_tvr(x, d):
+    pass
+
+
+def jump_decay(x, d, sensitivity=0.5, force=0.1):
+    pass
+
+
+def kth_element(x, d, k):
+    pass
+
+
+def last_diff_value(x, d):
+    pass
+
+
+def ts_arg_min(x, d):
+    def aux_ts_arg_min(t):
+        return np.nanargmin(t[::-1], axis=0)
+
+    return ts_apply(x, d, aux_ts_arg_min)
+
+
+def ts_arg_max(x, d):
+    def aux_ts_arg_max(t):
+        return np.nanargmax(t[::-1], axis=0)
+
+    return ts_apply(x, d, aux_ts_arg_max)
+
+
+def ts_av_diff(x, d):
+    return sub(x, ts_mean(x, d))
+
+
+def ts_backfill(x, d, k=1, ignore="NAN"):
+    pass
+
+
+def ts_co_kurtosis(y, x, d):
+    pass
+
+
+def ts_corr(x, y, d):
+    pass
+
+
+def ts_co_skewness(y, x, d):
+    pass
+
+
+def ts_count_nans(x, d):
+    def aux_func(t):
+        return np.nansum(np.isnan(t), axis=0)
+
+    return ts_apply(x, d, aux_func)
+
+
+def ts_covariance(y, x, d):
+    pass
+
+
+def ts_decay_exp_window(x, d, factor):
+    pass
+
+
+def ts_decay_linear(x, d, dense=False):
+    pass
+
+
+def ts_std_dev(x, d):
+    def aux_func(t):
+        return np.nanstd(t, axis=0)
+
+    return ts_apply(x, d, aux_func)
+
+
+def ts_ir(x, d):
+    return divide(ts_mean(x, d), ts_std_dev(x, d))
+
+
+def ts_kurtosis(x, d):
+    pass
+
+
+def ts_max_diff(x, d):
+    return sub(x, ts_max(x, d))
+
+
+def ts_median(x, d):
+    pass
+
+
+def ts_min_diff(x, d):
+    return x - ts_min(x, d)
+
+
+def ts_min_max_cps(x, d, f=2):
+    pass
+
+
+def ts_min_max_diff(x, d, f=0.5):
+    pass
+
+
+def ts_moment(x, d, k=0):
+    def aux_func(t):
+        return np.nanmean(np.power(t, k), axis=0)
+
+    return ts_apply(x, d, aux_func)
+
+
+def ts_partial_corr(x, y, z, d):
+    pass
+
+
+def ts_percentage(x, d, percentage=0.5):
+    pass
+
+
+def ts_poly_regression(y, x, d, k=1):
+    pass
+
+
+def ts_product(x, d):
+    def aux_func(t):
+        return np.nanprod(x, axis=0)
+
+    return ts_apply(x, d, aux_func)
+
+
+def ts_rank(x, d, mode="auto"):
+    def aux_func(array, window_size):
+        return roll_apply_rank(array, window_size, method=mode)
+
+    if isinstance(x, np.ndarray):
+        return aux_func(x, d)
+    elif isinstance(x, pd.Series):
+        return pd.Series(aux_func(x.values, d), index=x.index, name=x.name)
+    elif isinstance(x, pd.DataFrame):
+        return pd.DataFrame(aux_func(x.values, d), index=x.index, columns=x.columns)
+
+
+def ts_regression(y, x, d, lag=0, rettype=0):
+    pass
+
+
+def ts_returns(x, d):
+    return (x - ts_delay(x, d)) / ts_delay(x, d)
+
+
+def ts_scale(x, d, constant=0):
+    return constant + divide(x - ts_min(x, d), ts_max(x, d) - ts_min(x, d))
+
+
+def ts_skewness(x, d):
+    pass
+
+
+# ts_step(1), step(1)
+
+
+def ts_theilsen(x, y, d):
+    pass
+
+
+def ts_triple_corr(x, y, z, d):
+    pass
+
+
+def ts_zscore(x, d):
+    return divide(x - ts_mean(x, d), ts_std_dev(x, d))
+
+
+def ts_entropy(x, d):
+    pass
+
+
+def ts_vector_neut(x, y, d):
+    pass
+
+
+def ts_vector_proj(x, y, d):
+    pass
+
+
+# ts_rank_gmean_amean_diff(input1, input2, input3,...,d)
+
+
+def _ts_quantile_uniform(x, d):
+    def aux_func(array, window_size):
+        return ts_rank(array, window_size) / window_size
+
+    if isinstance(x, np.ndarray):
+        return aux_func(x, d)
+    elif isinstance(x, pd.Series):
+        return pd.Series(aux_func(x.values, d), index=x.index, name=x.name)
+    elif isinstance(x, pd.DataFrame):
+        return pd.DataFrame(aux_func(x.values, d), index=x.index, columns=x.columns)
+
+
+def _ts_quantile_gaussian(x, d):
+    def aux_fun(array, window_size):
+        return norm.ppf(ts_rank(array, window_size) / window_size)
+
+    if isinstance(x, np.ndarray):
+        return aux_fun(x, d)
+    elif isinstance(x, pd.Series):
+        return pd.Series(aux_fun(x.values, d), index=x.index, name=x.name)
+    elif isinstance(x, pd.DataFrame):
+        return pd.DataFrame(aux_fun(x.values, d), index=x.index, columns=x.columns)
+
+
+def ts_quantile(x, d, driver="uniform"):
+    if driver == "uniform":
+        return _ts_quantile_uniform(x, d)
+    elif driver == "gaussian":
+        return _ts_quantile_gaussian(x, d)
+    else:
+        return ValueError
 
 
 # CrossSectionalOperators
@@ -194,6 +491,8 @@ def _cs_corr(X, Y):
 
 @overload
 def cs_corr(X: pd.DataFrame, Y: pd.DataFrame, method: str = "pearson") -> pd.Series: ...
+
+
 @overload
 def cs_corr(X: np.ndarray, Y: np.ndarray, method: str = "pearson") -> np.ndarray: ...
 
@@ -272,13 +571,16 @@ def winsorize(X, method='quantile', param=0.05):
         else:
             raise ValueError('method should be either "quantile" or "std"')
         series[:] = np.where(series < lower_bound, lower_bound,
-                                     np.where(series > upper_bound, upper_bound, series))
+                             np.where(series > upper_bound, upper_bound, series))
         return series
+
     return X.apply(winsorize_series, axis=1)
 
 
 @overload
 def normalize(X: pd.DataFrame, useStd: bool = True) -> pd.DataFrame: ...
+
+
 @overload
 def normalize(X: np.ndarray, useStd: bool = True) -> np.ndarray: ...
 
@@ -353,7 +655,7 @@ def _group(x, group, agg_func):
 
         return rlt
     """
-    if np.sum(np.isnan(x))+np.sum(np.isnan(group)):
+    if np.sum(np.isnan(x)) + np.sum(np.isnan(group)):
         nan_mask = np.isnan(x) | np.isnan(group)
 
         x_copy = np.where(nan_mask, 0, x)

@@ -16,7 +16,7 @@ install_requires = [
 
 def main():
     setup(
-        ext_modules=cythonize(extensions),
+        ext_modules=cythonize(extensions, language='c++'),
         include_dirs=[numpy.get_include()],
         name="torchqtm",
         version="0.0.3",
