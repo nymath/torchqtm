@@ -1,17 +1,9 @@
-import os
 import numpy as np
 from torchqtm.autoalpha.gplearn import fitness
-from torchqtm.vbt.rebalance import Calendar, Weekly
-from torchqtm.autoalpha.gplearn.genetic import SymbolicRegressor, SymbolicTransformer
-from torchqtm.vbt.rebalance import Calendar, Weekly
-from torchqtm.visualization.visualization import ColorGenerator
-from torchqtm.vbt.universe import StaticUniverse, IndexComponents
-from torchqtm.vbt.benchmark import BenchMark
+from torchqtm.autoalpha.gplearn.genetic import SymbolicRegressor
+from torchqtm.utils.rebalance import Calendar
+from torchqtm.utils.universe import StaticUniverse, IndexComponents
 from torchqtm.vbt.backtest import BackTestEnv, GPTestingIC
-import torchqtm.op as op
-import torchqtm.op.functional as F
-import matplotlib.pyplot as plt
-import time
 import graphviz
 import pickle
 

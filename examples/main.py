@@ -1,13 +1,14 @@
 import os
 import sys
 
-from torchqtm.vbt.rebalance import Weekly
-from torchqtm.visualization.visualization import ColorGenerator
-from torchqtm.vbt.universe import StaticUniverse, IndexComponents
-from torchqtm.vbt.benchmark import BenchMark
+from torchqtm.utils.rebalance import Weekly
+from torchqtm.utils.visualization import ColorGenerator
+from torchqtm.utils.universe import StaticUniverse, IndexComponents
+from torchqtm.utils.benchmark import BenchMark
 from torchqtm.vbt.backtest import BackTestEnv, QuickBackTesting01
 import torchqtm.op as op
 import torchqtm.op.functional as F
+
 import matplotlib.pyplot as plt
 import pickle
 

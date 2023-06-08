@@ -55,4 +55,25 @@ def regression_neut(Y, others):
         else:
             pass
 
+# roll_apply.pyx
+cimport cython
+import numpy as np
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def roll_apply(np.ndarray[double, ndim=1] values, np.ndarray[int, ndim=1] begin, np.ndarray[int, ndim=1] end,
+               int minimum_periods, func):
+    cdef Py_ssize_t i, start, stop, count_nan
+    cdef np.ndarray[double] result = np.empty(len(begin))
+
+    with nogil:
+        for i in cython.parallel.prange(len(result)):
+            start = begin[i]
+            stop = end[i]
+            window = values[start:stop]
+            count_nan = np.sum(np.isnan(window))
+            if len(window) - count_nan >= minimum_periods:
+                result[i] = func(window)
+            else:
+                result[i] = np.nan
+    return result

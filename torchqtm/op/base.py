@@ -27,6 +27,17 @@ class Alpha(object, metaclass=ABCMeta):
         return self.operate(*args, **kwargs)
 
 
+class Volatility(Alpha):
+    def __init__(self, env: BackTestEnv, *args, **kwargs):
+        super().__init__(env, *args, **kwargs)
+        self.type = 'volatility'
+
+    @abstractmethod
+    def operate(self, *args, **kwargs):
+        """assign self.rawdata and return"""
+        raise NotImplementedError
+
+
 class Fundamental(Alpha):
     def __init__(self, env: BackTestEnv, *args, **kwargs):
         super().__init__(env, *args, **kwargs)

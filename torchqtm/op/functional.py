@@ -127,11 +127,20 @@ def ts_mean(x, d):
     elif isinstance(x, np.ndarray):
         return pd.DataFrame(x).rolling(d).mean().values
     else:
+        # talib.SMA(x, d)
+        raise TypeError("Input should be a pandas DataFrame, Series or a numpy ndarray.")
+
+
+def ts_delay(x, d):
+    if isinstance(x, pd.DataFrame) or isinstance(x, pd.Series):
+        return x.shift(d)
+    elif isinstance(x, np.ndarray):
+        return pd.DataFrame(x).shift(d).values
+    else:
         raise TypeError("Input should be a pandas DataFrame, Series or a numpy ndarray.")
 
 
 # CrossSectionalOperators
-
 def _cs_corr(X, Y):
     mean_x = np.nanmean(X, axis=1, keepdims=True)
     std_x = np.nanstd(X, axis=1, keepdims=True)

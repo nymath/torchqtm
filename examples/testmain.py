@@ -5,9 +5,9 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 sys.path.append(BASE_DIR)
 sys.path.append(ROOT_DIR)
 
-from torchqtm.vbt.rebalance import Weekly
-from torchqtm.vbt.universe import StaticUniverse, IndexComponents
-from torchqtm.vbt.benchmark import BenchMark
+from torchqtm.utils.rebalance import Weekly
+from torchqtm.utils.universe import StaticUniverse, IndexComponents
+from torchqtm.utils.benchmark import BenchMark
 from torchqtm.vbt.backtest import BackTestEnv
 import torchqtm.op as op
 import torchqtm.op.functional as F

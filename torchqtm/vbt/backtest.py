@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from torchqtm.vbt.universe import Universe
+from torchqtm.utils.universe import Universe
 import pandas as pd
 import numpy as np
 from multiprocessing import Pool
