@@ -121,14 +121,57 @@ def if_finite(X):
 
 
 # Time Series Operators
+from torchqtm.core.window.rolling import (
+    roll_apply,
+    roll_apply_max,
+    roll_apply_min,
+)
+
+
+def ts_apply(x, d, func):
+    if isinstance(x, np.ndarray):
+        return roll_apply(x, d, func)
+    elif isinstance(x, pd.DataFrame):
+        return pd.DataFrame(roll_apply(x.values, d, func), index=x.index, columns=x.columns)
+
+
 def ts_mean(x, d):
-    if isinstance(x, pd.DataFrame) or isinstance(x, pd.Series):
-        return x.rolling(d).mean()
+    if len(x.shape) == 1:
+        if isinstance(x, pd.DataFrame) or isinstance(x, pd.Series):
+            return x.rolling(d).mean()
     elif isinstance(x, np.ndarray):
         return pd.DataFrame(x).rolling(d).mean().values
     else:
         # talib.SMA(x, d)
         raise TypeError("Input should be a pandas DataFrame, Series or a numpy ndarray.")
+
+
+def ts_max(x, d):
+    if len(x.shape) == 1:
+        if isinstance(x, pd.Series):
+            return x.rolling(d).max()
+        elif isinstance(x, np.ndarray):
+            return roll_apply_max(x, d)
+    else:
+        if isinstance(x, pd.DataFrame):
+            rlt = roll_apply_max(x, d)
+            return pd.DataFrame(rlt, index=x.index, columns=x.columns)
+        elif isinstance(x, np.ndarray):
+            return roll_apply_max(x, d)
+
+
+def ts_min(x, d):
+    if len(x.shape) == 1:
+        if isinstance(x, pd.Series):
+            return x.rolling(d).min()
+        elif isinstance(x, np.ndarray):
+            return roll_apply_min(x, d)
+    else:
+        if isinstance(x, pd.DataFrame):
+            rlt = roll_apply_min(x, d)
+            return pd.DataFrame(rlt, index=x.index, columns=x.columns)
+        elif isinstance(x, np.ndarray):
+            return roll_apply_min(x, d)
 
 
 def ts_delay(x, d):

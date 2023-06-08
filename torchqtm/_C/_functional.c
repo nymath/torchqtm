@@ -3028,7 +3028,7 @@ static PyObject *__pyx_pf_8torchqtm_2_C_11_functional_4regression_neut(CYTHON_UN
  *         else:
  *             pass             # <<<<<<<<<<<<<<
  * 
- * 
+ * # roll_apply.pyx
  */
     /*else*/ {
     }
@@ -4698,6 +4698,18 @@ if (!__Pyx_RefNanny) {
   __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8torchqtm_2_C_11_functional_5regression_neut, NULL, __pyx_n_s_torchqtm__C__functional); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_regression_neut_2, __pyx_t_1) < 0) __PYX_ERR(0, 48, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "torchqtm/_C/_functional.pyx":60
+ * # roll_apply.pyx
+ * cimport cython
+ * import numpy as np             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "torchqtm/_C/_functional.pyx":1

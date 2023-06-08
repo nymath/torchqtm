@@ -5,6 +5,7 @@ import numpy
 import glob
 
 extensions = glob.glob("torchqtm/_C/*.pyx")
+
 install_requires = [
     'numpy',
     'pandas',
