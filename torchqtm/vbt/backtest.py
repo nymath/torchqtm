@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from multiprocessing import Pool
 from typing import Dict, Hashable
-import numba
+import functools
 
 
 # TODO: convert all the rawdata type to the QuantDataFrame
@@ -215,16 +215,16 @@ class QuickBackTesting02(BaseTest):
         self.returns.columns.name = "group"
 
 
-class GPTestingIC(BaseTest):
-    def __init__(self,
-                 env: BackTestEnv,
-                 universe: Universe):
-        super().__init__(env, universe)
-
-    def run_backtest(self, modified_factor) -> float:
-        modified_factor = pd.DataFrame(modified_factor, index=self.env._FutureReturn.index, columns=self.env._FutureReturn.columns)
-        rlt = F.cs_corr(modified_factor, self.env._FutureReturn, 'spearman')
-        if rlt.std() == 0:
-            return -1
-        else:
-            return np.abs(rlt.mean() / rlt.std())
+# class GPTestingIC(BaseTest):
+#     def __init__(self,
+#                  env: BackTestEnv,
+#                  universe: Universe):
+#         super().__init__(env, universe)
+#
+#     def run_backtest(self, modified_factor) -> float:
+#         modified_factor = pd.DataFrame(modified_factor, index=self.env._FutureReturn.index, columns=self.env._FutureReturn.columns)
+#         rlt = F.cs_corr(modified_factor, self.env._FutureReturn, 'spearman')
+#         if rlt.std() == 0:
+#             return -1
+#         else:
+#             return np.abs(rlt.mean() / rlt.std())

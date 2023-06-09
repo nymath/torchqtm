@@ -40,14 +40,15 @@ class GradientColor:
 class ColorGenerator:
     def __init__(self, n_groups):
         self.n_groups = n_groups
-
-    def __call__(self):
         cmap = plt.get_cmap('coolwarm')
         colors = [cmap(i) for i in np.linspace(0, 1, self.n_groups)]
-        return [mcolors.rgb2hex(color) for color in colors]
+        self.data = [mcolors.rgb2hex(color) for color in colors]
+
+    def __call__(self):
+        return self.data
 
 
-colors = ['#ADD8E6', '#90EE90', '#FFFF00', '#FFA500', '#8B0000']
+# colors = ['#ADD8E6', '#90EE90', '#FFFF00', '#FFA500', '#8B0000']
 
 
 # if __name__ == "__main__":

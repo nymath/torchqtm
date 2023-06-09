@@ -12,14 +12,6 @@ import talib
 # Arithmetic Operators
 
 
-@overload
-def abs(x: pd.DataFrame) -> pd.DataFrame: ...
-
-
-@overload
-def abs(x: np.ndarray) -> np.ndarray: ...
-
-
 def abs(x):
     """absolute value of x"""
     if isinstance(x, pd.DataFrame):
@@ -79,7 +71,6 @@ def eq(X, Y):
     return np.equal(X, Y)
 
 
-
 # def exp(X):
 #     if isinstance(X, np.ndarray):
 #         return np.exp(X)
@@ -88,7 +79,7 @@ def eq(X, Y):
 
 
 def inverse(X):
-    return 1 / X
+    return divide(1, X)
 
 
 def log(X):
@@ -156,6 +147,18 @@ def if_else(X, input2, input3):
         return pd.DataFrame(rlt, index=X.index, columns=X.columns)
 
 
+def logical_and(x, y):
+    return np.logical_and(x, y)
+
+
+def logical_or(x, y):
+    return np.logical_or(x, y)
+
+
+def negate(x):
+    return np.negative(x)
+
+
 def is_nan(X):
     return np.isnan(X)
 
@@ -182,6 +185,8 @@ from torchqtm.core.window.rolling import (
 def ts_apply(x, d, func):
     if isinstance(x, np.ndarray):
         return roll_apply(x, d, func)
+    elif isinstance(x, pd.Series):
+        return pd.Series(roll_apply(x, d, func), index=x.index, name=x.name)
     elif isinstance(x, pd.DataFrame):
         return pd.DataFrame(roll_apply(x.values, d, func), index=x.index, columns=x.columns)
 
@@ -211,15 +216,15 @@ def ts_max(x, d):
 
 
 def ts_min(x, d):
-    def aux_fun(array, window_size):
+    def aux_func(array, window_size):
         return roll_apply_min(array, window_size)
 
     if isinstance(x, np.ndarray):
-        return aux_fun(x, d)
+        return aux_func(x, d)
     elif isinstance(x, pd.Series):
-        return pd.Series(aux_fun(x.values, d), index=x.index, name=x.name)
+        return pd.Series(aux_func(x.values, d), index=x.index, name=x.name)
     elif isinstance(x, pd.DataFrame):
-        return pd.DataFrame(aux_fun(x.values, d), index=x.index, columns=x.columns)
+        return pd.DataFrame(aux_func(x.values, d), index=x.index, columns=x.columns)
 
 
 def ts_sum(x, d, mode='auto'):
@@ -280,17 +285,17 @@ def last_diff_value(x, d):
 
 
 def ts_arg_min(x, d):
-    def aux_ts_arg_min(t):
+    def aux_func(t):
         return np.nanargmin(t[::-1], axis=0)
 
-    return ts_apply(x, d, aux_ts_arg_min)
+    return ts_apply(x, d, aux_func)
 
 
 def ts_arg_max(x, d):
-    def aux_ts_arg_max(t):
+    def aux_func(t):
         return np.nanargmax(t[::-1], axis=0)
 
-    return ts_apply(x, d, aux_ts_arg_max)
+    return ts_apply(x, d, aux_func)
 
 
 def ts_av_diff(x, d):
@@ -493,14 +498,6 @@ def _cs_corr(X, Y):
     return np.nanmean((X - mean_x) / std_x * (Y - mean_y) / std_y, axis=1)
 
 
-@overload
-def cs_corr(X: pd.DataFrame, Y: pd.DataFrame, method: str = "pearson") -> pd.Series: ...
-
-
-@overload
-def cs_corr(X: np.ndarray, Y: np.ndarray, method: str = "pearson") -> np.ndarray: ...
-
-
 def cs_corr(X, Y, method="pearson"):
     if method == "pearson":
         rlt = _cs_corr(X, Y)
@@ -525,6 +522,7 @@ def cs_rank(X):
 
     def aux_func(t):
         return rank_2d(t, axis=1)
+
     if isinstance(X, np.ndarray):
         return aux_func(X)
     elif isinstance(X, pd.DataFrame):
@@ -532,93 +530,104 @@ def cs_rank(X):
 
 
 def _regression_neut(Y, X):
-    result = []
-    for i in range(len(Y)):
-        y = Y.values[i]
+    base_shape = Y.shape
+    n_axis = len(Y.shape)
+    data = np.concatenate([Y.reshape(*base_shape, 1), X.reshape(*base_shape, 1)], axis=n_axis)
+
+    def aux_func(data_slice):
+        y = data_slice[..., 0]
+        x = data_slice[..., 1]
         y_demean = y - np.nanmean(y)
-        x = X.values[i]
         x_demean = x - np.nanmean(x)
         residuals = y_demean - (np.nanmean(y_demean * x_demean) / np.nanvar(x_demean)) * x_demean
-        result.append(residuals)
-    return pd.DataFrame(np.array(result), index=Y.index, columns=Y.columns)
+        return residuals
+
+    return ts_apply(data, 1, aux_func)
 
 
 def _regression_neuts(Y, others):
-    result = []
-    for i in range(len(Y)):
-        y = Y.values[i]
-        X = np.concatenate([x.values[i].reshape(-1, 1) for x in others], axis=1)
-        model = LinearRegression()
-        model.fit(X, y)
-        y_pred = model.predict(X)
-        residuals = y - y_pred
-        result.append(residuals)
-    return pd.DataFrame(np.array(result), index=Y.index, columns=Y.columns)
+    pass
+    # result = np.empty_like(Y)
+    # for i in range(len(Y)):
+    #     y = Y[i]
+    #     X = np.concatenate([x[i].reshape(-1, 1) for x in others], axis=1)
+    #     model = LinearRegression()
+    #     model.fit(X, y)
+    #     y_pred = model.predict(X)
+    #     residuals = y - y_pred
+    #     result[i] = residuals
+    # return pd.DataFrame(np.array(result), index=Y.index, columns=Y.columns)
 
 
 def regression_neut(Y, others):
-    assert isinstance(Y, pd.DataFrame)
     if not isinstance(others, list):
-        return _regression_neut(Y, others)
+        if isinstance(Y, np.ndarray):
+            return _regression_neut(Y, others)
+        elif isinstance(Y, pd.Series):
+            return pd.Series(_regression_neut(Y.values, others.values), index=Y.index, name=Y.name)
+        elif isinstance(Y, pd.DataFrame):
+            return pd.DataFrame(_regression_neut(Y.values, others.values), index=Y.index, columns=Y.columns)
     else:
-        if __OP_MODE__ == "STABLE":
-            return _regression_neuts(Y, others)
-        else:
-            pass
+        raise ValueError
 
 
 def regression_proj(Y, others):
     return Y - regression_neut(Y, others)
 
 
+def _winsorize(X, method, param):
+    assert isinstance(X, np.ndarray)
+    n_stocks = X.shape[-1]
+    n_axis = len(X.shape)
+    if method == 'quantile':
+        lower_bound = np.nanquantile(X, param, axis=n_axis-1, keepdims=True)
+        upper_bound = np.nanquantile(X, 1-param, axis=n_axis-1, keepdims=True)
+    elif method == 'std':
+        mean = np.nanmean(X, axis=n_axis-1, keepdims=True)
+        std = np.nanstd(X, axis=n_axis-1, keepdims=True)
+        lower_bound = mean - std * param
+        upper_bound = mean + std * param
+    else:
+        raise ValueError('Unknown method')
+    return np.clip(a=X,
+                   a_min=np.repeat(lower_bound, n_stocks, axis=n_axis-1),
+                   a_max=np.repeat(upper_bound, n_stocks, axis=n_axis-1))
+
+
 def winsorize(X, method='quantile', param=0.05):
-    assert isinstance(X, pd.DataFrame)
-
-    def winsorize_series(series):
-        if method == 'quantile':
-            lower_bound = series.quantile(param)
-            upper_bound = series.quantile(1 - param)
-        elif method == 'std':
-            mean = np.nanmean(series)
-            std = np.nanstd(series)
-            lower_bound = mean - std * param
-            upper_bound = mean + std * param
-        else:
-            raise ValueError('method should be either "quantile" or "std"')
-        series[:] = np.where(series < lower_bound, lower_bound,
-                             np.where(series > upper_bound, upper_bound, series))
-        return series
-
-    return X.apply(winsorize_series, axis=1)
+    aux_func = _winsorize
+    if isinstance(X, np.ndarray):
+        return aux_func(X, method, param)
+    elif isinstance(X, pd.Series):
+        return pd.Series(aux_func(X.values, method, param), index=X.index, name=X.name)
+    elif isinstance(X, pd.DataFrame):
+        return pd.DataFrame(aux_func(X.values, method, param), index=X.index, columns=X.columns)
 
 
-@overload
-def normalize(X: pd.DataFrame, useStd: bool = True) -> pd.DataFrame: ...
-
-
-@overload
-def normalize(X: np.ndarray, useStd: bool = True) -> np.ndarray: ...
+def _normalize(X, useStd):
+    assert isinstance(X, np.ndarray)
+    n_axis = len(X.shape)
+    n_stocks = X.shape[-1]
+    x_mean = np.nanmean(X, axis=n_axis-1, keepdims=True)
+    s_std = np.nanstd(X, axis=n_axis-1, keepdims=True)
+    if useStd:
+        return (X - np.repeat(x_mean, n_stocks, axis=n_axis-1)) / np.repeat(s_std, n_stocks, axis=n_axis-1)
+    else:
+        return X - np.repeat(x_mean, n_stocks, axis=n_axis-1)
 
 
 def normalize(X, useStd=True):
-    if isinstance(X, pd.DataFrame):
-        if useStd:
-            return X.apply(lambda x: (x - x.mean()) / x.std(), axis=1)
-        else:
-            return X.apply(lambda x: (x - x.mean()), axis=1)
-    elif isinstance(X, np.ndarray):
-        x_mean = np.nanmean(X, axis=1, keepdims=True)
-        s_std = np.nanstd(X, axis=1, keepdims=True)
-        if useStd:
-            return (X - x_mean) / s_std
-        else:
-            return X - x_mean
+    aux_func = _normalize
+    if isinstance(X, np.ndarray):
+        return aux_func(X, useStd)
+    elif isinstance(X, pd.Series):
+        return pd.Series(aux_func(X.values, useStd), index=X.index, name=X.name)
+    elif isinstance(X, pd.DataFrame):
+        return pd.DataFrame(aux_func(X.values, useStd), index=X.index, columns=X.columns)
 
 
 # # Group Operators
-
 # ---
-
 def group_backfill(x, grou, d, std=4):
     pass
 
@@ -670,7 +679,7 @@ def _group(x, group, agg_func):
 
         return rlt
     """
-    if np.sum(np.isnan(x)) + np.sum(np.isnan(group)):
+    if np.sum(np.isnan(x)) + np.sum(np.isnan(group)) > 0:
         nan_mask = np.isnan(x) | np.isnan(group)
 
         x_copy = np.where(nan_mask, 0, x)
@@ -745,5 +754,3 @@ def trade_when(trigger: np.ndarray[bool],
         return pd.Series(rlt, index=alpha.index, name=alpha.name)
     elif isinstance(alpha, pd.DataFrame):
         return pd.DataFrame(rlt, index=alpha.index, columns=alpha.columns)
-
-

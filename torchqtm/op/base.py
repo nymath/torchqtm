@@ -1,10 +1,31 @@
 from abc import ABCMeta, abstractmethod
 from torchqtm.vbt.backtest import BackTestEnv
+import numpy as np
+from typing import Iterable
 
 
-class Parameters(object, metaclass=ABCMeta):
-    def __init__(self, data):
-        self.data = data
+import numpy as np
+from abc import ABCMeta
+from typing import Iterable
+
+
+class Parameter(np.ndarray, metaclass=ABCMeta):
+    def __new__(cls, data: int, required_optim: bool = False, feasible_region: Iterable[int] = None):
+        obj = np.asarray(data).view(cls)
+        obj.required_optim = required_optim
+        obj.feasible_region = feasible_region
+        obj._check_data()
+        return obj
+
+    def __array_finalize__(self, obj):
+        if obj is None: return
+        self.required_optim = getattr(obj, 'required_optim', None)
+        self.feasible_region = getattr(obj, 'feasible_region', None)
+
+    def _check_data(self):
+        if self.required_optim is True and self.feasible_region is None:
+            raise ValueError("must provide possible values for search")
+
 
 
 __TYPES = ['momentum', 'reversion']
@@ -65,6 +86,14 @@ class BaseAlpha(BaseOperator, metaclass=ABCMeta):
     @property
     def vwap(self):
         return self.env.Vwap
+
+    @property
+    def adv20(self):
+        return self.env.adv20
+
+    @property
+    def sector(self):
+        return self.env.Sector
 
 
 class Volatility(BaseAlpha):

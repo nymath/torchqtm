@@ -27,6 +27,22 @@ class Calendar(object, metaclass=ABCMeta):
         return rlt
 
 
+class Daily(object):
+    def __init__(self, start_date, end_date):
+        self.start_date = start_date
+        self.end_date = end_date
+        self.rebalance_dates = None
+        self._create_trade_dates()
+
+    def _create_trade_dates(self):
+        calendar = Calendar(self.start_date, self.end_date)
+        self.rebalance_dates = calendar.trade_dates
+
+    @property
+    def data(self):
+        return self.rebalance_dates
+
+
 class Weekly(object):
     def __init__(self, start_date, end_date, days: Iterable[int]):
         self.start_date = start_date
