@@ -278,7 +278,7 @@ cdef class Interval(IntervalMixin):
     >>> iv.length
     5
 
-    You can operate with `+` and `*` over an Interval and the operation
+    You can forward with `+` and `*` over an Interval and the operation
     is applied to each of its bounds, so the result depends on the type
     of the bound elements
 

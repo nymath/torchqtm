@@ -26,7 +26,7 @@ class NeutralizePE(op.Fundamental):
     def __init__(self, env):
         super().__init__(env)
 
-    def operate(self, factor):
+    def forward(self, factor):
         self.data = F.divide(1, factor)
         # self.rawdata = F.winsorize(self.rawdata, 'std', 4)
         # self.rawdata = F.normalize(self.rawdata)
@@ -49,7 +49,7 @@ if __name__ == '__main__':
                         symbols=universe.symbols)
     # Create alpha
     alphas = NeutralizePE(env=btEnv)
-    alphas.operate(btEnv.match_env(dfs['PE']))
+    alphas.forward(btEnv.match_env(dfs['PE']))
     # run backtest
     # bt = QuickBackTesting01(env=btEnv,
     #                         universe=universe,

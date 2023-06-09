@@ -30,7 +30,7 @@ class NeutralizePE(op.Fundamental):
     def __init__(self, env):
         super().__init__(env)
 
-    def operate(self, factor):
+    def forward(self, factor):
         self.data = F.divide(1, factor)
         self.data = self.data.astype(np.float64)
         self.data = F.winsorize(self.data, 'std', 4)
@@ -45,8 +45,8 @@ class Momentum01(op.Momentum):
     def __init__(self, env):
         super().__init__(env)
 
-    def operate(self):
-        self.data = F.divide(1, self.env.Close)
+    def forward(self):
+        self.data = F.divide(1, self.env.close)
         self.data = self.data.astype(np.float64)
         self.data = F.winsorize(self.data, 'std', 4)
         self.data = F.normalize(self.data)
@@ -54,7 +54,7 @@ class Momentum01(op.Momentum):
         self.data = F.regression_neut(self.data, self.env.MktVal)
         self.data = self.data.astype(np.float64)
         # self.data = F.ts_returns(self.data, 1)
-        self.data = F.ts_delta(self.env.Close, 3)
+        self.data = F.ts_delta(self.env.close, 3)
         return self.data
 
 
@@ -62,13 +62,13 @@ class Momentum02(op.Momentum):
     def __init__(self, env):
         super().__init__(env)
 
-    def operate(self):
-        self.env.Close = self.env.Close.astype(np.float64)
-        self.data = self.env.Close
+    def forward(self):
+        self.env.close = self.env.close.astype(np.float64)
+        self.data = self.env.close
         self.data = F.winsorize(self.data, 'std', 4)
         self.data = F.normalize(self.data)
-        cond = F.geq(F.ts_mean(self.env.Close, 1), F.ts_mean(self.env.Close, 4))
-        self.data = F.trade_when(cond, F.ts_delta(self.env.Close, 3), False)
+        cond = F.geq(F.ts_mean(self.env.close, 1), F.ts_mean(self.env.close, 4))
+        self.data = F.trade_when(cond, F.ts_delta(self.env.close, 3), False)
         self.data = F.group_neutralize(self.data, self.env.Sector)
         self.data = F.regression_neut(self.data, self.env.MktVal)
         return self.data
@@ -80,13 +80,13 @@ if __name__ == '__main__':
         dfs = pickle.load(f)
     # Create the backtest environment
     btEnv = BackTestEnv(dfs=dfs,
-                        dates=rebalance.rebalance_dates,
-                        symbols=universe.symbols)
+                        dates=rebalance.data,
+                        symbols=universe.data)
     # Create alpha
     # alphas = NeutralizePE(env=btEnv)
     alphas = Momentum02(env=btEnv)
-    # alphas.operate(btEnv.match_env(dfs['PE']))
-    alphas.operate()
+    # alphas.forward(btEnv.match_env(dfs['PE']))
+    alphas.forward()
     # run backtest
     bt = QuickBackTesting01(env=btEnv,
                             universe=universe,

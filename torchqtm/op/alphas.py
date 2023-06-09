@@ -2,7 +2,6 @@ import torchqtm.op as op
 import torchqtm.op.functional as F
 import pandas as pd
 import numpy as np
-pd.DataFrame.rolling
 
 a = np.zeros((10, 20), dtype=np.float64)
 a = pd.DataFrame(a)
@@ -32,9 +31,9 @@ class Ross(op.Volatility):
     def __init__(self):
         super().__init__()
 
-    def operate(self):
-        Open = F.log(self.env.Open)
-        High = F.log(self.env.High)
-        Low = F.log(self.env.Low)
-        Close = F.log(self.env.Close)
-        Closel1 = F.ts_delay(self.env.Close)
+    def forward(self):
+        Open = F.log(self.env.open)
+        High = F.log(self.env.high)
+        Low = F.log(self.env.low)
+        Close = F.log(self.env.close)
+        Closel1 = F.ts_delay(self.env.close)

@@ -842,7 +842,7 @@ cdef class _Timedelta(timedelta):
             if other.dtype.kind == "m":
                 return PyObject_RichCompare(self.asm8, other, op)
             elif other.dtype.kind == "O":
-                # operate element-wise
+                # forward element-wise
                 return np.array(
                     [PyObject_RichCompare(self, x, op) for x in other],
                     dtype=bool,

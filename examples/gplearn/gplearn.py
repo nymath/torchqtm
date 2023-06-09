@@ -64,12 +64,12 @@ if __name__ == '__main__':
                                        random_state=0,
                                        strategy=bt)
 
-    fixed_shape = bt.env.Open.values.shape
-    x1 = bt.env.Open.values.reshape(*fixed_shape, 1)
-    x2 = bt.env.High.values.reshape(*fixed_shape, 1)
-    x3 = bt.env.Low.values.reshape(*fixed_shape, 1)
-    x4 = bt.env.Close.values.reshape(*fixed_shape, 1)
-    x5 = bt.env.Volume.values.reshape(*fixed_shape, 1)
+    fixed_shape = bt.env.open.values.shape
+    x1 = bt.env.open.values.reshape(*fixed_shape, 1)
+    x2 = bt.env.high.values.reshape(*fixed_shape, 1)
+    x3 = bt.env.low.values.reshape(*fixed_shape, 1)
+    x4 = bt.env.close.values.reshape(*fixed_shape, 1)
+    x5 = bt.env.volume.values.reshape(*fixed_shape, 1)
 
     X = np.concatenate((x1, x2, x3, x4), axis=2)
     y = x1  # Have no role in the fitness function

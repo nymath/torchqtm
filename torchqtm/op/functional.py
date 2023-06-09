@@ -520,6 +520,17 @@ def cs_corr(X, Y, method="pearson"):
         return pd.Series(rlt, index=X.index, name=f'{method}')
 
 
+def cs_rank(X):
+    assert len(X.shape) == 2
+
+    def aux_func(t):
+        return rank_2d(t, axis=1)
+    if isinstance(X, np.ndarray):
+        return aux_func(X)
+    elif isinstance(X, pd.DataFrame):
+        return pd.DataFrame(aux_func(X.values), index=X.index, columns=X.columns)
+
+
 def _regression_neut(Y, X):
     result = []
     for i in range(len(Y)):
