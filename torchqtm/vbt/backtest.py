@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from multiprocessing import Pool
 from typing import Dict, Hashable
+import numba
 
 
 # TODO: convert all the rawdata type to the QuantDataFrame
@@ -29,13 +30,13 @@ class BackTestEnv(object):
         self.symbols = symbols
         self.dates = dates
         self.shape = (len(self.symbols), len(self.dates))
-        self.open = None
-        self.high = None
-        self.low = None
-        self.close = None
-        self.volume = None
-        self.returns = None
-        self.vwap = None
+        self.Open = None
+        self.High = None
+        self.Low = None
+        self.Close = None
+        self.Volume = None
+        self.Returns = None
+        self.Vwap = None
         self.MktVal = None
         self.PE = None
         self.Sector = None
@@ -48,7 +49,7 @@ class BackTestEnv(object):
         check is dfs is a valid dict
         :return: None
         """
-        assert 'Close' in self.dfs
+        # assert 'close' in self.dfs
         assert 'MktVal' in self.dfs
         assert 'Sector' in self.dfs
 

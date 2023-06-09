@@ -3,7 +3,20 @@ import pandas as pd
 import torchqtm.core.window.rolling as F
 from torchqtm.utils import Timer
 import numpy as np
-a = np.random.normal(0, 1, (252 * 10, 5000))
+a = np.random.normal(0, 1, (252 * 10, 5000, 2))
+a[..., 1] = -a[..., 0]
+
+def ff(x):
+    x1 = x[..., 0]
+    x2 = x[..., 1]
+    rlt = np.sum(x1, axis=0) + np.sum(x2, axis=0)
+    return rlt
+
+
+ff(a).shape
+F.roll_apply(a, 5, ff)
+
+
 m = pd.DataFrame([1,2,3,np.nan,5,6])
 b = [0,0,0, 1,1, np.nan]
 m.groupby(b).apply(lambda x: np.mean(x))

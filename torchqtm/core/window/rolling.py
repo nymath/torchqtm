@@ -38,6 +38,8 @@ def roll_apply(array: NDArray[np.float64],
         return roll_apply_1D(array, start, end, window_size, func, args, kwargs)
     elif array.ndim == 2:
         return roll_apply_2D(array, start, end, window_size, func, args, kwargs)
+    elif array.ndim == 3:
+        return roll_apply_3D(array, start, end, window_size, func, args, kwargs)
     else:
         raise ValueError("Invalid number of dimensions")
 

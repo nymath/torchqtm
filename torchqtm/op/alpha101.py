@@ -59,9 +59,9 @@ class Alpha011(WQAlpha101):
         super().__init__(env)
 
     def forward(self):
-        self.data = ((F.cs_rank(F.ts_max((self.env.vwap - self.env.close), 3)) +
-                      F.cs_rank(F.ts_min((self.env.vwap - self.env.close), 3))) * F.cs_rank(
-            F.ts_delta(self.env.volume, 3)))
+        self.data = ((F.cs_rank(F.ts_max((self.env.Vwap - self.env.Close), 3)) +
+                      F.cs_rank(F.ts_min((self.env.Vwap - self.env.Close), 3))) * F.cs_rank(
+            F.ts_delta(self.env.Volume, 3)))
         return self.data
 
 
@@ -86,8 +86,8 @@ class Alpha017(WQAlpha101):
         super().__init__(env)
 
     def forward(self):
-        adv20 = ts_mean(self.env.volume, 20)
-        self.data = -1 * (cs_rank(ts_rank(self.env.close, 10)) *
-                          cs_rank(ts_delta(ts_delta(self.env.close, 1), 1)) *
-                          cs_rank(ts_rank((self.env.volume / adv20), 5)))
+        adv20 = ts_mean(self.env.Volume, 20)
+        self.data = -1 * (cs_rank(ts_rank(self.env.Close, 10)) *
+                          cs_rank(ts_delta(ts_delta(self.env.Close, 1), 1)) *
+                          cs_rank(ts_rank((self.env.Volume / adv20), 5)))
         return self.data

@@ -1,8 +1,11 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, language_level=3,
 # distutils: language=c++
+from typing import Type
+
 import numpy as np
 cimport numpy as cnp
 import cython
+# from Cython.Includes.numpy import ndarray
 from libc.math cimport round
 from libcpp.deque cimport deque
 from numpy cimport (
@@ -519,6 +522,42 @@ def roll_apply_2D(object obj,
 
     return output
 
+
+def roll_apply_3D(object obj,
+                  ndarray[int64_t] start,
+                  ndarray[int64_t] end,
+                  int64_t minp,
+                  object function,
+                  tuple args,
+                  dict kwargs) -> Type[ndarray]:
+    cdef:
+        ndarray[float64_t, ndim=2] output
+        ndarray[float64_t, ndim=1] counts
+        ndarray[float64_t, ndim=3, cast=True] arr
+        Py_ssize_t i, s, e,
+        Py_ssize_t N = len(start)
+        Py_ssize_t n = len(obj)
+        Py_ssize_t n_stocks = obj.shape[1]
+        Py_ssize_t n_features = obj.shape[2]
+    # if n == 0:
+    #     return np.array([], dtype=np.float64)
+
+    arr = np.asarray(obj)
+    # ndarray input
+    if not arr.flags.c_contiguous:
+        arr = arr.copy('C')
+
+    counts = roll_sum(np.isfinite(arr[:, 0, 0]).astype(float), start, end, minp)
+    output = np.empty((N, n_stocks), dtype=np.float64)
+    for i in range(N):
+        s = start[i]
+        e = end[i]
+
+        if counts[i] >= minp:
+            output[i] = function(arr[s:e], *args, **kwargs)
+        else:
+            output[i] = NaN
+    return output
 
 def roll_weighted_sum(
     const float64_t[:] values, const float64_t[:] weights, int minp

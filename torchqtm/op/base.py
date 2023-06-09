@@ -40,31 +40,31 @@ class BaseAlpha(BaseOperator, metaclass=ABCMeta):
 
     @property
     def open(self):
-        return self.env.close
+        return self.env.Close
 
     @property
     def high(self):
-        return self.env.high
+        return self.env.High
 
     @property
     def low(self):
-        return self.env.low
+        return self.env.Low
 
     @property
     def close(self):
-        return self.env.close
+        return self.env.Close
 
     @property
     def volume(self):
-        return self.env.volume
+        return self.env.Volume
 
     @property
     def returns(self):
-        return self.env.returns
+        return self.env.Returns
 
     @property
     def vwap(self):
-        return self.env.vwap
+        return self.env.Vwap
 
 
 class Volatility(BaseAlpha):

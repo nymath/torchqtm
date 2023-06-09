@@ -9,7 +9,7 @@ from torchqtm.vbt.backtest import BackTestEnv, QuickBackTesting01
 import torchqtm.op as op
 import numpy as np
 import torchqtm.op.functional as F
-
+import pandas as pd
 import matplotlib.pyplot as plt
 import pickle
 
@@ -46,7 +46,7 @@ class Momentum01(op.Momentum):
         super().__init__(env)
 
     def forward(self):
-        self.data = F.divide(1, self.env.close)
+        self.data = F.divide(1, self.env.Close)
         self.data = self.data.astype(np.float64)
         self.data = F.winsorize(self.data, 'std', 4)
         self.data = F.normalize(self.data)
@@ -54,7 +54,7 @@ class Momentum01(op.Momentum):
         self.data = F.regression_neut(self.data, self.env.MktVal)
         self.data = self.data.astype(np.float64)
         # self.data = F.ts_returns(self.data, 1)
-        self.data = F.ts_delta(self.env.close, 3)
+        self.data = F.ts_delta(self.env.Close, 3)
         return self.data
 
 
@@ -63,12 +63,43 @@ class Momentum02(op.Momentum):
         super().__init__(env)
 
     def forward(self):
-        self.env.close = self.env.close.astype(np.float64)
-        self.data = self.env.close
+        self.env.Close = self.env.Close.astype(np.float64)
+        self.data = self.env.Close
         self.data = F.winsorize(self.data, 'std', 4)
         self.data = F.normalize(self.data)
-        cond = F.geq(F.ts_mean(self.env.close, 1), F.ts_mean(self.env.close, 4))
-        self.data = F.trade_when(cond, F.ts_delta(self.env.close, 3), False)
+        cond = F.geq(F.ts_mean(self.env.Close, 1), F.ts_mean(self.env.Close, 4))
+        self.data = F.trade_when(cond, F.ts_delta(self.env.Close, 3), False)
+        self.data = F.group_neutralize(self.data, self.env.Sector)
+        self.data = F.regression_neut(self.data, self.env.MktVal)
+        return self.data
+
+
+class Ross(op.Volatility):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def forward(self):
+        raw_shape = self.env.Open.shape
+        Open = np.array(F.log(self.env.Open), dtype=np.float64).reshape(*raw_shape, 1)
+        High = np.array(F.log(self.env.High), dtype=np.float64).reshape(*raw_shape, 1)
+        Low = np.array(F.log(self.env.Low), dtype=np.float64).reshape(*raw_shape, 1)
+        Close = np.array(F.log(self.env.Close), dtype=np.float64).reshape(*raw_shape, 1)
+        Closel1 = np.array(F.ts_delay(self.env.Close, 1), dtype=np.float64).reshape(*raw_shape, 1)
+        data = np.concatenate([Open, High, Low, Close, Closel1], axis=2)
+        def aux_func(data_slice):
+            cl = {
+                'Open': 0,
+                'High': 1,
+                'Low': 2,
+                'Close': 3,
+                'Closel1': 4
+            }
+            return np.sqrt(np.nanmean(0.5 * (data_slice[..., cl['High']] - data_slice[..., cl['Low']]) ** 2, axis=0) -
+                           (2 * np.log(2) - 1) * np.nanmean(
+                (data_slice[..., cl['Close']] - data_slice[..., cl['Open']]) ** 2, axis=0) +
+                           np.nanmean((data_slice[..., cl['Open']] - data_slice[..., cl['Closel1']]) ** 2, axis=0))
+        self.data = F.ts_apply(data, 10, aux_func)
+        self.data = pd.DataFrame(self.data, index=self.env.Close.index, columns=self.env.Close.columns)
         self.data = F.group_neutralize(self.data, self.env.Sector)
         self.data = F.regression_neut(self.data, self.env.MktVal)
         return self.data
@@ -84,7 +115,7 @@ if __name__ == '__main__':
                         symbols=universe.data)
     # Create alpha
     # alphas = NeutralizePE(env=btEnv)
-    alphas = Momentum02(env=btEnv)
+    alphas = Ross(env=btEnv)
     # alphas.forward(btEnv.match_env(dfs['PE']))
     alphas.forward()
     # run backtest
@@ -102,5 +133,6 @@ if __name__ == '__main__':
         ax.plot((1+bt.returns.iloc[:, i]).cumprod(), label=f'group_{i+1}', color=colors[i])
     fig.legend(fontsize=16)
     fig.show()
+
 
 

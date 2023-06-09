@@ -95,6 +95,15 @@ def roll_apply_2D(
     args: tuple[Any, ...],
     kwargs: dict[str, Any],
 ) -> npt.NDArray[np.float64]: ...
+def roll_apply_3D(
+    obj: object,
+    start: np.ndarray,  # np.ndarray[np.int64]
+    end: np.ndarray,  # np.ndarray[np.int64]
+    minp: int,  # int64_t
+    function: Callable[..., Any],
+    args: tuple[Any, ...],
+    kwargs: dict[str, Any],
+) -> npt.NDArray[np.float64]: ...
 def roll_weighted_sum(
     values: np.ndarray,  # const float64_t[:]
     weights: np.ndarray,  # const float64_t[:]
