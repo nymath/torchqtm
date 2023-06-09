@@ -95,6 +95,10 @@ def log(X):
     return np.log(X)
 
 
+def log_diff(X):
+    return np.log(X / ts_delay(X, 1))
+
+
 def nan_out(X, lower=-0.1, upper=0.1):
     """set returns outside of [lower, upper] to nan"""
     rlt = np.where(((X < lower) + (X > upper)) > 0, np.nan, X)
@@ -143,8 +147,8 @@ def densify(X):
 
 
 # Logical Operators
+# TODO: 1231
 def if_else(X, input2, input3):
-    assert X.shape == input2.shape == input3.shape
     rlt = np.where(X, input2, input3)
     if isinstance(rlt, np.ndarray):
         return rlt
@@ -183,15 +187,15 @@ def ts_apply(x, d, func):
 
 
 def ts_mean(x, d):
-    def aux_fun(array, window_size):
+    def aux_func(array, window_size):
         return roll_apply_mean(array, window_size)
 
     if isinstance(x, np.ndarray):
-        return aux_fun(x, d)
+        return aux_func(x, d)
     elif isinstance(x, pd.Series):
-        return pd.Series(aux_fun(x.values, d), index=x.index, name=x.name)
+        return pd.Series(aux_func(x.values, d), index=x.index, name=x.name)
     elif isinstance(x, pd.DataFrame):
-        return pd.DataFrame(aux_fun(x.values, d), index=x.index, columns=x.columns)
+        return pd.DataFrame(aux_func(x.values, d), index=x.index, columns=x.columns)
 
 
 def ts_max(x, d):
@@ -218,9 +222,9 @@ def ts_min(x, d):
         return pd.DataFrame(aux_fun(x.values, d), index=x.index, columns=x.columns)
 
 
-def ts_sum(x, d):
+def ts_sum(x, d, mode='auto'):
     def aux_func(array, window_size):
-        return roll_apply_sum(array, window_size, method=mode)
+        return roll_apply_sum(array, window_size, mode=mode)
 
     if isinstance(x, np.ndarray):
         return aux_func(x, d)
@@ -713,3 +717,22 @@ def group_sum(x, group):
 
 def group_zscore(x, group):
     pass
+
+
+# Transformational Operators
+
+
+# TODO: 保持变量类型封闭
+def trade_when(trigger: np.ndarray[bool],
+               alpha: np.ndarray[np.float64],
+               exit_cond: np.ndarray[bool]):
+    rlt = if_else(exit_cond, np.nan, alpha)
+    rlt = if_else(trigger, rlt, ts_delay(rlt, 1))
+    if isinstance(alpha, np.ndarray):
+        return rlt
+    elif isinstance(alpha, pd.Series):
+        return pd.Series(rlt, index=alpha.index, name=alpha.name)
+    elif isinstance(alpha, pd.DataFrame):
+        return pd.DataFrame(rlt, index=alpha.index, columns=alpha.columns)
+
+

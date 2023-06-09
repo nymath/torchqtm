@@ -149,16 +149,19 @@ class QuickBackTesting01(BaseTest):
             # na stands for stocks that we you not insterested in
             # We can develop a class to better represent this process.
             temp_data = temp_data.loc[~np.isnan(temp_data['modified_factor'])]
-            temp_data['group'] = pd.qcut(temp_data['modified_factor'], self.n_groups, labels=labels)
+            if len(temp_data) == 0:
+                group_return = pd.Series(0, index=labels)
+            else:
+                temp_data['group'] = pd.qcut(temp_data['modified_factor'], self.n_groups, labels=labels)
 
-            def temp(x):
-                # TODO: develop a weight_scheme class
-                weight = x['MktVal'] / x['MktVal'].sum()
-                # weight = 1 / len(x['MktVal'])
-                # weights.append(weight)
-                ret = x['_FutureReturn']
-                return (weight * ret).sum()
-            group_return = temp_data.groupby('group').apply(temp)
+                def temp(x):
+                    # TODO: develop a weight_scheme class
+                    weight = x['MktVal'] / x['MktVal'].sum()
+                    # weight = 1 / len(x['MktVal'])
+                    # weights.append(weight)
+                    ret = x['_FutureReturn']
+                    return (weight * ret).sum()
+                group_return = temp_data.groupby('group').apply(temp)
             returns.append(group_return)
         returns.append(pd.Series(np.repeat(0, self.n_groups), index=group_return.index))
         self.returns = pd.concat(returns, axis=1).T

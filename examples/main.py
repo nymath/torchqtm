@@ -7,6 +7,7 @@ from torchqtm.utils.universe import StaticUniverse, IndexComponents
 from torchqtm.utils.benchmark import BenchMark
 from torchqtm.vbt.backtest import BackTestEnv, QuickBackTesting01
 import torchqtm.op as op
+import numpy as np
 import torchqtm.op.functional as F
 
 import matplotlib.pyplot as plt
@@ -31,8 +32,43 @@ class NeutralizePE(op.Fundamental):
 
     def operate(self, factor):
         self.data = F.divide(1, factor)
+        self.data = self.data.astype(np.float64)
         self.data = F.winsorize(self.data, 'std', 4)
         self.data = F.normalize(self.data)
+        self.data = F.group_neutralize(self.data, self.env.Sector)
+        self.data = F.regression_neut(self.data, self.env.MktVal)
+        self.data = F.ts_mean(self.data, 5)
+        return self.data
+
+
+class Momentum01(op.Momentum):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def operate(self):
+        self.data = F.divide(1, self.env.Close)
+        self.data = self.data.astype(np.float64)
+        self.data = F.winsorize(self.data, 'std', 4)
+        self.data = F.normalize(self.data)
+        self.data = F.group_neutralize(self.data, self.env.Sector)
+        self.data = F.regression_neut(self.data, self.env.MktVal)
+        self.data = self.data.astype(np.float64)
+        # self.data = F.ts_returns(self.data, 1)
+        self.data = F.ts_delta(self.env.Close, 3)
+        return self.data
+
+
+class Momentum02(op.Momentum):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def operate(self):
+        self.env.Close = self.env.Close.astype(np.float64)
+        self.data = self.env.Close
+        self.data = F.winsorize(self.data, 'std', 4)
+        self.data = F.normalize(self.data)
+        cond = F.geq(F.ts_mean(self.env.Close, 1), F.ts_mean(self.env.Close, 4))
+        self.data = F.trade_when(cond, F.ts_delta(self.env.Close, 3), False)
         self.data = F.group_neutralize(self.data, self.env.Sector)
         self.data = F.regression_neut(self.data, self.env.MktVal)
         return self.data
@@ -47,8 +83,10 @@ if __name__ == '__main__':
                         dates=rebalance.rebalance_dates,
                         symbols=universe.symbols)
     # Create alpha
-    alphas = NeutralizePE(env=btEnv)
-    alphas.operate(btEnv.match_env(dfs['PE']))
+    # alphas = NeutralizePE(env=btEnv)
+    alphas = Momentum02(env=btEnv)
+    # alphas.operate(btEnv.match_env(dfs['PE']))
+    alphas.operate()
     # run backtest
     bt = QuickBackTesting01(env=btEnv,
                             universe=universe,
