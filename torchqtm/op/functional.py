@@ -257,23 +257,40 @@ def days_from_last_change(x, d):
 
 
 def ts_weighted_delay(x, k=0.5):
-    pass
+    return add(k * x, (1-k) * ts_delay(x, 1))
 
 
-def hump(x, hump=0.01):
-    pass
-
-
-def hump_decay(x, p=0):
-    pass
+# 这俩函数有点抽象, 后边想想怎么实现
+# def hump(x, hump=0.01):
+#     """
+#     This operator limits amount and magnitude of changes in input
+#     (thus reducing turnover). If input changed by less than a threshold
+#      compared to previous days’ output, current output is the same as on the previous day.
+#     """
+#
+#
+#
+# def hump_decay(x, p=0):
+#     pass
 
 
 def inst_tvr(x, d):
+    """
+    Total trading value / Total holding value in the past d days
+
+    """
     pass
 
 
 def jump_decay(x, d, sensitivity=0.5, force=0.1):
-    pass
+    """
+    If there is a huge jump in current data compare to previous one, apply force:
+    我认为作用是滤平变动
+    """
+    cond = abs(x-ts_delay(x, 1) > sensitivity * ts_std_dev(x, d))
+    value_if_true = ts_delay(x, 1) + ts_delta(x, 1) * force
+    value_if_false = x
+    return if_else(cond, value_if_true, value_if_false)
 
 
 def kth_element(x, d, k):
@@ -311,6 +328,8 @@ def ts_co_kurtosis(y, x, d):
 
 
 def ts_corr(x, y, d):
+    def aux_func(data_slice)
+        return None
     pass
 
 
@@ -334,7 +353,11 @@ def ts_decay_exp_window(x, d, factor):
 
 
 def ts_decay_linear(x, d, dense=False):
-    pass
+    # TODO: 想想怎么改进这个矩阵乘法, 目前会产生大量的NA
+    def aux_func(data_slice):
+        filters = np.arange(1, d+1) / ( d * (d + 2) / 2 )
+        return np.matmul(data_slice.T, filters)
+    return ts_apply(x, d, aux_func)
 
 
 def ts_std_dev(x, d):
@@ -357,8 +380,9 @@ def ts_max_diff(x, d):
 
 
 def ts_median(x, d):
-    pass
-
+    def aux_func(t):
+        return np.nanmedian(x, axis=0)
+    return ts_apply(x, d, aux_func)
 
 def ts_min_diff(x, d):
     return x - ts_min(x, d)
@@ -628,6 +652,25 @@ def normalize(X, useStd=True):
 
 # # Group Operators
 # ---
+# Should be optimized
+def _group(X, groups, agg_func):
+    assert X.shape == groups.shape
+    assert len(X.shape) == 2
+    result = np.empty_like(X)
+    if isinstance(X, pd.DataFrame):
+        for i in range(len(X)):
+            x, group = X.iloc[i], groups.iloc[i]
+            result[i] = (x - x.groupby(group).transform(agg_func))
+        return pd.DataFrame(result, index=X.index, columns=X.columns)
+    elif isinstance(X, np.ndarray):
+        X = pd.DataFrame(X)
+        groups = pd.DataFrame(groups)
+        for i in range(len(X)):
+            x, group = X.iloc[i], groups.iloc[i]
+            result[i] = (x - x.groupby(group).transform(agg_func))
+        return result
+
+
 def group_backfill(x, grou, d, std=4):
     pass
 
@@ -640,60 +683,38 @@ def group_extra(x, weight, group):
     pass
 
 
+def group_mean(x, group):
+    return _group(x, group, np.mean)
+
+
 def group_max(x, group):
-    pass
+    return _group(x, group, np.max)
 
 
 def group_median(x, group):
-    pass
+    return _group(x, group, np.median)
 
 
 def group_min(x, group):
-    pass
+    return _group(x, group, np.min)
 
 
-def _group(x, group, agg_func):
-    """
-    agg_func should be robust against nan.
-    import numpy as np
-    import pandas as pd
-
-    def _group(x, group, agg_func):
-        # Masking nan values
-        nan_mask_x = np.isnan(x)
-        nan_mask_group = np.isnan(group)
-
-        # Replacing nan values
-        x_copy = np.where(nan_mask_x, 0, x)
-        group_copy = np.where(nan_mask_group, '0', group)
-
-        # Using pandas for efficient grouping and aggregation
-        df = pd.DataFrame({'x': x_copy, 'group': group_copy})
-        grouped_df = df.groupby('group').agg(agg_func)
-
-        # Mapping aggregated values back to original rawdata
-        df['rlt'] = df['group'].map(grouped_df['x'])
-
-        # Restoring nan values
-        rlt = np.where(nan_mask_x | nan_mask_group, np.nan, df['rlt'].values)
-
-        return rlt
-    """
-    if np.sum(np.isnan(x)) + np.sum(np.isnan(group)) > 0:
-        nan_mask = np.isnan(x) | np.isnan(group)
-
-        x_copy = np.where(nan_mask, 0, x)
-        group_copy = np.where(nan_mask, '0', group)
-
-        labels, indices = np.unique(group_copy, return_inverse=True)
-        grouped_val = np.array([agg_func(x_copy[group_copy == label]) for label in labels])
-        rlt = grouped_val[indices]
-        rlt = np.where(nan_mask, np.nan, rlt)
-    else:
-        labels, indices = np.unique(group, return_inverse=True)
-        grouped_val = np.array([agg_func(x[group == label]) for label in labels])
-        rlt = grouped_val[indices]
-    return rlt
+# def _group(x, group, agg_func):
+#     if np.sum(np.isnan(x)) + np.sum(np.isnan(group)) > 0:
+#         nan_mask = np.isnan(x) | np.isnan(group)
+#
+#         x_copy = np.where(nan_mask, 0, x)
+#         group_copy = np.where(nan_mask, '0', group)
+#
+#         labels, indices = np.unique(group_copy, return_inverse=True)
+#         grouped_val = np.array([agg_func(x_copy[group_copy == label]) for label in labels])
+#         rlt = grouped_val[indices]
+#         rlt = np.where(nan_mask, np.nan, rlt)
+#     else:
+#         labels, indices = np.unique(group, return_inverse=True)
+#         grouped_val = np.array([agg_func(x[group == label]) for label in labels])
+#         rlt = grouped_val[indices]
+#     return rlt
 
 
 def _group_neutralize_single(x, group):
@@ -708,23 +729,8 @@ def _group_neutralize_single(x, group):
     return neutralized_values
 
 
-def group_neutralize(X, groups):
-    assert X.shape == groups.shape
-    result = []
-    if isinstance(X, pd.DataFrame):
-        for i in range(len(X)):
-            x, group = X.iloc[i], groups.iloc[i]
-            result.append(x - x.groupby(group).transform('mean'))
-        return pd.DataFrame(np.array(result), index=X.index, columns=X.columns)
-    elif isinstance(X, np.ndarray):
-        X = pd.DataFrame(X)
-        groups = pd.DataFrame(groups)
-        for i in range(len(X)):
-            # x, group = X[i], groups[i]
-            # result.append(x - _group(x, group, np.nanmean))
-            x, group = X.iloc[i], groups.iloc[i]
-            result.append(x - x.groupby(group).transform('mean'))
-        return np.array(result)
+def group_neutralize(x, group):
+    return sub(x, group_mean(x, group))
 
 
 def group_rank(x, group):
@@ -732,7 +738,7 @@ def group_rank(x, group):
 
 
 def group_sum(x, group):
-    pass
+    return _group(x, group, np.sum)
 
 
 def group_zscore(x, group):
@@ -740,6 +746,56 @@ def group_zscore(x, group):
 
 
 # Transformational Operators
+
+def arc_cos(x):
+    return np.arccos(x)
+
+
+def arc_sin(x):
+    return np.arc_sin(x)
+
+
+def arc_tan(x):
+    return np.arctan(x)
+
+
+# def bucket(rank(x), range="0, 1, 0.1" or buckets = "2,5,6,7,10")
+
+# def clamp(x, lower = 0, upper = 0, inverse = False, mask = ")
+
+def filter(x, h = "1, 2, 3, 4", t="0.5"):
+    pass
+
+
+def keep(x, f, period=5):
+    pass
+
+
+def left_tail(x, maximum=0.02):
+    """
+    left_tail(rank(close), maximum = 0.02)
+    """
+    return if_else(more(x, maximum), np.nan, x)
+
+
+def right_tail(x, minimum=0.5):
+    """
+    right_tail(rank(volume), minimum = 0.5)
+    """
+    return if_else(less(x, minimum), np.nan, x)
+
+
+def sigmoid(x):
+    return divide(1, add(1, np.exp(-x)))
+
+
+def tanh(x):
+    return np.tanh(x)
+
+
+def tail(x, lower=0, upper=0.5, newval=np.nan):
+    cond = logical_or(less(x, lower), more(x, upper))
+    return if_else(cond, x, np.nan)
 
 
 # TODO: 保持变量类型封闭

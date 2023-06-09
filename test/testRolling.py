@@ -6,6 +6,8 @@ import numpy as np
 a = np.random.normal(0, 1, (252 * 10, 5000, 2))
 a[..., 1] = -a[..., 0]
 
+pd.DataFrame(a[..., 0]).rolling(10).corr(pd.DataFrame(a[..., 0]))
+
 def ff(x):
     x1 = x[..., 0]
     x2 = x[..., 1]
@@ -23,7 +25,14 @@ m.groupby(b).apply(lambda x: np.mean(x))
 from scipy.stats import norm
 
 with Timer():
-    F.roll_apply_rank(a, 100, mode="roll_single")
+    pd.DataFrame(a[..., 0]).rolling(10).corr(pd.DataFrame(a[..., 0]))
+
+
+def aux_func(data_slice):
+    x = data_slice[..., 0]
+    y = data_slice[..., 1]
+    retur
+
 
 with Timer():
     pd.DataFrame(a).rolling(5).rank()
