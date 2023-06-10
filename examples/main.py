@@ -13,6 +13,7 @@ from torchqtm.utils.universe import StaticUniverse, IndexComponents
 from torchqtm.utils.warnings import catch_warnings
 from torchqtm.utils.benchmark import BenchMark
 from torchqtm.vbt.backtest import BackTestEnv, QuickBackTesting01
+from torchqtm.alphas.alpha101 import *
 import torchqtm.op as op
 import torchqtm.op.functional as F
 import numpy as np
@@ -127,7 +128,8 @@ if __name__ == '__main__':
                          symbols=universe.data)
     # Create alpha
     # alphas = Momentum01(env=btEnv0)
-    alphas = Ross(env=btEnv0)
+    alphas = Alpha018(env=btEnv0)
+    # alphas = Ross(env=btEnv0)
     # alphas.forward(btEnv.match_env(dfs['PE']))
     with Timer():
         with catch_warnings():

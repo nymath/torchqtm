@@ -7,9 +7,13 @@ F['ts_mean']
 from torchqtm.utils import Timer
 import numpy as np
 import pandas as pd
-a = np.random.normal(0, 1, (252 * 10, 5000))
+a = np.random.normal(0, 1, (252 * 10, 50000))
 b = np.random.normal(0, 1, (252 * 100, 500))
 c = 2*b + 1
+
+
+with Timer():
+    a = a.astype(np.float64)
 
 am = pd.DataFrame(a)
 

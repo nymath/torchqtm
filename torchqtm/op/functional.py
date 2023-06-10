@@ -14,7 +14,7 @@ import talib
 def abs(x):
     """absolute value of x"""
     if isinstance(x, pd.DataFrame):
-        return x.abs(x)
+        return np.abs(x)
     elif isinstance(x, np.ndarray):
         return np.abs(x)
 
