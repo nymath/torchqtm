@@ -92,3 +92,7 @@ For more information, we refer to [Documentation](https://nymath.github.io/torch
 If you are interested in quantitative finance and are committed to devoting 
 your life to alpha mining, you can contact me through WeChat at Ny_math.
 
+## References
+
+[quantopian/alphalens](https://github1s.com/quantopian/alphalens/blob/HEAD/alphalens/performance.py)  
+[quantopian/zipline](https://github1s.com/quantopian/zipline/blob/HEAD/zipline/performance.py)

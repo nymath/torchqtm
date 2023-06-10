@@ -19,7 +19,7 @@ def main():
         ext_modules=cythonize(extensions, language='c++'),
         include_dirs=[numpy.get_include()],
         name="torchqtm",
-        version="0.0.3",
+        version="0.1.0",
         author="ny",
         author_email="nymath@163.com",
         install_requires=install_requires,
@@ -49,3 +49,5 @@ if __name__ == "__main__":
 # twine upload dist/*
 # twine upload --skip-existing dist/*
 
+# ny.math
+# xxx
