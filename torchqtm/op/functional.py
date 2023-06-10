@@ -8,7 +8,6 @@ from .algos import rank_1d, rank_2d
 from scipy.stats import norm
 import talib
 
-
 # Arithmetic Operators
 
 
@@ -139,12 +138,12 @@ def densify(X):
 
 # Logical Operators
 # TODO: 1231
-def if_else(X, input2, input3):
-    rlt = np.where(X, input2, input3)
+def if_else(condition, value_if_true, value_if_false):
+    rlt = np.where(condition, value_if_true, value_if_false)
     if isinstance(rlt, np.ndarray):
         return rlt
     elif isinstance(rlt, pd.DataFrame):
-        return pd.DataFrame(rlt, index=X.index, columns=X.columns)
+        return pd.DataFrame(rlt, index=condition.index, columns=condition.columns)
 
 
 def logical_and(x, y):
@@ -327,10 +326,24 @@ def ts_co_kurtosis(y, x, d):
     pass
 
 
-def ts_corr(x, y, d):
-    def aux_func(data_slice)
-        return None
+def _ts_corr_single(x, y, d):
     pass
+
+
+def ts_corr(x, y, d):
+    """
+    Pearson correlation of x, y in the past d days.
+    """
+    if len(x.shape) == 2:
+        rlt = pd.DataFrame(x).rolling(d).corr(pd.DataFrame(y))
+    else:
+        rlt = pd.Series(x).rolling(d).corr(pd.Series(y))
+    if isinstance(x, np.ndarray):
+        return rlt.values
+    elif isinstance(x, pd.Series):
+        return pd.Series(rlt.values, index=x.index, name=x.name)
+    elif isinstance(x, pd.DataFrame):
+        return pd.DataFrame(rlt.values, index=x.index, columns=x.columns)
 
 
 def ts_co_skewness(y, x, d):
@@ -384,16 +397,17 @@ def ts_median(x, d):
         return np.nanmedian(x, axis=0)
     return ts_apply(x, d, aux_func)
 
+
 def ts_min_diff(x, d):
     return x - ts_min(x, d)
 
 
 def ts_min_max_cps(x, d, f=2):
-    pass
+    return sub(add(ts_max(x, d), ts_min(x, d)), f * x)
 
 
 def ts_min_max_diff(x, d, f=0.5):
-    pass
+    return sub(x, f * (ts_max(x, d) + ts_min(x, d)))
 
 
 def ts_moment(x, d, k=0):

@@ -59,6 +59,9 @@ class BaseAlpha(BaseOperator, metaclass=ABCMeta):
         """assign self.rawdata and return"""
         raise NotImplementedError
 
+    def __eq__(self, other):
+        return self.__repr__() == other.__repr__() and self.data == other.data
+
     @property
     def open(self):
         return self.env.Close
