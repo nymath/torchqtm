@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from abc import ABCMeta, abstractmethod
 from torchqtm.vbt.backtest import BackTestEnv
-from torchqtm.op.base import BaseAlpha
+from torchqtm.base import BaseAlpha
 
 
 class MLAlpha(BaseAlpha):

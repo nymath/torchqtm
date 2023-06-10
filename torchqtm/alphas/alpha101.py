@@ -5,14 +5,14 @@ import pandas as pd
 import numpy as np
 from abc import ABCMeta, abstractmethod
 from torchqtm.vbt.backtest import BackTestEnv
-from torchqtm.op.base import BaseAlpha
+from torchqtm.base import BaseAlpha
 
 
 # __all__ = [f"Alpha{str(i).zfill(3)}" for i in range(1, 102)]
 # https://github1s.com/yli188/WorldQuant_alpha101_code/blob/master/101Alpha_code_1.py#L378
 
 
-class WQAlpha101(BaseAlpha):
+class WQAlpha101(BaseAlpha, metaclass=ABCMeta):
     def __init__(self, env: BackTestEnv, *args, **kwargs):
         super().__init__(env, *args, **kwargs)
         self.type = 'WorldQuant Alpha101'
@@ -762,3 +762,5 @@ class Alpha101(WQAlpha101):
     def forward(self):
         self.data = (self.close - self.open) / ((self.high - self.low) + 0.001)
         return self.data
+
+

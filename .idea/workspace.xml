@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="66349cf0-fbe3-4040-b5c9-360c62ed966e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/torchquantum.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/torchquantum.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/examples/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/alphas/alpha101.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/alphas/alpha101.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/torchqtm/op/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/op/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/torchqtm/alphas/ml.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/alphas/ml.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/torchqtm/op/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/op/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/torchqtm/op/base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/torchqtm/vbt/backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/vbt/backtest.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -267,7 +268,7 @@
       <workItem from="1686036751162" duration="2623000" />
       <workItem from="1686039680602" duration="109714000" />
       <workItem from="1686323168580" duration="27251000" />
-      <workItem from="1686402231514" duration="7125000" />
+      <workItem from="1686402231514" duration="8403000" />
     </task>
     <servers />
   </component>
@@ -340,7 +341,7 @@
     <SUITE FILE_PATH="coverage/torchquantum$alphas.coverage" NAME="alphas Coverage Results" MODIFIED="1686202941931" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/torchqtm/op" />
     <SUITE FILE_PATH="coverage/torchquantum$functional.coverage" NAME="functional Coverage Results" MODIFIED="1684608285579" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/quant/op" />
     <SUITE FILE_PATH="coverage/torchquantum$backtest.coverage" NAME="backtest Coverage Results" MODIFIED="1685021407960" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/quant/vbt" />
-    <SUITE FILE_PATH="coverage/torchquantum$main.coverage" NAME="main Coverage Results" MODIFIED="1686407605315" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples" />
+    <SUITE FILE_PATH="coverage/torchquantum$main.coverage" NAME="main Coverage Results" MODIFIED="1686411522316" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/examples" />
     <SUITE FILE_PATH="coverage/torchquantum$testRolling.coverage" NAME="testRolling Coverage Results" MODIFIED="1686291302203" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/torchquantum$testFunctional.coverage" NAME="testFunctional Coverage Results" MODIFIED="1686271280844" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/torchquantum$_func_pyx.coverage" NAME="_func.pyx Coverage Results" MODIFIED="1685207324844" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/quant/op" />
