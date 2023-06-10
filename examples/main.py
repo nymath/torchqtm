@@ -128,7 +128,7 @@ if __name__ == '__main__':
                          symbols=universe.data)
     # Create alpha
     # alphas = Momentum01(env=btEnv0)
-    alphas = Alpha018(env=btEnv0)
+    alphas = Alpha033(env=btEnv0)
     # alphas = Ross(env=btEnv0)
     # alphas.forward(btEnv.match_env(dfs['PE']))
     with Timer():
@@ -137,16 +137,16 @@ if __name__ == '__main__':
     # run backtest
     bt = QuickBackTesting01(env=btEnv,
                             universe=universe,
-                            n_groups=10)
+                            n_groups=5)
     with Timer():
         bt.run_backtest(bt.env.match_env(alphas.data))
 
     # plot the result
     fig = plt.figure(figsize=(20, 12))
     ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])
-    color_generator = ColorGenerator(10)
+    color_generator = ColorGenerator(5)
     colors = color_generator.data
-    for i in range(10):
+    for i in range(5):
         ax.plot((1 + bt.returns.iloc[:, i]).cumprod(), label=f'group_{i + 1}', color=colors[i])
     fig.legend(fontsize=16)
     fig.show()

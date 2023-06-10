@@ -7,6 +7,7 @@ from abc import ABCMeta, abstractmethod
 from torchqtm.vbt.backtest import BackTestEnv
 from torchqtm.op.base import BaseAlpha
 
+
 # __all__ = [f"Alpha{str(i).zfill(3)}" for i in range(1, 102)]
 # https://github1s.com/yli188/WorldQuant_alpha101_code/blob/master/101Alpha_code_1.py#L378
 
@@ -137,6 +138,10 @@ class Alpha009(WQAlpha101):
 
     def __repr__(self):
         return "(-1 * correlation(rank(delta(log(volume), 2)), rank(((close - open) / open)), 6))"
+
+
+class Alpha010(WQAlpha101):
+    pass
 
 
 class Alpha011(WQAlpha101):
@@ -347,6 +352,20 @@ class Alpha024(WQAlpha101):
 
 
 class Alpha025(WQAlpha101):
+    """
+               [rank]
+                 |
+               [mul]
+               /   \
+           [mul]   [sub]
+           /   \     /   \
+        [mul] vwap high close
+         /   \
+       [mul] adv20
+       /   \
+      -1 returns
+
+    """
     def __init__(self, env):
         super().__init__(env)
 
@@ -359,6 +378,18 @@ class Alpha025(WQAlpha101):
 
 
 class Alpha026(WQAlpha101):
+    """
+        [mul]
+        /   \
+      -1  [ts_max]
+          /   \
+    [correlation] 3
+     /   |   \
+    [ts_rank] [ts_rank] 5
+     /   \    /   \
+    volume 5 high  5
+
+    """
     def __init__(self, env):
         super().__init__(env)
 
@@ -413,6 +444,25 @@ class Alpha027(WQAlpha101):
 
 
 class Alpha030(WQAlpha101):
+    """
+                   [div]
+                   /   \
+               [mul]   [sum]
+               /   \       /   \
+          [sub]    [sum] volume 20
+          /   \       /   \
+        1.0 [rank] volume 5
+             |
+           [add]
+           /   \
+       [add]  [sign]
+       /   \    |
+    [sign] [sign] [delay]
+     /   \   /   \  /   \
+    [delay] [delay] close 3
+     /   \    /   \
+    close 1 close 2
+    """
     def __init__(self, env):
         super().__init__(env)
 
@@ -427,7 +477,282 @@ class Alpha030(WQAlpha101):
         return self.data
 
 
+# TODO: implement it
+class Alpha031(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+        self.USED = False
+
+    def __repr__(self):
+        return "((rank(rank(rank(decay_linear((-1 * rank(rank(delta(close, 10)))), 10)))) + " \
+               "rank((-1 *delta(close, 3)))) + sign(scale(correlation(adv20, low, 12))))"
+
+    def forward(self):
+        pass
+
+
+# TODO: implement it
+class Alpha032(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+        self.USED = False
+
+    def __repr__(self):
+        return "(scale(((sum(close, 7) / 7) - close)) + (20 * scale(correlation(vwap, delay(close, 5),230))))"
+
+    def forward(self):
+        self.data = -1 * cs_rank(ts_delta(self.returns, 3)) * ts_corr(self.open, self.volume, 10)
+        return self.data
+
+
+class Alpha033(WQAlpha101):
+    """
+             [rank]
+             |
+            [mul]
+            /   \
+          -1    [pow]
+                /   \
+             [sub]   1
+             /   \
+            1   [div]
+                /   \
+             open close
+    """
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "rank((-1 * ((1 - (open / close))^1)))"
+
+    def forward(self):
+        self.data = cs_rank(-1 + (self.open / self.close))
+        return self.data
+
+
+class Alpha034(WQAlpha101):
+    """
+             [rank]
+             |
+           [add]
+           /   \
+       [sub]   [sub]
+       /   \     /   \
+      1  [rank] 1  [rank]
+         |         |
+      [div]    [delta]
+     /   \     /   \
+    [stddev] [stddev] close 1
+     /   \     /   \
+    returns 2 returns 5
+
+    """
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "rank(((1 - rank((stddev(returns, 2) / stddev(returns, 5)))) + (1 - rank(delta(close, 1)))))"
+
+    def forward(self):
+        temp = ts_std_dev(self.returns, 2) / ts_std_dev(self.returns, 5)
+        self.data = cs_rank(2 - cs_rank(temp) - cs_rank(ts_delta(self.close, 1)))
+        return self.data
+
+
+class Alpha035(WQAlpha101):
+    """
+              [mul]
+              /   \
+           [mul]  [sub]
+           /   \     / \
+     [ts_Rank] [sub] 1 [ts_Rank]
+     /   \     /     /   \
+    volume 32 1 [ts_Rank] returns 32
+               | /   \
+             [sub]   16
+             / | \
+         [add] low
+         /   \
+       close high
+    """
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "((ts_Rank(volume, 32) * (1 - Ts_Rank(((close + high) - low), 16))) * (1 -Ts_Rank(returns, 32)))"
+
+    def forward(self):
+        self.data = ((ts_rank(self.volume, 32) *
+                      (1 - ts_rank(self.close + self.high - self.low, 16))) *
+                     (1 - ts_rank(self.returns, 32)))
+        return self.data
+
+
+class Alpha036(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+        self.USED = False  # It seems too complex and use too long data.
+
+    def __repr__(self):
+        return "(((((2.21 * rank(correlation((close - open), delay(volume, 1), 15))) + (0.7 * rank((open- close)))) + " \
+               "(0.73 * rank(Ts_Rank(delay((-1 * returns), 6), 5)))) + rank(abs(correlation(vwap,adv20, 6)))) + (0.6 " \
+               "* rank((((sum(close, 200) / 200) - open) * (close - open)))))"
+
+    def forward(self):
+        pass
+
+
+class Alpha037(WQAlpha101):
+    """
+              [add]
+              /   \
+        [rank]   [rank]
+        /          |
+    [correlation] [sub]
+     /   |   \     /   \
+    [delay] close 200 open close
+     /   \
+    [sub] 1
+     /   \
+    open close
+    """
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "(rank(correlation(delay((open - close), 1), close, 200)) + rank((open - close)))"
+
+    def forward(self):
+        self.data = cs_rank(ts_corr(ts_delay(self.open - self.close, 1), self.close, 200)) \
+                    + cs_rank(self.open - self.close)
+        return self.data
+
+
+class Alpha038(WQAlpha101):
+    """
+              (*)
+              / \
+             /   \
+            /     \
+        [mul]    [cs_rank]
+         /  \        |
+        -1  [cs_rank] [divide]
+            |        /   \
+         [ts_rank] self.close self.open
+            |
+         [self.close, 10]
+    """
+
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "((-1 * rank(Ts_Rank(close, 10))) * rank((close / open)))"
+
+    def forward(self):
+        self.data = (-1 * cs_rank(ts_rank(self.close, 10))) * cs_rank(divide(self.close, self.open))
+        return self.data
+
+
+class Alpha039(WQAlpha101):
+    """
+            [mul]
+            /   \
+         [mul]  [add]
+         /   \     / \
+       -1  [rank] 1 [rank]
+            |         |
+       [mul]     [sum]
+       /   \         |
+    [delta] [sub] [returns, 250]
+     /   \   /   \
+    close 7  1  [rank]
+               |
+          [decay_linear]
+           /        \
+      [div]         9
+     /   \
+    volume adv20
+    """
+
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "((-1 * rank((delta(close, 7) * (1 - rank(decay_linear((volume / adv20), 9)))))) * (1 +rank(sum(" \
+               "returns, 250))))"
+
+    def forward(self):
+        self.data = ((-1 * cs_rank(
+            ts_delta(self.close, 7) * (1 - cs_rank(ts_decay_linear((self.volume / self.adv20), 9).CLOSE)))) *
+                     (1 + cs_rank(ts_mean(self.returns, 250))))
+        return self.data
+
+
+class Alpha040(WQAlpha101):
+    """
+            [mul]
+            /   \
+        [mul]  [correlation]
+        /   \     /   |   \
+      -1  [rank] high volume 10
+          |
+       [stddev]
+       /   \
+     high  10
+    """
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "((-1 * rank(delta(returns, 3))) * correlation(open, volume, 10))"
+
+    def forward(self):
+        self.data = -1 * cs_rank(ts_std_dev(self.high, 10)) * ts_corr(self.high, self.volume, 10)
+        return self.data
+
+
+class Alpha099(WQAlpha101):
+    """
+               [mul]
+               /   \
+           [lt]   -1
+           /   \
+       [rank] [rank]
+       /        |
+    [correlation] [correlation]
+     /   |   \    /   |   \
+    [sum] [sum] 8.8136 low volume 6.28259
+     /   \    /   \
+    [div] 19.8975 adv60 19.8975
+     /   \
+    high low
+
+    """
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "((rank(correlation(sum(((high + low) / 2), 19.8975), sum(adv60, 19.8975), 8.8136)) <rank(correlation(" \
+               "low, volume, 6.28259))) * -1)"
+
+    def forward(self):
+        adv60 = ts_mean(self.volume, 60)
+        self.data = (cs_rank(ts_corr(ts_sum(((self.high + self.low) / 2), 20), ts_sum(adv60, 20), 9)) <
+                     cs_rank(ts_corr(self.low, self.volume, 6))) * -1
+        return self.data
+
+
 class Alpha101(WQAlpha101):
+    """
+           [div]
+           /   \
+       [sub]  [add]
+       /   \   /   \
+     close open [sub] .001
+               /   \
+             high  low
+    """
     def __init__(self, env):
         super().__init__(env)
 
@@ -435,7 +760,5 @@ class Alpha101(WQAlpha101):
         return "((close - open) / ((high - low) + .001))"
 
     def forward(self):
-        self.data = (self.close - self.open) /((self.high - self.low) + 0.001)
+        self.data = (self.close - self.open) / ((self.high - self.low) + 0.001)
         return self.data
-
-

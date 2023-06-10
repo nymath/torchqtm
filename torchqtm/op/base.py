@@ -27,7 +27,6 @@ class Parameter(np.ndarray, metaclass=ABCMeta):
             raise ValueError("must provide possible values for search")
 
 
-
 __TYPES = ['momentum', 'reversion']
 
 
@@ -53,6 +52,7 @@ class BaseAlpha(BaseOperator, metaclass=ABCMeta):
         self.kwargs = kwargs
         self.data = None
         self.type = None
+        self.USED = True  # default to be used
 
     @abstractmethod
     def forward(self, *args, **kwargs):
@@ -64,7 +64,7 @@ class BaseAlpha(BaseOperator, metaclass=ABCMeta):
 
     @property
     def open(self):
-        return self.env.Close
+        return self.env.Open
 
     @property
     def high(self):
