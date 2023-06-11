@@ -7,7 +7,10 @@ build_cython:
 
 build_package:
 	@python setup.py sdist bdist_wheel
+
+publish_package:
 	@twine upload --skip-existing dist/*
+
 
 
 
@@ -19,3 +22,6 @@ build_package:
 # git branch --all
 # git branch --verbose
 # git branch --remotes
+
+# git push --set-upstream origin main:main
+
