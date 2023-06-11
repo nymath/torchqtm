@@ -9,3 +9,4 @@ build_package:
 	@python setup.py sdist bdist_wheel
 	@twine upload --skip-existing dist/*
 
+# add hash

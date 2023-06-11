@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="66349cf0-fbe3-4040-b5c9-360c62ed966e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/base.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/types.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/types.py" afterDir="false" />
