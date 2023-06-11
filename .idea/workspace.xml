@@ -5,11 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="66349cf0-fbe3-4040-b5c9-360c62ed966e" name="Changes" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/alphas/alpha101.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/alphas/alpha101.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/alphas/ml.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/alphas/ml.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/op/base.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/vbt/backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/vbt/backtest.py" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/torchqtm/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/torchqtm/types.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/types.py" afterDir="false" />
+>>>>>>> dev
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,11 +57,11 @@
                 <list>
                   <RecentBranch>
                     <option name="branchName" value="dev" />
-                    <option name="lastUsedInstant" value="1686218514" />
+                    <option name="lastUsedInstant" value="1686412104" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="main" />
-                    <option name="lastUsedInstant" value="1686206737" />
+                    <option name="lastUsedInstant" value="1686412042" />
                   </RecentBranch>
                   <RecentBranch>
                     <option name="branchName" value="stable" />
@@ -270,7 +277,7 @@
       <workItem from="1686036751162" duration="2623000" />
       <workItem from="1686039680602" duration="109714000" />
       <workItem from="1686323168580" duration="27251000" />
-      <workItem from="1686402231514" duration="8403000" />
+      <workItem from="1686402231514" duration="22266000" />
     </task>
     <servers />
   </component>

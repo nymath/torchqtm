@@ -5,7 +5,8 @@ import numpy as np
 from typing import Dict, Hashable
 from abc import ABCMeta, abstractmethod
 from typing import Iterable
-
+import torch.nn as nn
+nn.ReLU
 
 class BackTestEnv(object):
     """
