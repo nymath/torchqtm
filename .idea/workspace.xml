@@ -13,9 +13,13 @@
       <change beforePath="$PROJECT_DIR$/torchqtm/vbt/backtest.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/vbt/backtest.py" afterDir="false" />
 =======
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/base.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/torchqtm/types.py" beforeDir="false" afterPath="$PROJECT_DIR$/torchqtm/types.py" afterDir="false" />
+>>>>>>> dev
+=======
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
 >>>>>>> dev
     </list>
     <option name="SHOW_DIALOG" value="false" />
