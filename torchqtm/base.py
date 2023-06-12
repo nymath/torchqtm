@@ -5,8 +5,7 @@ import numpy as np
 from typing import Dict, Hashable
 from abc import ABCMeta, abstractmethod
 from typing import Iterable
-import torch.nn as nn
-nn.ReLU
+
 
 class BackTestEnv(object):
     """
@@ -137,7 +136,7 @@ class BaseOperator(object, metaclass=ABCMeta):
 class BaseAlpha(BaseOperator, metaclass=ABCMeta):
 
     __DATA_AVAILABLE__ = ['open', 'high', 'low', 'close', 'volume',
-                          'return', 'vwap', 'adv20', 'sector']
+                          'returns', 'vwap', 'adv20', 'sector']
 
     def __init__(self, env: BackTestEnv, *args, **kwargs):
 

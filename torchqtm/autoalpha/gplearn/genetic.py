@@ -30,7 +30,7 @@ from .functions import _function_map, _Function, sig1 as sigmoid
 from .utils import _partition_estimators
 from .utils import check_random_state
 import copy
-from torchqtm.vbt.backtest import BaseTest
+from torchqtm.vbt.backtest import BaseTester
 
 __all__ = ['SymbolicRegressor', 'SymbolicClassifier', 'SymbolicTransformer']
 
@@ -54,7 +54,7 @@ def _parallel_evolve(n_programs, parents, X, y, sample_weight, seeds, params):
     p_point_replace = params['p_point_replace']
     max_samples = params['max_samples']
     feature_names = params['feature_names']
-    strategy: BaseTest = params['strategy']
+    strategy: BaseTester = params['strategy']
     max_samples = int(max_samples * n_samples)
 
     def _tournament():
@@ -194,7 +194,7 @@ class BaseSymbolic(BaseEstimator, metaclass=ABCMeta):
                  n_jobs=1,
                  verbose=0,
                  random_state=None,
-                 strategy: BaseTest = None,
+                 strategy: BaseTester = None,
                  ):
         self.population_size = population_size
         self.hall_of_fame = hall_of_fame
@@ -222,7 +222,7 @@ class BaseSymbolic(BaseEstimator, metaclass=ABCMeta):
         self.n_jobs = n_jobs
         self.verbose = verbose
         self.random_state = random_state
-        self.strategy: BaseTest = strategy
+        self.strategy: BaseTester = strategy
         self.n_features_in_ = ...
         self._function_set = ...
         self._arities = ...
@@ -819,7 +819,7 @@ class SymbolicRegressor(BaseSymbolic, RegressorMixin):
                  n_jobs=1,
                  verbose=0,
                  random_state=None,
-                 strategy: BaseTest = None):
+                 strategy: BaseTester = None):
         super(SymbolicRegressor, self).__init__(
             population_size=population_size,
             generations=generations,

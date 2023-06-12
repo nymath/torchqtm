@@ -1,6 +1,8 @@
 import os
 import sys
 
+import joblib
+
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 sys.path.append(BASE_DIR)
@@ -8,17 +10,15 @@ sys.path.append(ROOT_DIR)
 
 from torchqtm.utils import Timer
 from torchqtm.utils.rebalance import Weekly, Daily
-from torchqtm.utils.visualization import ColorGenerator
 from torchqtm.utils.universe import StaticUniverse, IndexComponents
 from torchqtm.utils.warnings import catch_warnings
 from torchqtm.utils.benchmark import BenchMark
-from torchqtm.vbt.backtest import BackTestEnv, QuickBackTesting01
+from torchqtm.vbt.backtest import GroupTester01
 from torchqtm.alphas.alpha101 import *
 import torchqtm.op as op
 import torchqtm.op.functional as F
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import pickle
 
 start = '20170101'
@@ -51,12 +51,10 @@ class Momentum01(op.Momentum):
 
     def forward(self):
         self.data = self.env.Close
-        self.data = self.data.astype(np.float64)
         self.data = F.winsorize(self.data, 'std', 4)
         self.data = F.normalize(self.data)
         self.data = F.group_neutralize(self.data, self.env.Sector)
         self.data = F.regression_neut(self.data, self.env.MktVal)
-        self.data = self.data.astype(np.float64)
         # self.data = F.ts_returns(self.data, 1)
         self.data = F.ts_delta(self.env.Close, 3)
         return self.data
@@ -67,7 +65,6 @@ class Momentum02(op.Momentum):
         super().__init__(env)
 
     def forward(self):
-        self.env.Close = self.env.Close.astype(np.float64)
         self.data = self.env.Close
         self.data = F.winsorize(self.data, 'std', 4)
         self.data = F.normalize(self.data)
@@ -117,8 +114,15 @@ class Ross(op.Volatility):
 
 if __name__ == '__main__':
     # Load the rawdata
-    with open(f"{BASE_DIR}/largedata/Stocks.pkl", "rb") as f:
-        dfs = pickle.load(f)
+    import joblib
+
+    # @joblib.Memory('./.cache', verbose=0).cache
+    def load_data():
+        with open(f"{BASE_DIR}/largedata/stocks_f64.pkl", "rb") as f:
+            return pickle.load(f)
+
+    dfs = load_data()
+
     # Create the backtest environment
     btEnv = BackTestEnv(dfs=dfs,
                         dates=rebalance_backtest.data,
@@ -128,25 +132,19 @@ if __name__ == '__main__':
                          symbols=universe.data)
     # Create alpha
     # alphas = Momentum01(env=btEnv0)
-    alphas = Alpha033(env=btEnv0)
-    # alphas = Ross(env=btEnv0)
+    # alphas = Momentum01(env=btEnv0)
+    alphas = Alpha015(env=btEnv0)
     # alphas.forward(btEnv.match_env(dfs['PE']))
     with Timer():
         with catch_warnings():
             alphas.forward()
     # run backtest
-    bt = QuickBackTesting01(env=btEnv,
-                            universe=universe,
-                            n_groups=5)
+    bt = GroupTester01(env=btEnv,
+                       universe=universe,
+                       n_groups=5)
     with Timer():
         bt.run_backtest(bt.env.match_env(alphas.data))
+    # print(bt.score(bt.env.match_env(alphas.data)))
+    bt.plot()
 
-    # plot the result
-    fig = plt.figure(figsize=(20, 12))
-    ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])
-    color_generator = ColorGenerator(5)
-    colors = color_generator.data
-    for i in range(5):
-        ax.plot((1 + bt.returns.iloc[:, i]).cumprod(), label=f'group_{i + 1}', color=colors[i])
-    fig.legend(fontsize=16)
-    fig.show()
+

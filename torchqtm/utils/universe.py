@@ -6,6 +6,7 @@ from torchqtm.utils import relativedelta, datetime
 pro = ts.pro_api(__TS_API__)
 from typing import Iterable, Union, List
 from abc import abstractmethod, ABCMeta
+import joblib
 
 
 class Universe(object, metaclass=ABCMeta):
@@ -34,6 +35,7 @@ class DynamicUniverse(object):
     pass
 
 
+@joblib.Memory('./.cache', verbose=0).cache
 class IndexComponents(object):
     def __init__(self,
                  index_code: str,

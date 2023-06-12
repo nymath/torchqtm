@@ -11,7 +11,8 @@ build_package:
 publish_package:
 	@twine upload --skip-existing dist/*
 
-
+git_log:
+	@git log --all --graph --decorate --oneline
 
 
 # add hash

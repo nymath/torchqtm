@@ -11,7 +11,6 @@ from torchqtm.base import BaseAlpha
 # __all__ = [f"Alpha{str(i).zfill(3)}" for i in range(1, 102)]
 # https://github1s.com/yli188/WorldQuant_alpha101_code/blob/master/101Alpha_code_1.py#L378
 # https://chat.openai.com/share/7147e5ec-d1f9-4282-9394-c59fd35ee13b
-
 class WQAlpha101(BaseAlpha, metaclass=ABCMeta):
     def __init__(self, env: BackTestEnv, *args, **kwargs):
         super().__init__(env, *args, **kwargs)
@@ -49,7 +48,7 @@ class Alpha002(WQAlpha101):
 class Alpha003(WQAlpha101):
     """
     The Spearman correlation of open and volume
-    (-1 * correlation(rank(open), rank(volume), 10))
+    -1 * correlation(rank(open), rank(volume), 10)
     """
 
     def __init__(self, env):
@@ -97,7 +96,8 @@ class Alpha006(WQAlpha101):
 
 class Alpha007(WQAlpha101):
     """
-    ((adv20 < volume) ? ((-1 * ts_rank(abs(delta(close, 7)), 60)) * sign(delta(close, 7))) : (-1* 1))    """
+    ((adv20 < volume) ? ((-1 * ts_rank(abs(delta(close, 7)), 60)) * sign(delta(close, 7))) : (-1* 1))
+    """
 
     def __init__(self, env):
         super().__init__(env)
@@ -861,7 +861,7 @@ class Alpha049(WQAlpha101):
 
     def forward(self):
         condition = (((ts_delay(self.close, 20) - ts_delay(self.close, 10)) / 10) - (
-                    (ts_delay(self.close, 10) - self.close) / 10)) < -0.1
+                (ts_delay(self.close, 10) - self.close) / 10)) < -0.1
         value_if_true = 1
         value_if_false = -1 * ts_delta(self.close, 1)
         self.data = if_else(condition, value_if_true, value_if_false)
@@ -890,10 +890,10 @@ class Alpha051(WQAlpha101):
 
     def forward(self):
         condition = (((ts_delay(self.close, 20) - ts_delay(self.close, 10)) / 10) - (
-                    (ts_delay(self.close, 10) - self.close) / 10)) < -0.05
+                (ts_delay(self.close, 10) - self.close) / 10)) < -0.05
         value_if_true = 1
         value_if_false = -1 * ts_delta(self.close, 1)
-        self.data = -1 * cs_rank(ts_delta(self.returns, 3)) * ts_corr(self.open, self.volume, 10)
+        self.data = if_else(condition, value_if_true, value_if_false)
         return self.data
 
 
