@@ -912,10 +912,18 @@ class Alpha052(WQAlpha101):
         return self.data
 
 
-# Alpha#53	 (-1 * delta((((close - low) - (high - close)) / (close - low)), 9))
-def alpha053(self):
-    inner = (self.close - self.low).replace(0, 0.0001)
-    return -1 * delta((((self.close - self.low) - (self.high - self.close)) / inner), 9)
+class Alpha053(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+        self.USED = False
+
+    def __repr__(self):
+        return "(-1 * delta((((close - low) - (high - close)) / (close - low)), 9))"
+
+    def forward(self):
+        inner = (self.close - self.low)
+        self.data = -1 * ts_delta((((self.close - self.low) - (self.high - self.close)) / inner), 9)
+        return self.data
 
 
 # Alpha#54	 ((-1 * ((low - close) * (open^5))) / ((low - high) * (close^5)))
