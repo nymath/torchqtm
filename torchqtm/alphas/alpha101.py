@@ -492,7 +492,7 @@ class Alpha030(WQAlpha101):
 class Alpha031(WQAlpha101):
     def __init__(self, env):
         super().__init__(env)
-        self.enabled = False
+        self.Enabled = False
 
     def __repr__(self):
         return "((rank(rank(rank(decay_linear((-1 * rank(rank(delta(close, 10)))), 10)))) + " \
@@ -506,7 +506,7 @@ class Alpha031(WQAlpha101):
 class Alpha032(WQAlpha101):
     def __init__(self, env):
         super().__init__(env)
-        self.enabled = False
+        self.Enabled = False
 
     def __repr__(self):
         return "(scale(((sum(close, 7) / 7) - close)) + (20 * scale(correlation(vwap, delay(close, 5),230))))"
@@ -605,7 +605,7 @@ class Alpha035(WQAlpha101):
 class Alpha036(WQAlpha101):
     def __init__(self, env):
         super().__init__(env)
-        self.enabled = False  # It seems too complex and use too long data.
+        self.Enabled = False  # It seems too complex and use too long data.
 
     def __repr__(self):
         return "(((((2.21 * rank(correlation((close - open), delay(volume, 1), 15))) + (0.7 * rank((open- close)))) + " \
@@ -814,7 +814,7 @@ class Alpha045(WQAlpha101):
 class Alpha046(WQAlpha101):
     def __init__(self, env):
         super().__init__(env)
-        self.enabled = False
+        self.Enabled = False
 
     def __repr__(self):
         return "((0.25 < (((delay(close, 20) - delay(close, 10)) / 10) - ((delay(close, 10) - close) / 10))) ?(-1 * " \
@@ -848,7 +848,7 @@ class Alpha047(WQAlpha101):
 class Alpha048(WQAlpha101):
     def __init__(self, env):
         super().__init__(env)
-        self.enabled = False
+        self.Enabled = False
 
     def __repr__(self):
         return "(indneutralize(((correlation(delta(close, 1), delta(delay(close, 1), 1), 250) *delta(close, " \
@@ -923,7 +923,7 @@ class Alpha052(WQAlpha101):
 class Alpha053(WQAlpha101):
     def __init__(self, env):
         super().__init__(env)
-        self.enabled = False
+        self.Enabled = False
 
     def __repr__(self):
         return "(-1 * delta((((close - low) - (high - close)) / (close - low)), 9))"

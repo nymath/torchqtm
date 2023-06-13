@@ -46,9 +46,13 @@ class TesterMixin:
 class BaseGroupTester(BaseTester, TesterMixin):
     def __init__(self,
                  env: BackTestEnv = None,
-                 n_groups: int = 5):
+                 n_groups: int = 5,
+                 exclude_suspended: bool = False,
+                 exclude_limits: bool = False):
         super().__init__(env)
         self.n_groups = n_groups
+        self.exclude_limits = exclude_limits
+        self.exclude_suspended = exclude_suspended
         self.returns = None
 
     def _reset(self):

@@ -140,9 +140,9 @@ def densify(X):
 # TODO: 1231
 def if_else(condition, value_if_true, value_if_false):
     rlt = np.where(condition, value_if_true, value_if_false)
-    if isinstance(rlt, np.ndarray):
+    if isinstance(condition, np.ndarray):
         return rlt
-    elif isinstance(rlt, pd.DataFrame):
+    elif isinstance(condition, pd.DataFrame):
         return pd.DataFrame(rlt, index=condition.index, columns=condition.columns)
 
 

@@ -134,7 +134,7 @@ if __name__ == '__main__':
     # Create alpha
     # alphas = Momentum01(env=btEnv0)
     # alphas = NeutralizePE(env=btEnv0)
-    alphas = Alpha015(env=btEnv0)
+    alphas = Alpha060(env=btEnv0)
     # alphas = Ross(env=btEnv0)
     # alphas.forward(btEnv.match_env(dfs['PE']))
     with Timer():
