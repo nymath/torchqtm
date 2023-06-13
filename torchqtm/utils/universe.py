@@ -11,7 +11,7 @@ import joblib
 
 class Universe(object, metaclass=ABCMeta):
     def __init__(self):
-        pass
+        self.data = None
 
     @abstractmethod
     def get_symbols(self, trade_date: Union[str, datetime, pd.Timestamp]):
