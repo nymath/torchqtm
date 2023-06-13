@@ -1,8 +1,6 @@
 import os
 import sys
 
-import joblib
-
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 sys.path.append(BASE_DIR)
