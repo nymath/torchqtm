@@ -14,6 +14,8 @@ publish_package:
 git_log:
 	@git log --all --graph --decorate --oneline
 
+git_remove_cached:
+	@git rm -r --cached .idea
 
 # add hash
 
