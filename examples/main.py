@@ -23,8 +23,8 @@ start = '20170101'
 end = '20230101'
 rebalance_factor = Daily(start, end)
 rebalance_backtest = Weekly(start, end, [-1])
-benchmark = BenchMark('000905.SH', start, end)
-universe = StaticUniverse(IndexComponents('000905.SH', start).data)
+benchmark = BenchMark('000852.SH', start, end)
+universe = StaticUniverse(IndexComponents('000852.SH', start).data)
 
 
 class NeutralizePE(op.Fundamental):
@@ -121,27 +121,31 @@ if __name__ == '__main__':
 
     dfs = load_data()
 
+    # universe = list(dfs['Close'].columns)
     # Create the backtest environment
-    btEnv = BackTestEnv(dfs=dfs,
-                        dates=rebalance_backtest.data,
-                        symbols=universe.data)
     btEnv0 = BackTestEnv(dfs=dfs,
                          dates=rebalance_factor.data,
                          symbols=universe.data)
+
+    btEnv = BackTestEnv(dfs=dfs,
+                        dates=rebalance_backtest.data,
+                        symbols=universe.data)
+
     # Create alpha
     # alphas = Momentum01(env=btEnv0)
-    # alphas = Momentum01(env=btEnv0)
+    # alphas = NeutralizePE(env=btEnv0)
     alphas = Alpha015(env=btEnv0)
+    # alphas = Ross(env=btEnv0)
     # alphas.forward(btEnv.match_env(dfs['PE']))
     with Timer():
         with catch_warnings():
             alphas.forward()
     # run backtest
     bt = GroupTester01(env=btEnv,
-                       universe=universe,
                        n_groups=5)
+
     with Timer():
-        bt.run_backtest(bt.env.match_env(alphas.data))
+        bt.run_backtest(bt.env.match_env(F.purify(alphas.data)))
     # print(bt.score(bt.env.match_env(alphas.data)))
     bt.plot()
 

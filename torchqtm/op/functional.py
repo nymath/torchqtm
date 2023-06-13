@@ -100,9 +100,9 @@ def nan_out(X, lower=-0.1, upper=0.1):
 
 def purify(X):
     rlt = np.where(np.isinf(X), np.nan, X)
-    if isinstance(rlt, np.ndarray):
+    if isinstance(X, np.ndarray):
         return rlt
-    elif isinstance(rlt, pd.DataFrame):
+    elif isinstance(X, pd.DataFrame):
         return pd.DataFrame(rlt, index=X.index, columns=X.columns)
 
 

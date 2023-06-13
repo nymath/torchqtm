@@ -18,7 +18,7 @@ from pandas._libs.algos import rank_1d, rank_2d
 # Scalar = Union[PythonScalar, PandasScalar, np.datetime64, np.timedelta64, datetime]
 
 
-@functools.lru_cache(maxsize=None)
+# @functools.lru_cache(maxsize=None)
 def get_window_bounds(num_values, window_size):
     offset = 0
     end = np.arange(1 + offset, num_values + 1 + offset, 1, dtype=np.int64)
