@@ -812,7 +812,8 @@ def tail(x, lower=0, upper=0.5, newval=np.nan):
     return if_else(cond, x, np.nan)
 
 
-# TODO: 保持变量类型封闭
+# TODO: 保持变量类型封闭, 目前有一堆BUG
+# BUG:
 def trade_when(trigger: np.ndarray[bool],
                alpha: np.ndarray[np.float64],
                exit_cond: np.ndarray[bool]):

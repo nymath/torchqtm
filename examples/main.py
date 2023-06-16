@@ -11,7 +11,7 @@ from torchqtm.utils.rebalance import Weekly, Daily
 from torchqtm.utils.universe import StaticUniverse, IndexComponents
 from torchqtm.utils.warnings import catch_warnings
 from torchqtm.utils.benchmark import BenchMark
-from torchqtm.vbt.backtest import GroupTester01
+from torchqtm.vbt.backtest import GroupTester01, GroupTester02
 from torchqtm.alphas.alpha101 import *
 import torchqtm.op as op
 import torchqtm.op.functional as F
@@ -34,7 +34,6 @@ class NeutralizePE(op.Fundamental):
 
     def forward(self):
         self.data = F.divide(1, self.env.PE)
-        self.data = self.data.astype(np.float64)
         self.data = F.winsorize(self.data, 'std', 4)
         self.data = F.normalize(self.data)
         self.data = F.group_neutralize(self.data, self.env.Sector)
@@ -103,8 +102,8 @@ class Ross(op.Volatility):
         self.data = F.winsorize(self.data, 'std', 4)
         self.data = F.normalize(self.data)
         self.data = pd.DataFrame(self.data, index=self.env.Close.index, columns=self.env.Close.columns)
-        cond = F.geq(F.ts_mean(np.squeeze(Close, -1), 5), F.ts_mean(np.squeeze(Close, -1), 22))
-        self.data = F.trade_when(cond, self.data, False)
+        cond = F.geq(F.ts_mean(self.close, 5), F.ts_mean(self.close, 22))
+        # self.data = F.trade_when(cond, self.data, False)
         self.data = F.group_neutralize(self.data, self.env.Sector)
         self.data = F.regression_neut(self.data, self.env.MktVal)
         return self.data
@@ -134,15 +133,18 @@ if __name__ == '__main__':
     # Create alpha
     # alphas = Momentum01(env=btEnv0)
     # alphas = NeutralizePE(env=btEnv0)
-    alphas = Alpha060(env=btEnv0)
+    alphas = Alpha055(env=btEnv0)
     # alphas = Ross(env=btEnv0)
     # alphas.forward(btEnv.match_env(dfs['PE']))
     with Timer():
         with catch_warnings():
             alphas.forward()
     # run backtest
-    bt = GroupTester01(env=btEnv,
-                       n_groups=5)
+    bt = GroupTester02(env=btEnv,
+                       n_groups=5,
+                       weighting='equal',
+                       exclude_suspended=False,
+                       exclude_limits=False)
 
     with Timer():
         bt.run_backtest(bt.env.match_env(F.purify(alphas.data)))

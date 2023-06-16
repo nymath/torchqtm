@@ -5,6 +5,7 @@ import numpy as np
 from typing import Dict, Hashable
 from abc import ABCMeta, abstractmethod
 from typing import Iterable
+from collections import OrderedDict
 
 
 class BackTestEnv(object):
@@ -39,9 +40,10 @@ class BackTestEnv(object):
         self.MktVal = None
         self.PE = None
         self.Sector = None
-        self._FutureReturn = None
+        self.forward_returns = None
         self._create_datas()
         self._create_features()
+        self._create_forward_returns()
 
     def _check_dfs(self):
         """
@@ -53,22 +55,24 @@ class BackTestEnv(object):
         assert 'Sector' in self.dfs
 
     def _create_datas(self):
-        self.datas = {}
+        self.data = {}
         for key in self.dfs:
             if isinstance(self.dfs[key], pd.DataFrame):
-                self.datas[key] = self.dfs[key].loc[self.dates, self.symbols]
+                self.data[key] = self.dfs[key].loc[self.dates, self.symbols]
             else:
-                self.datas[key] = self.dfs[key]
-        self.datas['_FutureReturn'] = self.datas['Close'].pct_change().shift(-1)
+                self.data[key] = self.dfs[key]
+
+    def _create_forward_returns(self, D=1):
+        forward_returns = self.data['Close'].pct_change().shift(-1)
+        setattr(self, 'forward_returns', forward_returns)
 
     def _create_features(self):
         """
         Create the reference to the dict values
         :return:
         """
-        for key in self.datas.keys():
-            setattr(self, key, self.datas[key])
-        setattr(self, '_FutureReturn', self.datas['_FutureReturn'])
+        for key in self.data.keys():
+            setattr(self, key, self.data[key])
 
     def __getitem__(self, item):
         """
@@ -76,7 +80,7 @@ class BackTestEnv(object):
         :param item:
         :return:
         """
-        return self.datas[item]
+        return self.data[item]
 
     def __setitem__(self, item, value):
         """
@@ -85,15 +89,15 @@ class BackTestEnv(object):
         :return:
         """
         assert isinstance(value, pd.DataFrame)
-        self.datas[item] = value
+        self.data[item] = value
         setattr(self, item, value)
 
     def __delitem__(self, item):
-        del self.datas[item]
+        del self.data[item]
         delattr(self, item)
 
     def __contains__(self, item):
-        return item in self.datas
+        return item in self.data
 
     def match_env(self, factor):
         return factor.loc[self.dates, self.symbols]
