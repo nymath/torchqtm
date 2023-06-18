@@ -124,12 +124,16 @@ class GroupTester01(BaseGroupTester):
                  exclude_limits: bool = False):
         super().__init__(env, n_groups, weighting, exclude_suspended, exclude_limits)
 
-    def run_backtest(self, modified_factor) -> None:
+    def run_backtest(self,
+                     modified_factor,
+                     purify=True) -> None:
         assert modified_factor.shape == self.env['Close'].shape
+        if purify:
+            modified_factor = F.purify(modified_factor)
         self._reset()
         labels = ["group_" + str(i + 1) for i in range(self.n_groups)]
         returns = []
-        for i in range(len(modified_factor)-1):
+        for i in range(len(modified_factor) - 1):
             # If you are confused about concat series, you apply use the following way
             # 1. series.unsqueeze(1) to generate an additional axes
             # 2. concat these series along axis1
@@ -158,6 +162,7 @@ class GroupTester01(BaseGroupTester):
                         raise ValueError('Invalid weight scheme')
                     ret = x['forward_returns']
                     return (weight * ret).sum()
+
                 group_return = temp_data.groupby('group').apply(temp)
             returns.append(group_return)
         returns.append(pd.Series(np.repeat(0, self.n_groups), index=group_return.index))

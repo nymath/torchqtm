@@ -144,7 +144,7 @@ if __name__ == '__main__':
                        exclude_limits=False)
 
     with Timer():
-        bt.run_backtest(bt.env.match_env(F.purify(alphas.data)))
+        bt.run_backtest(bt.env.match_env(alphas.data))
     # print(bt.score(bt.env.match_env(alphas.data)))
     bt.plot()
 
