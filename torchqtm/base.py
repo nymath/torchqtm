@@ -105,9 +105,9 @@ class BackTestEnv(object):
 
 
 class Parameter(np.ndarray, metaclass=ABCMeta):
-    def __new__(cls, data: int, required_optim: bool = False, feasible_region: Iterable[int] = None):
+    def __new__(cls, data: int, requires_optim: bool = False, feasible_region: Iterable[int] = None):
         obj = np.asarray(data).view(cls)
-        obj.required_optim = required_optim
+        obj.required_optim = requires_optim
         obj.feasible_region = feasible_region
         obj._check_data()
         return obj

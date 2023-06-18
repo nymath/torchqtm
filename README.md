@@ -60,7 +60,7 @@ import torchqtm.op.functional as F
 class NeutralizePE(op.Fundamental):
     def __init__(self, env):
         super().__init__(env)
-        self.lag = op.Parameter(5, required_optim=False, feasible_region=None)
+        self.lag = op.Parameter(5, requires_optim=False, feasible_region=None)
 
     def forward(self):
         self.data = F.divide(1, self.env.PE)

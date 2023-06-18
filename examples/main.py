@@ -18,7 +18,7 @@ from torchqtm.alphas.alpha101 import *
 class NeutralizePE(op.Fundamental):
     def __init__(self, env):
         super().__init__(env)
-        self.lag = op.Parameter(5, required_optim=False, feasible_region=None)
+        self.lag = op.Parameter(5, requires_optim=False, feasible_region=None)
 
     def forward(self):
         self.data = F.divide(1, self.env.PE)
@@ -139,5 +139,4 @@ if __name__ == '__main__':
     with Timer():
         bt.run_backtest(bt.env.match(alpha.data))
     bt.plot()
-
 
