@@ -1,4 +1,4 @@
-<img src="https://github.com/nymath/torchquantum/blob/main/src/fig/logo.png" align="right" width="196" />
+<img src="https://github.com/nymath/torchquantum/blob/main/resources/fig/logo.png" align="right" width="196" />
 
 # torchquantum
 
