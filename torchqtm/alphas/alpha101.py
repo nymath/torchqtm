@@ -1336,101 +1336,231 @@ class Alpha083(WQAlpha101):
         return self.data
 
 
+class Alpha084(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
 
-# Alpha#84	 SignedPower(Ts_Rank((vwap - ts_max(vwap, 15.3217)), 20.7127), delta(close,4.96796))
-def alpha084(self):
-    return pow(ts_rank((self.vwap - ts_max(self.vwap, 15)), 21), delta(self.close, 5))
-
-
-# Alpha#85	 (rank(correlation(((high * 0.876703) + (close * (1 - 0.876703))), adv30,9.61331))^rank(correlation(Ts_Rank(((high + low) / 2), 3.70596), Ts_Rank(volume, 10.1595),7.11408)))
-def alpha085(self):
-    adv30 = sma(self.volume, 30)
-    return (rank(correlation(((self.high * 0.876703) + (self.close * (1 - 0.876703))), adv30, 10)).pow(
-        rank(correlation(ts_rank(((self.high + self.low) / 2), 4), ts_rank(self.volume, 10), 7))))
+    def __repr__(self):
+        return "SignedPower(Ts_Rank((vwap - ts_max(vwap, 15.3217)), 20.7127), delta(close,4.96796))"
 
 
-# Alpha#86	 ((Ts_Rank(correlation(close, sum(adv20, 14.7444), 6.00049), 20.4195) < rank(((open+ close) - (vwap + open)))) * -1)
+    def forward(self):
+        self.data =  pow(ts_rank((self.vwap - ts_max(self.vwap, 15)), 21), delta(self.close, 5))
 
-def alpha086(self):
-    adv20 = sma(self.volume, 20)
-    return ((ts_rank(correlation(self.close, sma(adv20, 15), 6), 20) < rank(
-        ((self.open + self.close) - (self.vwap + self.open)))) * -1)
+        return self.data
 
 
-# Alpha#87	 (max(rank(decay_linear(delta(((close * 0.369701) + (vwap * (1 - 0.369701))),1.91233), 2.65461)), Ts_Rank(decay_linear(abs(correlation(IndNeutralize(adv81,IndClass.industry), close, 13.4132)), 4.89768), 14.4535)) * -1)
+class Alpha085(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
 
-# Alpha#88	 min(rank(decay_linear(((rank(open) + rank(low)) - (rank(high) + rank(close))),8.06882)), Ts_Rank(decay_linear(correlation(Ts_Rank(close, 8.44728), Ts_Rank(adv60,20.6966), 8.01266), 6.65053), 2.61957))
-def alpha088(self):
-    adv60 = sma(self.volume, 60)
-    p1 = rank(decay_linear(((rank(self.open) + rank(self.low)) - (rank(self.high) + rank(self.close))).to_frame(),
-                           8).CLOSE)
-    p2 = ts_rank(decay_linear(correlation(ts_rank(self.close, 8), ts_rank(adv60, 21), 8).to_frame(), 7).CLOSE, 3)
-    df = pd.DataFrame({'p1': p1, 'p2': p2})
-    df.at[df['p1'] >= df['p2'], 'min'] = df['p2']
-    df.at[df['p2'] >= df['p1'], 'min'] = df['p1']
-    return df['min']
-    # return min(rank(decay_linear(((rank(self.open) + rank(self.low)) - (rank(self.high) + rank(self.close))).to_frame(),8).CLOSE), ts_rank(decay_linear(correlation(ts_rank(self.close, 8), ts_rank(adv60,20.6966), 8).to_frame(), 7).CLOSE, 3))
+    def __repr__(self):
+        return " (rank(correlation(((high * 0.876703) + (close * (1 - 0.876703))), adv30,9.61331))^rank(correlation(Ts_Rank(((high + low) / 2), 3.70596), Ts_Rank(volume, 10.1595),7.11408)))"
 
 
-# Alpha#89	 (Ts_Rank(decay_linear(correlation(((low * 0.967285) + (low * (1 - 0.967285))), adv10,6.94279), 5.51607), 3.79744) - Ts_Rank(decay_linear(delta(IndNeutralize(vwap,IndClass.industry), 3.48158), 10.1466), 15.3012))
+    def forward(self):
+        self.data =   (rank(correlation(((high * 0.876703) + (close * (1 - 0.876703))), adv30,9.61331))^rank(correlation、
+        (Ts_Rank(((high + low) / 2), 3.70596), Ts_Rank(volume, 10.1595),7.11408)))
 
-# Alpha#90	 ((rank((close - ts_max(close, 4.66719)))^Ts_Rank(correlation(IndNeutralize(adv40,IndClass.subindustry), low, 5.38375), 3.21856)) * -1)
-
-# Alpha#91	 ((Ts_Rank(decay_linear(decay_linear(correlation(IndNeutralize(close,IndClass.industry), volume, 9.74928), 16.398), 3.83219), 4.8667) -rank(decay_linear(correlation(vwap, adv30, 4.01303), 2.6809))) * -1)
-
-# Alpha#92	 min(Ts_Rank(decay_linear(((((high + low) / 2) + close) < (low + open)), 14.7221),18.8683), Ts_Rank(decay_linear(correlation(rank(low), rank(adv30), 7.58555), 6.94024),6.80584))
-def alpha092(self):
-    adv30 = sma(self.volume, 30)
-    p1 = ts_rank(
-        decay_linear(((((self.high + self.low) / 2) + self.close) < (self.low + self.open)).to_frame(), 15).CLOSE,
-        19)
-    p2 = ts_rank(decay_linear(correlation(rank(self.low), rank(adv30), 8).to_frame(), 7).CLOSE, 7)
-    df = pd.DataFrame({'p1': p1, 'p2': p2})
-    df.at[df['p1'] >= df['p2'], 'min'] = df['p2']
-    df.at[df['p2'] >= df['p1'], 'min'] = df['p1']
-    return df['min']
-    # return  min(ts_rank(decay_linear(((((self.high + self.low) / 2) + self.close) < (self.low + self.open)).to_frame(), 15).CLOSE,19), ts_rank(decay_linear(correlation(rank(self.low), rank(adv30), 8).to_frame(), 7).CLOSE,7))
+        return self.data
 
 
-# Alpha#93	 (Ts_Rank(decay_linear(correlation(IndNeutralize(vwap, IndClass.industry), adv81,17.4193), 19.848), 7.54455) / rank(decay_linear(delta(((close * 0.524434) + (vwap * (1 -0.524434))), 2.77377), 16.2664)))
+class Alpha086(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return " ((Ts_Rank(correlation(close, sum(adv20, 14.7444), 6.00049), 20.4195) < rank(((open+ close) - (vwap + open)))) * -1)"
+
+
+    def forward(self):
+        adv20 = sma(self.volume, 20)
+        self.data =  ((Ts_Rank(correlation(close, sum(adv20, 14.7444), 6.00049), 20.4195) < rank(((open+ close) - (vwap + open)))) * -1)
+        return self.data
+
+class Alpha087(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "(max(rank(decay_linear(delta(((close * 0.369701) + (vwap * (1 - 0.369701))),1.91233), 2.65461)), Ts_Rank(decay_linear(abs(correlation(IndNeutralize(adv81,IndClass.industry), close, 13.4132)), 4.89768), 14.4535)) * -1)"
+
+
+    def forward(self):
+        self.data = (max(rank(decay_linear(delta(((close * 0.369701) + (vwap * (1 - 0.369701))),1.91233), 2.65461)), Ts_Rank(decay_linear(abs(correlation(IndNeutralize(adv81,IndClass.industry), close, 13.4132)), 4.89768), 14.4535)) * -1)
+        return self.data
+
+class Alpha088(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "min(rank(decay_linear(((rank(open) + rank(low)) - (rank(high) + rank(close))),8.06882)), Ts_Rank(decay_linear(correlation(Ts_Rank(close, 8.44728), Ts_Rank(adv60,20.6966), 8.01266), 6.65053), 2.61957))"
+
+
+    def forward(self):
+        adv60 = sma(self.volume, 60)
+        p1 = rank(decay_linear(((rank(self.open) + rank(self.low)) - (rank(self.high) + rank(self.close))).to_frame(),
+                            8).CLOSE)
+        p2 = ts_rank(decay_linear(correlation(ts_rank(self.close, 8), ts_rank(adv60, 21), 8).to_frame(), 7).CLOSE, 3)
+        df = pd.DataFrame({'p1': p1, 'p2': p2})
+        df.at[df['p1'] >= df['p2'], 'min'] = df['p2']
+        df.at[df['p2'] >= df['p1'], 'min'] = df['p1']
+        self.data = df['min']
+        return self.data 
+
+
+class Alpha089(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "(Ts_Rank(decay_linear(correlation(((low * 0.967285) + (low * (1 - 0.967285))), adv10,6.94279), 5.51607), 3.79744) - Ts_Rank(decay_linear(delta(IndNeutralize(vwap,IndClass.industry), 3.48158), 10.1466), 15.3012))"
+
+
+    def forward(self):
+        self.data = (Ts_Rank(decay_linear(correlation(((low * 0.967285) + (low * (1 - 0.967285))), adv10,6.94279), 5.51607), 3.79744) - \
+            Ts_Rank(decay_linear(delta(IndNeutralize(vwap,IndClass.industry), 3.48158), 10.1466), 15.3012))
+        return self.data 
+
+
+class Alpha090(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return " ((rank((close - ts_max(close, 4.66719)))^Ts_Rank(correlation(IndNeutralize(adv40,IndClass.subindustry), low, 5.38375), 3.21856)) * -1)"
+
+
+    def forward(self):
+        self.data =  ((rank((close - ts_max(close, 4.66719)))^Ts_Rank(correlation(IndNeutralize(adv40,IndClass.subindustry), low, 5.38375), 3.21856)) * -1)
+        return self.data 
+
+
+class Alpha091(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return " ((Ts_Rank(decay_linear(decay_linear(correlation(IndNeutralize(close,IndClass.industry), volume, 9.74928), 16.398), 3.83219), 4.8667) -rank(decay_linear(correlation(vwap, adv30, 4.01303), 2.6809))) * -1)"
+
+
+    def forward(self):
+        self.data = ((Ts_Rank(decay_linear(decay_linear(correlation(IndNeutralize(close,IndClass.industry), volume, 9.74928), 16.398), 3.83219), 4.8667) -rank(decay_linear(correlation(vwap, adv30, 4.01303), 2.6809))) * -1)
+        return self.data 
+
+class Alpha092(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return " min(Ts_Rank(decay_linear(((((high + low) / 2) + close) < (low + open)), 14.7221),18.8683), Ts_Rank(decay_linear(correlation(rank(low), rank(adv30), 7.58555), 6.94024),6.80584))"
+
+
+    def forward(self):
+        adv30 = sma(self.volume, 30)
+        p1 = ts_rank(
+            decay_linear(((((self.high + self.low) / 2) + self.close) < (self.low + self.open)).to_frame(), 15).CLOSE,
+            19)
+        p2 = ts_rank(decay_linear(correlation(rank(self.low), rank(adv30), 8).to_frame(), 7).CLOSE, 7)
+        df = pd.DataFrame({'p1': p1, 'p2': p2})
+        df.at[df['p1'] >= df['p2'], 'min'] = df['p2']
+        df.at[df['p2'] >= df['p1'], 'min'] = df['p1']
+        self.data = df['min']
+        return self.data 
+
+
+class Alpha093(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return " (Ts_Rank(decay_linear(correlation(IndNeutralize(vwap, IndClass.industry), adv81,17.4193), 19.848), 7.54455) / rank(decay_linear(delta(((close * 0.524434) + (vwap * (1 -0.524434))), 2.77377), 16.2664)))"
+
+
+    def forward(self):
+    
+        self.data = (Ts_Rank(decay_linear(correlation(IndNeutralize(self.vwap, IndClass.industry), adv81,17.4193), 19.848), 7.54455) / rank(decay_linear(delta(((close * 0.524434) + (vwap * (1 -0.524434))), 2.77377), 16.2664)))
+        return self.data 
 
 # Alpha#94	 ((rank((vwap - ts_min(vwap, 11.5783)))^Ts_Rank(correlation(Ts_Rank(vwap,19.6462), Ts_Rank(adv60, 4.02992), 18.0926), 2.70756)) * -1)
-def alpha094(self):
-    adv60 = sma(self.volume, 60)
-    return ((rank((self.vwap - ts_min(self.vwap, 12))).pow(
-        ts_rank(correlation(ts_rank(self.vwap, 20), ts_rank(adv60, 4), 18), 3)) * -1))
+class Alpha094(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return " ((rank((vwap - ts_min(vwap, 11.5783)))^Ts_Rank(correlation(Ts_Rank(vwap,19.6462), Ts_Rank(adv60, 4.02992), 18.0926), 2.70756)) * -1)"
 
 
+    def forward(self):
+    
+        self.data = ((rank((vwap - ts_min(vwap, 11.5783)))^Ts_Rank(correlation(Ts_Rank(vwap,19.6462), \
+            Ts_Rank(adv60, 4.02992), 18.0926), 2.70756)) * -1)
+        return self.data 
 # Alpha#95	 (rank((open - ts_min(open, 12.4105))) < Ts_Rank((rank(correlation(sum(((high + low)/ 2), 19.1351), sum(adv40, 19.1351), 12.8742))^5), 11.7584))
-def alpha095(self):
-    adv40 = sma(self.volume, 40)
-    return (rank((self.open - ts_min(self.open, 12))) < ts_rank(
+
+class Alpha095(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return " ((rank((vwap - ts_min(vwap, 11.5783)))^Ts_Rank(correlation(Ts_Rank(vwap,19.6462), Ts_Rank(adv60, 4.02992), 18.0926), 2.70756)) * -1)"
+
+
+    def forward(self):
+        adv40 = sma(self.volume, 40)
+        self.data = (rank((self.open - ts_min(self.open, 12))) < ts_rank(
         (rank(correlation(sma(((self.high + self.low) / 2), 19), sma(adv40, 19), 13)).pow(5)), 12))
+        return self.data 
+
+class Alpha096(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "(max(Ts_Rank(decay_linear(correlation(rank(vwap), rank(volume), 3.83878),4.16783), 8.38151), Ts_Rank(decay_linear(Ts_ArgMax(correlation(Ts_Rank(close, 7.45404),Ts_Rank(adv60, 4.13242), 3.65459), 12.6556), 14.0365), 13.4143)) * -1)"
 
 
-# Alpha#96	 (max(Ts_Rank(decay_linear(correlation(rank(vwap), rank(volume), 3.83878),4.16783), 8.38151), Ts_Rank(decay_linear(Ts_ArgMax(correlation(Ts_Rank(close, 7.45404),Ts_Rank(adv60, 4.13242), 3.65459), 12.6556), 14.0365), 13.4143)) * -1)
-def alpha096(self):
-    adv60 = sma(self.volume, 60)
-    p1 = ts_rank(decay_linear(correlation(rank(self.vwap), rank(self.volume).to_frame(), 4), 4).CLOSE, 8)
-    p2 = ts_rank(
-        decay_linear(ts_argmax(correlation(ts_rank(self.close, 7), ts_rank(adv60, 4), 4), 13).to_frame(), 14).CLOSE,
-        13)
-    df = pd.DataFrame({'p1': p1, 'p2': p2})
-    df.at[df['p1'] >= df['p2'], 'max'] = df['p1']
-    df.at[df['p2'] >= df['p1'], 'max'] = df['p2']
-    return -1 * df['max']
-    # return (max(ts_rank(decay_linear(correlation(rank(self.vwap), rank(self.volume).to_frame(), 4),4).CLOSE, 8), ts_rank(decay_linear(ts_argmax(correlation(ts_rank(self.close, 7),ts_rank(adv60, 4), 4), 13).to_frame(), 14).CLOSE, 13)) * -1)
+    def forward(self):
+        adv60 = sma(self.volume, 60)
+        p1 = ts_rank(decay_linear(correlation(rank(self.vwap), rank(self.volume).to_frame(), 4), 4).CLOSE, 8)
+        p2 = ts_rank(
+            decay_linear(ts_argmax(correlation(ts_rank(self.close, 7), ts_rank(adv60, 4), 4), 13).to_frame(), 14).CLOSE,
+            13)
+        df = pd.DataFrame({'p1': p1, 'p2': p2})
+        df.at[df['p1'] >= df['p2'], 'max'] = df['p1']
+        df.at[df['p2'] >= df['p1'], 'max'] = df['p2']
+        self.data = -1*df['max']
+        return self.data
+
+class Alpha097(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "((rank(decay_linear(delta(IndNeutralize(((low * 0.721001) + (vwap * (1 - 0.721001))),IndClass.industry), 3.3705), 20.4523)) - Ts_Rank(decay_linear(Ts_Rank(correlation(Ts_Rank(low,7.87871), Ts_Rank(adv60, 17.255), 4.97547), 18.5925), 15.7152), 6.71659)) * -1)"
 
 
-# Alpha#97	 ((rank(decay_linear(delta(IndNeutralize(((low * 0.721001) + (vwap * (1 - 0.721001))),IndClass.industry), 3.3705), 20.4523)) - Ts_Rank(decay_linear(Ts_Rank(correlation(Ts_Rank(low,7.87871), Ts_Rank(adv60, 17.255), 4.97547), 18.5925), 15.7152), 6.71659)) * -1)
+    def forward(self):
+        self.data =((rank(decay_linear(delta(IndNeutralize(((low * 0.721001) + (vwap * (1 - 0.721001))),\
+            IndClass.industry), 3.3705), 20.4523)) - Ts_Rank(decay_linear(Ts_Rank(correlation(Ts_Rank(low,7.87871), Ts_Rank(adv60, 17.255), 4.97547), 18.5925), 15.7152), 6.71659)) * -1)
+        return self.data
 
-# Alpha#98	 (rank(decay_linear(correlation(vwap, sum(adv5, 26.4719), 4.58418), 7.18088)) -rank(decay_linear(Ts_Rank(Ts_ArgMin(correlation(rank(open), rank(adv15), 20.8187), 8.62571),6.95668), 8.07206)))
-def alpha098(self):
-    adv5 = sma(self.volume, 5)
-    adv15 = sma(self.volume, 15)
-    return (rank(decay_linear(correlation(self.vwap, sma(adv5, 26), 5).to_frame(), 7).CLOSE) - rank(
-        decay_linear(ts_rank(ts_argmin(correlation(rank(self.open), rank(adv15), 21), 9), 7).to_frame(), 8).CLOSE))
 
+class Alpha098(WQAlpha101):
+    def __init__(self, env):
+        super().__init__(env)
+
+    def __repr__(self):
+        return "((rank(decay_linear(delta(IndNeutralize(((low * 0.721001) + (vwap * (1 - 0.721001))),IndClass.industry), 3.3705), 20.4523)) - Ts_Rank(decay_linear(Ts_Rank(correlation(Ts_Rank(low,7.87871), Ts_Rank(adv60, 17.255), 4.97547), 18.5925), 15.7152), 6.71659)) * -1)"
+
+
+    def forward(self):
+        adv5 = sma(self.volume, 5)
+        adv15 = sma(self.volume, 15)    
+        self.data = (rank(decay_linear(correlation(self.vwap, sma(adv5, 26), 5).to_frame(), 7).CLOSE) - rank(
+        decay_linear(ts_rank(ts_argmin(correlation(rank(self.open), rank(adv15), 21), 9), 7).to_frame(), 8).CLOSE))    
+        return self.data
 
 class Alpha099(WQAlpha101):
     """
