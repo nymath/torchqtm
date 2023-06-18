@@ -40,9 +40,9 @@ If you are not downloading the dataset, then you should
 cd ./examples
 mkdir largedata
 cd ./largedata
-wget https://github.com/nymath/torchquantum/releases/download/V0.1/Stocks.pkl.zip
-unzip Stocks.pkl.zip
-rm Stocks.pkl.zip
+wget https://github.com/nymath/torchquantum/releases/download/V0.1/stocks_f64.pkl.zip
+unzip stocks_f64.pkl.zip
+rm stocks_f64.pkl.zip
 cd ../
 cd ../
 ```
@@ -54,6 +54,8 @@ You can easily create an alpha through torchquantum!
 ```python
 import torchqtm.op as op
 import torchqtm.op.functional as F
+
+
 class NeutralizePE(op.Fundamental):
     def __init__(self, env):
         super().__init__(env)
