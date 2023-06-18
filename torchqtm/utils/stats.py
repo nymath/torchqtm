@@ -3,6 +3,7 @@ import pandas as pd
 import torchqtm.op.functional as F
 from typing import Optional
 import matplotlib.pyplot as plt
+from scipy import stats
 
 
 class RiskEvaluator(object):
@@ -124,6 +125,19 @@ def sharpe(returns, freq=None, rfr=0):
     std = returns.std()
     _annf = freq
     return mean / std * _annf ** 0.5
+
+
+def information_table(ic_data):
+    ic_summary_table = pd.DataFrame()
+    ic_summary_table["IC Mean"] = ic_data.mean()
+    ic_summary_table["IC Std."] = ic_data.std()
+    ic_summary_table["Risk-Adjusted IC"] = \
+        ic_data.mean() / ic_data.std()
+    t_stat, p_value = stats.ttest_1samp(ic_data, 0)
+    ic_summary_table["t-stat(IC)"] = t_stat
+    ic_summary_table["p-value(IC)"] = p_value
+    ic_summary_table["IC Skew"] = stats.skew(ic_data)
+    ic_summary_table["IC Kurtosis"] = stats.kurtosis(ic_data)
 
 
 

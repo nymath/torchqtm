@@ -43,7 +43,6 @@ class BackTestEnv(object):
         self.forward_returns = None
         self._create_datas()
         self._create_features()
-        self._create_forward_returns()
 
     def _check_dfs(self):
         """
@@ -62,9 +61,9 @@ class BackTestEnv(object):
             else:
                 self.data[key] = self.dfs[key]
 
-    def _create_forward_returns(self, D=1):
+    def create_forward_returns(self, D=1):
         forward_returns = self.data['Close'].pct_change().shift(-1)
-        setattr(self, 'forward_returns', forward_returns)
+        return forward_returns
 
     def _create_features(self):
         """

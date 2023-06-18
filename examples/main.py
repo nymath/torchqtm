@@ -11,7 +11,7 @@ from torchqtm.utils.rebalance import Weekly, Daily
 from torchqtm.utils.universe import StaticUniverse, IndexComponents
 from torchqtm.utils.warnings import catch_warnings
 from torchqtm.utils.benchmark import BenchMark
-from torchqtm.vbt.backtest import GroupTester01, GroupTester02
+from torchqtm.vbt.backtest import GroupTester01
 from torchqtm.alphas.alpha101 import *
 import torchqtm.op as op
 import torchqtm.op.functional as F
@@ -137,7 +137,7 @@ if __name__ == '__main__':
         with catch_warnings():
             alphas.forward()
     # run backtest
-    bt = GroupTester02(env=btEnv,
+    bt = GroupTester01(env=btEnv,
                        n_groups=5,
                        weighting='equal',
                        exclude_suspended=False,

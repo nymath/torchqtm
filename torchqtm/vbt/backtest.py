@@ -50,6 +50,16 @@ class BaseGroupTester(BaseTester, TesterMixin):
                  weighting: str = 'equal',
                  exclude_suspended: bool = False,
                  exclude_limits: bool = False):
+        """
+
+        Parameters
+        ----------
+        env
+        n_groups
+        weighting: "equal" or "market_cap" or "factor_cap"
+        exclude_suspended
+        exclude_limits
+        """
         super().__init__(env)
         self.n_groups = n_groups
         self.weighting = weighting
@@ -117,64 +127,14 @@ class GroupTester01(BaseGroupTester):
     def run_backtest(self, modified_factor) -> None:
         assert modified_factor.shape == self.env['Close'].shape
         self._reset()
-        self.env['modified_factor'] = modified_factor
-        labels = ["group_" + str(i + 1) for i in range(self.n_groups)]
-        returns = []
-        for i in range(len(self.env['modified_factor'])-1):
-            # If you are confused about concat series, you apply use the following way
-            # 1. series.unsqueeze(1) to generate an additional axes
-            # 2. concat these series along axis1
-            temp_data = pd.concat([self.env._FutureReturn.iloc[i],
-                                   self.env.MktVal.iloc[i],
-                                   self.env['modified_factor'].iloc[i]], axis=1)
-            temp_data.columns = ['_FutureReturn', 'MktVal', 'modified_factor']
-            # na stands for stocks that we you not insterested in
-            # We can develop a class to better represent this process.
-            temp_data = temp_data.loc[~np.isnan(temp_data['modified_factor'])]
-            if len(temp_data) == 0:
-                group_return = pd.Series(0, index=labels)
-            else:
-                temp_data['group'] = pd.qcut(temp_data['modified_factor'], self.n_groups, labels=labels)
-
-                def temp(x):
-                    # TODO: develop a weight_scheme class
-                    if self.weighting == 'equal':
-                        weight = 1 / len(x['MktVal'])
-                    elif self.weighting == 'market_cap':
-                        weight = x['MktVal'] / x['MktVal'].sum()
-                    else:
-                        raise ValueError('Invalid weight scheme')
-                    ret = x['_FutureReturn']
-                    return (weight * ret).sum()
-                group_return = temp_data.groupby('group').apply(temp)
-            returns.append(group_return)
-        returns.append(pd.Series(np.repeat(0, self.n_groups), index=group_return.index))
-        self.returns = pd.concat(returns, axis=1).T
-        # Here we need to transpose the return, since the rows are stocks.
-        self.returns.index = self.rebalance_dates
-        self.returns.index.name = "trade_date"
-        self.returns.columns.name = "group"
-
-
-class GroupTester02(BaseGroupTester):
-    def __init__(self,
-                 env: BackTestEnv = None,
-                 n_groups: int = 5,
-                 weighting: str = 'equal',
-                 exclude_suspended: bool = False,
-                 exclude_limits: bool = False):
-        super().__init__(env, n_groups, weighting, exclude_suspended, exclude_limits)
-
-    def run_backtest(self, modified_factor) -> None:
-        assert modified_factor.shape == self.env['Close'].shape
-        self._reset()
         labels = ["group_" + str(i + 1) for i in range(self.n_groups)]
         returns = []
         for i in range(len(modified_factor)-1):
             # If you are confused about concat series, you apply use the following way
             # 1. series.unsqueeze(1) to generate an additional axes
             # 2. concat these series along axis1
-            temp_data = pd.concat([self.env.forward_returns.iloc[i],
+            forward_return = self.env.create_forward_returns(D=1)
+            temp_data = pd.concat([forward_return.iloc[i],
                                    self.env.MktVal.iloc[i],
                                    modified_factor.iloc[i]], axis=1)
             temp_data.columns = ['forward_returns', 'MktVal', 'modified_factor']
@@ -192,6 +152,8 @@ class GroupTester02(BaseGroupTester):
                         weight = 1 / len(x['MktVal'])
                     elif self.weighting == 'market_cap':
                         weight = x['MktVal'] / x['MktVal'].sum()
+                    elif self.weighting == 'factor_cap':
+                        weight = x['modified_factor'] / np.sum(np.abs(x['modified_factor']))
                     else:
                         raise ValueError('Invalid weight scheme')
                     ret = x['forward_returns']
