@@ -49,7 +49,7 @@ if __name__ == '__main__':
                         symbols=universe.symbols)
     # Create alpha
     alphas = NeutralizePE(env=btEnv)
-    alphas.forward(btEnv.match_env(dfs['PE']))
+    alphas.forward(btEnv.match(dfs['PE']))
     # run backtest
     # bt = QuickBackTesting01(env=btEnv,
     #                         universe=universe,

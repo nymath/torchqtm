@@ -100,7 +100,7 @@ class BackTestEnv(object):
     def __contains__(self, item):
         return item in self.data
 
-    def match_env(self, factor):
+    def match(self, factor):
         return factor.loc[self.dates, self.symbols]
 
 

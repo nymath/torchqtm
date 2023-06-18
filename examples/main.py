@@ -1,31 +1,18 @@
 import os
 import sys
+import numpy as np
+import pandas as pd
+import pickle
 
 BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 sys.path.append(BASE_DIR)
 sys.path.append(ROOT_DIR)
 
+from torchqtm.configurator import *
 from torchqtm.utils import Timer
-from torchqtm.utils.rebalance import Weekly, Daily
-from torchqtm.utils.universe import StaticUniverse, IndexComponents
 from torchqtm.utils.warnings import catch_warnings
-from torchqtm.utils.benchmark import BenchMark
-from torchqtm.vbt.backtest import GroupTester01
 from torchqtm.alphas.alpha101 import *
-import torchqtm.op as op
-import torchqtm.op.functional as F
-import numpy as np
-import pandas as pd
-import pickle
-
-
-start = '20170101'
-end = '20230101'
-rebalance_factor = Daily(start, end)
-rebalance_backtest = Weekly(start, end, [-1])
-benchmark = BenchMark('000852.SH', start, end)
-universe = StaticUniverse(IndexComponents('000852.SH', start).data)
 
 
 class NeutralizePE(op.Fundamental):
@@ -112,16 +99,24 @@ class Ross(op.Volatility):
 
 
 if __name__ == '__main__':
+
     def load_data():
         with open(f"{BASE_DIR}/largedata/stocks_f64.pkl", "rb") as f:
             return pickle.load(f)
 
     dfs = load_data()
 
-    # universe = list(dfs['Close'].columns)
+    start = '20170101'
+    end = '20230101'
+    rebalance_alpha = Daily(start, end)
+    rebalance_backtest = Weekly(start, end, [-1])
+    benchmark = BenchMark('000852.SH', start, end)
+    universe = StaticUniverse(IndexComponents('000852.SH', start).data)
+    # universe = StaticUniverse(list(dfs['Close'].columns))
+
     # Create the backtest environment
     alphaEnv = BackTestEnv(dfs=dfs,
-                           dates=rebalance_factor.data,
+                           dates=rebalance_alpha.data,
                            symbols=universe.data)
 
     btEnv = BackTestEnv(dfs=dfs,
@@ -129,13 +124,11 @@ if __name__ == '__main__':
                         symbols=universe.data)
 
     # Create alpha
-    # alphas = Momentum01(env=alphaEnv)
-    # alphas = NeutralizePE(env=btEnv0)
-    alphas = Alpha015(env=alphaEnv)
-    # alphas = Ross(env=btEnv0)
+    alpha = Alpha015(env=alphaEnv)
+
     with Timer():
         with catch_warnings():
-            alphas.forward()
+            alpha.forward()
     # run backtest
     bt = GroupTester01(env=btEnv,
                        n_groups=5,
@@ -144,8 +137,7 @@ if __name__ == '__main__':
                        exclude_limits=False)
 
     with Timer():
-        bt.run_backtest(bt.env.match_env(alphas.data))
-    # print(bt.score(bt.env.match_env(alphas.data)))
+        bt.run_backtest(bt.env.match(alpha.data))
     bt.plot()
 
 
