@@ -73,7 +73,7 @@ cdef extern from "numpy/ndarrayobject.h":
     bint PyArray_CheckScalar(obj) nogil
 
 
-cdef extern from "src/parse_helper.h":
+cdef extern from "resources/parse_helper.h":
     int floatify(object, float64_t *result, int *maybe_int) except -1
 
 from pandas._libs cimport util

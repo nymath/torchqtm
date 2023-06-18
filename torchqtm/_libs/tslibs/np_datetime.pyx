@@ -24,7 +24,7 @@ from numpy cimport int64_t
 from pandas._libs.tslibs.util cimport get_c_string_buf_and_size
 
 
-cdef extern from "src/datetime/np_datetime.h":
+cdef extern from "resources/datetime/np_datetime.h":
     int cmp_npy_datetimestruct(npy_datetimestruct *a,
                                npy_datetimestruct *b)
 
@@ -42,7 +42,7 @@ cdef extern from "src/datetime/np_datetime.h":
 
     npy_datetimestruct _NS_MIN_DTS, _NS_MAX_DTS
 
-cdef extern from "src/datetime/np_datetime_strings.h":
+cdef extern from "resources/datetime/np_datetime_strings.h":
     int parse_iso_8601_datetime(const char *str, int len, int want_exc,
                                 npy_datetimestruct *out,
                                 int *out_local, int *out_tzoffset)

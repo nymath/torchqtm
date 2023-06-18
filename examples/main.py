@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 import pickle
 
+
 start = '20170101'
 end = '20230101'
 rebalance_factor = Daily(start, end)
@@ -110,10 +111,6 @@ class Ross(op.Volatility):
 
 
 if __name__ == '__main__':
-    # Load the rawdata
-    import joblib
-
-    # @joblib.Memory('./.cache', verbose=0).cache
     def load_data():
         with open(f"{BASE_DIR}/largedata/stocks_f64.pkl", "rb") as f:
             return pickle.load(f)

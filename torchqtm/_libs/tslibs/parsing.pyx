@@ -63,10 +63,10 @@ from pandas._libs.tslibs.util cimport (
 )
 
 
-cdef extern from "../src/headers/portable.h":
+cdef extern from "../resources/headers/portable.h":
     int getdigit_ascii(char c, int default) nogil
 
-cdef extern from "../src/parser/tokenizer.h":
+cdef extern from "../resources/parser/tokenizer.h":
     double xstrtod(const char *p, char **q, char decimal, char sci, char tsep,
                    int skip_trailing, int *error, int *maybe_int)
 

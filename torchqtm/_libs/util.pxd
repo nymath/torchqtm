@@ -3,7 +3,7 @@ cimport numpy as cnp
 from pandas._libs.tslibs.util cimport *
 
 
-cdef extern from "src/headers/stdint.h":
+cdef extern from "resources/headers/stdint.h":
     enum: UINT8_MAX
     enum: UINT16_MAX
     enum: UINT32_MAX

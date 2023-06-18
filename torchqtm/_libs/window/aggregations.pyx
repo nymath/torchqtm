@@ -20,7 +20,7 @@ from numpy cimport (
 cnp.import_array()
 
 
-cdef extern from "../src/headers/cmath" namespace "std":
+cdef extern from "../resources/headers/cmath" namespace "std":
     bint isnan(float64_t) nogil
     bint notnan(float64_t) nogil
     int signbit(float64_t) nogil
@@ -30,7 +30,7 @@ from pandas._libs.algos import is_monotonic
 from pandas._libs.dtypes cimport numeric_t
 
 
-cdef extern from "../src/skiplist.h":
+cdef extern from "../resources/skiplist.h":
     ctypedef struct node_t:
         node_t **next
         int *width

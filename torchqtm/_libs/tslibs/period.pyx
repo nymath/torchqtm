@@ -54,7 +54,7 @@ from pandas._libs.tslibs.np_datetime cimport (
 )
 
 
-cdef extern from "src/datetime/np_datetime.h":
+cdef extern from "resources/datetime/np_datetime.h":
     int64_t npy_datetimestruct_to_datetime(NPY_DATETIMEUNIT fr,
                                            npy_datetimestruct *d) nogil
 
