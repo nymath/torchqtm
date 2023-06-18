@@ -47,6 +47,7 @@ class Momentum01(op.Momentum):
     def __init__(self, env):
         super().__init__(env)
 
+    # @ContextManager(catch_warnings(), self.catch_warnings)
     def forward(self):
         self.data = self.env.Close
         self.data = F.winsorize(self.data, 'std', 4)
@@ -119,20 +120,19 @@ if __name__ == '__main__':
 
     # universe = list(dfs['Close'].columns)
     # Create the backtest environment
-    btEnv0 = BackTestEnv(dfs=dfs,
-                         dates=rebalance_factor.data,
-                         symbols=universe.data)
+    alphaEnv = BackTestEnv(dfs=dfs,
+                           dates=rebalance_factor.data,
+                           symbols=universe.data)
 
     btEnv = BackTestEnv(dfs=dfs,
                         dates=rebalance_backtest.data,
                         symbols=universe.data)
 
     # Create alpha
-    # alphas = Momentum01(env=btEnv0)
+    # alphas = Momentum01(env=alphaEnv)
     # alphas = NeutralizePE(env=btEnv0)
-    alphas = Alpha055(env=btEnv0)
+    alphas = Alpha015(env=alphaEnv)
     # alphas = Ross(env=btEnv0)
-    # alphas.forward(btEnv.match_env(dfs['PE']))
     with Timer():
         with catch_warnings():
             alphas.forward()

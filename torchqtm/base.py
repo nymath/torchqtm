@@ -4,8 +4,10 @@ import pandas as pd
 import numpy as np
 from typing import Dict, Hashable
 from abc import ABCMeta, abstractmethod
-from typing import Iterable
+from typing import Iterable, Callable
 from collections import OrderedDict
+from torchqtm.utils._decorators import ContextManager
+from torchqtm.utils.warnings import catch_warnings
 
 
 class BackTestEnv(object):
@@ -124,6 +126,9 @@ __TYPES = ['momentum', 'reversion']
 
 
 class BaseOperator(object, metaclass=ABCMeta):
+
+    catch_warnings = False
+
     def __init__(self, *args, **kwargs):
         pass
 
