@@ -45,6 +45,7 @@ unzip stocks_f64.pkl.zip
 rm stocks_f64.pkl.zip
 cd ../
 cd ../
+git checkout dev
 ```
 
 ## Example
