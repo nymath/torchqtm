@@ -37,7 +37,7 @@ class BaseTester(object, metaclass=ABCMeta):
 
 class TesterMixin:
     def score(self, alpha, method='pearson'):
-        return np.nanmean(F.cs_corr(alpha, self.env._FutureReturn, method='pearson'), axis=0)
+        return np.nanmean(F.cs_corr(alpha, self.env.create_forward_returns(), method='pearson'), axis=0)
 
     # def _more_tags(self):
     #     return {"requires_y": True}

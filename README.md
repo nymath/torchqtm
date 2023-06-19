@@ -18,8 +18,8 @@ for Unix:
 
 ```shell
 cd /path/to/your/directory
-git clone git@github.com:nymath/torchquantum.git
-cd ./torchquantum
+git clone git@github.com:nymath/torchqtm.git
+cd ./torchqtm
 ```
 
 Before running examples, you should compile the cython code.
@@ -40,7 +40,7 @@ If you are not downloading the dataset, then you should
 cd ./examples
 mkdir largedata
 cd ./largedata
-wget https://github.com/nymath/torchquantum/releases/download/V0.1/stocks_f64.pkl.zip
+wget https://github.com/nymath/torchqtm/releases/download/V0.1/stocks_f64.pkl.zip
 unzip stocks_f64.pkl.zip
 rm stocks_f64.pkl.zip
 cd ../
@@ -85,7 +85,7 @@ class NeutralizePE(op.Fundamental):
 
 ## Contribution
 
-For more information, we refer to [Documentation](https://nymath.github.io/torchquantum/navigate).
+For more information, we refer to [Documentation](https://nymath.github.io/torchqtm/navigate).
 
 ## Join us
 
