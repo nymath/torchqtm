@@ -1,8 +1,8 @@
 site_name: TorchQuantum
 site_description: PyTorch and WorldQuant's Operator Framework
 site_author: NyMath
-site_url: https://nymath.github.io/torchquantum/navigate
-repo_url: https://github.com/nymath/torchquantum
+site_url: https://nymath.github.io/torchqtm/navigate
+repo_url: https://github.com/nymath/torchqtm
 
 nav:
   - Home: navigate.md
