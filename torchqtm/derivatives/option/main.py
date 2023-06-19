@@ -1,4 +1,4 @@
-import torchqtm.option.functional as F
+import torchqtm.derivatives.option.functional as F
 from torchqtm.utils import Timer
 
 S = 100
