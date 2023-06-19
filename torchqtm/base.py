@@ -248,6 +248,16 @@ class Reversion(BaseAlpha):
         raise NotImplementedError
 
 
+class Technical(BaseAlpha):
+    def __init__(self, env: BackTestEnv, *args, **kwargs):
+        super().__init__(env, *args, **kwargs)
+        self.type = 'technical'
+
+    @abstractmethod
+    def forward(self, *args, **kwargs):
+        """assign self.rawdata and return"""
+        raise NotImplementedError
+
 
 
 

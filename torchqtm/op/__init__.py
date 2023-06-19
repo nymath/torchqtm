@@ -1,4 +1,4 @@
-from torchqtm.base import BaseAlpha, Momentum, Reversion, Fundamental, Volatility, Parameter
+from torchqtm.base import BaseAlpha, Momentum, Reversion, Fundamental, Volatility, Parameter, Technical
 
 __all__ = [
     "BaseAlpha",
@@ -6,6 +6,7 @@ __all__ = [
     "Reversion",
     "Fundamental",
     "Volatility",
+    "Technical",
     "Parameter",
 ]
 
