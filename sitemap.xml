@@ -2,17 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://nymath.github.io/torchqtm/navigate/</loc>
-         <lastmod>2023-06-19</lastmod>
+         <lastmod>2023-06-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://nymath.github.io/torchqtm/navigate/introduction/</loc>
-         <lastmod>2023-06-19</lastmod>
+         <lastmod>2023-06-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://nymath.github.io/torchqtm/navigate/navigate/</loc>
-         <lastmod>2023-06-19</lastmod>
+         <lastmod>2023-06-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://nymath.github.io/torchqtm/navigate/WorldQuant/introduction/</loc>
+         <lastmod>2023-06-23</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
