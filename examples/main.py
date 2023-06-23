@@ -125,7 +125,7 @@ if __name__ == '__main__':
                         symbols=universe.data)
 
     # Create alpha
-    # alpha = Alpha015(env=alphaEnv)
+    # alpha = WQ.Alpha015(env=alphaEnv)
     alpha = chatgpt.Alpha004(env=alphaEnv)
     with Timer():
         with catch_warnings():

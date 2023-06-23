@@ -8,6 +8,7 @@ from torchqtm.base import BackTestEnv
 import matplotlib.pyplot as plt
 from torchqtm.utils.visualization import ColorGenerator
 import torchqtm.op.functional as F
+from typing import final
 
 
 class BaseTester(object, metaclass=ABCMeta):
@@ -107,6 +108,7 @@ class BaseIcTester(BaseTester, TesterMixin):
         # self.results = F.cs_corr(modified_factor, self.env._FutureReturn)
         # self.metrics = np.nanmean(self.results, axis=0)
 
+    @final
     def plot(self):
         fig = plt.figure(figsize=(20, 12))
         ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])
@@ -172,46 +174,79 @@ class GroupTester01(BaseGroupTester):
         self.returns.index.name = "trade_date"
         self.returns.columns.name = "group"
 
-# class QuickBackTesting02(BaseTester):
-#     def __init__(self,
-#                  env: BackTestEnv = None,
-#                  universe: Universe = None,
-#                  n_groups: int = 5):
-#         super().__init__(env, universe)
-#         self.n_groups = n_groups
-#
-#     @staticmethod
-#     def compute_group_return(args):
-#         i, env, n_groups, labels = args
-#         temp_data = pd.concat([env['_FutureReturn'].iloc[i],
-#                                env['MktVal'].iloc[i],
-#                                env['modified_factor'].iloc[i]], axis=1)
-#         temp_data.columns = ['_FutureReturn', 'MktVal', 'modified_factor']
-#         temp_data = temp_data.loc[~np.isnan(temp_data['modified_factor'])]
-#         temp_data['group'] = pd.qcut(temp_data['modified_factor'], n_groups, labels=labels)
-#
-#         def temp(x):
-#             weight = x['MktVal'] / x['MktVal'].sum()
-#             ret = x['_FutureReturn']
-#             return (weight * ret).sum()
-#
-#         return temp_data.groupby('group').apply(temp)
-#
-#     def run_backtest(self, modified_factor) -> None:
-#         assert modified_factor.shape == self.env['Close'].shape
-#         self._reset()
-#         self.env['modified_factor'] = modified_factor
-#         labels = ["group_" + str(i + 1) for i in range(self.n_groups)]
-#
-#         with Pool(4) as pool:
-#             args = [(i, self.env, self.n_groups, labels) for i in range(len(self.env['modified_factor']))]
-#             returns = pool.map(self.compute_group_return, args)
-#
-#         self.returns = pd.concat(returns, axis=1).T
-#         self.returns.index = self.rebalance_dates
-#         self.returns.index.name = "trade_date"
-#         self.returns.columns.name = "group"
 
+class LongShort01(BaseGroupTester):
+    def __init__(self,
+                 env: BackTestEnv = None,
+                 n_groups: int = 5,
+                 leverage: float = 1,
+                 weighting: str = 'equal',
+                 exclude_suspended: bool = False,
+                 exclude_limits: bool = False):
+        super().__init__(env, n_groups, weighting, exclude_suspended, exclude_limits)
+        self.leverage = leverage
+
+    def run_backtest(self,
+                     modified_factor,
+                     purify=True) -> None:
+        """
+        self.returns
+        """
+        assert modified_factor.shape == self.env['Close'].shape
+        if purify:
+            modified_factor = F.purify(modified_factor)
+        self._reset()
+        labels = ["group_" + str(i + 1) for i in range(self.n_groups)]
+        returns = []
+        forward_return = self.env.create_forward_returns(D=1)
+        symbols = list(self.env.Close.columns)
+
+        datas = np.concatenate([forward_return.values[..., np.newaxis],
+                                self.env.MktVal.values[..., np.newaxis],
+                                modified_factor.values[..., np.newaxis]], axis=2)
+
+        for i in range(len(modified_factor)):
+
+            data_slice = pd.DataFrame(datas[i],
+                                      index=symbols,
+                                      columns=['forward_returns', 'MktVal', 'modified_factor'])
+            data_masked = data_slice.loc[~np.isnan(data_slice['modified_factor'])].copy()
+            if len(data_masked) == 0 or data_masked['forward_returns'].isna().all():
+                group_return = pd.Series(0, index=labels)
+            else:
+                data_masked.loc[:, 'group'] = pd.qcut(data_masked['modified_factor'], self.n_groups, labels=labels)
+
+                def aggHelper(x):
+                    # TODO: develop a weight_scheme class
+                    if self.weighting == 'equal':
+                        weight = 1 / len(x['MktVal'])
+                    elif self.weighting == 'market_cap':
+                        weight = x['MktVal'] / x['MktVal'].sum()
+                    elif self.weighting == 'factor_cap':
+                        weight = x['modified_factor'] / np.sum(np.abs(x['modified_factor']))
+                    else:
+                        raise ValueError('Invalid weight scheme')
+                    ret = x['forward_returns']
+                    return (weight * ret).sum()
+
+                group_return = data_masked.groupby('group').apply(aggHelper)
+            returns.append(group_return)
+        temp_data = pd.concat(returns, axis=1).T
+        returns = temp_data[f'group_{self.n_groups+1}'] - temp_data[f'group_{1}']
+        if self.leverage == 1:
+            self.returns = returns / 2
+        else:
+            self.returns = returns
+        # Here we need to transpose the return, since the rows are stocks.
+        self.returns.index = self.rebalance_dates
+
+    @final
+    def plot(self):
+        fig = plt.figure(figsize=(20, 12))
+        ax = fig.add_axes([0.1, 0.1, 0.8, 0.8])
+        ax.plot((1 + self.returns).cumprod())
+        fig.legend(fontsize=16)
+        fig.show()
 
 # class GPTestingIC(BaseTest):
 #     def __init__(self,
