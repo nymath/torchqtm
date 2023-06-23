@@ -12,7 +12,8 @@ sys.path.append(ROOT_DIR)
 from torchqtm.configurator import *
 from torchqtm.utils import Timer
 from torchqtm.utils.warnings import catch_warnings
-from torchqtm.alphas.alpha101 import *
+import torchqtm.alphas.alpha101 as WQ
+import torchqtm.alphas.chatgpt as chatgpt
 
 
 class NeutralizePE(op.Fundamental):
@@ -124,8 +125,8 @@ if __name__ == '__main__':
                         symbols=universe.data)
 
     # Create alpha
-    alpha = Alpha015(env=alphaEnv)
-
+    # alpha = Alpha015(env=alphaEnv)
+    alpha = chatgpt.Alpha004(env=alphaEnv)
     with Timer():
         with catch_warnings():
             alpha.forward()

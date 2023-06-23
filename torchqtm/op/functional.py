@@ -89,6 +89,20 @@ def log_diff(X):
     return np.log(X / ts_delay(X, 1))
 
 
+def max(X, Y):
+    condition = X > Y
+    value_if_true = X
+    value_if_false = Y
+    return if_else(condition, value_if_true, value_if_false)
+
+
+def min(X, Y):
+    condition = X <= Y
+    value_if_true = X
+    value_if_false = Y
+    return if_else(condition, value_if_true, value_if_false)
+
+
 def nan_out(X, lower=-0.1, upper=0.1):
     """set returns outside of [lower, upper] to nan"""
     rlt = np.where(((X < lower) + (X > upper)) > 0, np.nan, X)
