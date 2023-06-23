@@ -133,22 +133,23 @@ class GroupTester01(BaseGroupTester):
         self._reset()
         labels = ["group_" + str(i + 1) for i in range(self.n_groups)]
         returns = []
-        for i in range(len(modified_factor) - 1):
-            # If you are confused about concat series, you apply use the following way
-            # 1. series.unsqueeze(1) to generate an additional axes
-            # 2. concat these series along axis1
-            forward_return = self.env.create_forward_returns(D=1)
-            temp_data = pd.concat([forward_return.iloc[i],
-                                   self.env.MktVal.iloc[i],
-                                   modified_factor.iloc[i]], axis=1)
-            temp_data.columns = ['forward_returns', 'MktVal', 'modified_factor']
-            # na stands for stocks that we you not insterested in
-            # We can develop a class to better represent this process.
-            temp_data = temp_data.loc[~np.isnan(temp_data['modified_factor'])]
-            if len(temp_data) == 0:
+        forward_return = self.env.create_forward_returns(D=1)
+        symbols = list(self.env.Close.columns)
+
+        datas = np.concatenate([forward_return.values[..., np.newaxis],
+                                self.env.MktVal.values[..., np.newaxis],
+                                modified_factor.values[..., np.newaxis]], axis=2)
+
+        for i in range(len(modified_factor)):
+
+            data_slice = pd.DataFrame(datas[i],
+                                      index=symbols,
+                                      columns=['forward_returns', 'MktVal', 'modified_factor'])
+            data_masked = data_slice.loc[~np.isnan(data_slice['modified_factor'])].copy()
+            if len(data_masked) == 0 or data_masked['forward_returns'].isna().all():
                 group_return = pd.Series(0, index=labels)
             else:
-                temp_data['group'] = pd.qcut(temp_data['modified_factor'], self.n_groups, labels=labels)
+                data_masked.loc[:, 'group'] = pd.qcut(data_masked['modified_factor'], self.n_groups, labels=labels)
 
                 def temp(x):
                     # TODO: develop a weight_scheme class
@@ -163,9 +164,8 @@ class GroupTester01(BaseGroupTester):
                     ret = x['forward_returns']
                     return (weight * ret).sum()
 
-                group_return = temp_data.groupby('group').apply(temp)
+                group_return = data_masked.groupby('group').apply(temp)
             returns.append(group_return)
-        returns.append(pd.Series(np.repeat(0, self.n_groups), index=group_return.index))
         self.returns = pd.concat(returns, axis=1).T
         # Here we need to transpose the return, since the rows are stocks.
         self.returns.index = self.rebalance_dates
