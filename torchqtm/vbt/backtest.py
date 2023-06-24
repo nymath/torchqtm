@@ -248,16 +248,60 @@ class LongShort01(BaseGroupTester):
         fig.legend(fontsize=16)
         fig.show()
 
-# class GPTestingIC(BaseTest):
-#     def __init__(self,
-#                  env: BackTestEnv,
-#                  universe: Universe):
-#         super().__init__(env, universe)
-#
-#     def run_backtest(self, modified_factor) -> float:
-#         modified_factor = pd.DataFrame(modified_factor, index=self.env._FutureReturn.index, columns=self.env._FutureReturn.columns)
-#         rlt = F.cs_corr(modified_factor, self.env._FutureReturn, 'spearman')
-#         if rlt.std() == 0:
-#             return -1
-#         else:
-#             return np.abs(rlt.mean() / rlt.std())
+
+class WQTester(BaseTester, TesterMixin):
+
+    def __init__(self,
+                 env: BackTestEnv = None,
+                 exclude_suspended: bool = False,
+                 exclude_limits: bool = False
+                 ):
+        super().__init__(env)
+        self.env = env
+        self.exclude_suspended = exclude_suspended
+        self.returns = None
+        self.exclude_limits = exclude_limits
+
+    def _reset(self):
+        super()._reset()
+        self.returns = None
+
+    def run_backtest(self,
+                     modified_factor,
+                     purify=True):
+
+        assert modified_factor.shape == self.env['Close'].shape
+        if purify:
+            modified_factor = F.purify(modified_factor)
+        self._reset()
+        forward_return = self.env.create_forward_returns(D=1)
+        symbols = list(self.env.Close.columns)
+        returns = []
+        datas = np.concatenate([forward_return.values[..., np.newaxis],
+                                self.env.MktVal.values[..., np.newaxis],
+                                modified_factor.values[..., np.newaxis]], axis=2)
+
+        for i in range(len(modified_factor)):
+
+            # Step1: Evaluate the expression for each stock to generate the alpha vector for the given date.
+            data_slice = pd.DataFrame(datas[i],
+                                      index=symbols,
+                                      columns=['forward_returns', 'MktVal', 'modified_factor'])
+            data_masked = data_slice.loc[~np.isnan(data_slice['modified_factor'])].copy()
+
+            # Step2: From each value in the vector, subtract the average of the vector values in the group.
+            # Sum of all vector values = 0. This is called neutralization.
+            # The group can be the entire market,
+            # but we can also perform this neutralization operation on sector,
+            # industry or subindustry groupings of stocks.
+            data_masked['modified_factor'] -= np.mean(data_masked['modified_factor'])
+
+            # Step 3: The resulting values are scaled or ‘normalized’ such that absolute sum of the alpha vector
+            # values is 1. These values can be called as normalized weights.
+            data_masked['modified_factor'] /= np.sum(np.abc(data_masked['modified_factor']))
+
+            # Step 4: Using normalized weights, the BRAIN simulator allocates capital
+            # (from a fictitious book of $20 million) to each stock to construct a portfolio.
+            returns.append(np.sum(data_masked['modified_factor'] * data_masked['forward_returns']))
+
+        self.returns = pd.Series(returns, index=self.rebalance_dates)

@@ -10,6 +10,7 @@ nav:
     - Introduction: introduction.md
     - Features: index.md
   - WorldQuant:
+    - Introduction: WorldQuant/introduction.md
     - Datasets: index.md
     - Operators:
       - Arithmetic Operators: index.md
