@@ -4,7 +4,7 @@ from torchqtm.op.functional import *
 import pandas as pd
 import numpy as np
 from abc import ABCMeta, abstractmethod
-from torchqtm.vbt.backtest import BackTestEnv
+from torchqtm.tdbt.backtest import BackTestEnv
 from torchqtm.base import BaseAlpha
 
 
