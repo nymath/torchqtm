@@ -8,7 +8,7 @@ sys.path.append(ROOT_DIR)
 from torchqtm.utils.rebalance import Weekly
 from torchqtm.utils.universe import StaticUniverse, IndexComponents
 from torchqtm.utils.benchmark import BenchMark
-from torchqtm.vbt.backtest import BackTestEnv
+from torchqtm.tdbt.backtest import BackTestEnv
 import torchqtm.op as op
 import torchqtm.op.functional as F
 from torchqtm.utils import Timer
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     # bt.run_backtest(alphas.rawdata)
     #
     # #
-    # # from torchqtm.vbt.stats import ic
+    # # from torchqtm.tdbt.stats import ic
     # # icSeries = ic(alphas.rawdata, BtEnv._FutureReturn, method='spearman')
     #
     # # plot the result

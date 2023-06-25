@@ -3,7 +3,7 @@ from torchqtm.autoalpha.gplearn import fitness
 from torchqtm.autoalpha.gplearn.genetic import SymbolicRegressor
 from torchqtm.utils.rebalance import Calendar
 from torchqtm.utils.universe import StaticUniverse, IndexComponents
-from torchqtm.vbt.backtest import BackTestEnv, GPTestingIC
+from torchqtm.tdbt.backtest import BackTestEnv, GPTestingIC
 import graphviz
 import pickle
 
