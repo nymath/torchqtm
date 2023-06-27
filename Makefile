@@ -17,6 +17,15 @@ git_log:
 git_remove_cached:
 	@git rm -r --cached .idea
 
+
+BUNDLE_PATH := ~/.rqalpha
+download_bundle:
+	@rqalpha download-bundle -d $(BUNDLE_PATH)
+
+update_bundle:
+	@rqalpha update-bundle
+
+
 # add hash
 
 # git fetch origin --prune: The --prune option tells Git to remove any remote tracking branches that no longer exist on the remote repository.
