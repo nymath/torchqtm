@@ -21,7 +21,7 @@ class _Fitness(object):
 
     """A metric to measure the fitness of a program.
 
-    This object is able to be called with NumPy torchquantum arguments and return
+    This object is able to be called with NumPy torchqtm arguments and return
     a resulting floating point score quantifying the quality of the program's
     representation of the true relationship.
 
@@ -55,7 +55,7 @@ def make_fitness(*, function, greater_is_better, wrap=True):
     This factory function creates a fitness measure object which measures the
     quality of a program's fit and thus its likelihood to undergo genetic
     operations into the next generation. The resulting object is able to be
-    called with NumPy torchquantum arguments and return a resulting floating
+    called with NumPy torchqtm arguments and return a resulting floating
     point score quantifying the quality of the program's representation of the
     true relationship.
 

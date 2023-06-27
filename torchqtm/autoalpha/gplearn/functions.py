@@ -21,7 +21,7 @@ __all__ = ['make_function']
 class _Function(object):
     """A representation of a mathematical relationship, a node in a program.
 
-    This object is able to be called with NumPy torchquantum arguments and return
+    This object is able to be called with NumPy torchqtm arguments and return
     a resulting vector based on a mathematical relationship.
 
     Parameters
@@ -52,7 +52,7 @@ def make_function(*, function, name, arity, wrap=True):
     """Make a function node, a representation of a mathematical relationship.
 
     This factory function creates a function node, one of the core nodes in any
-    program. The resulting object is able to be called with NumPy torchquantum
+    program. The resulting object is able to be called with NumPy torchqtm
     arguments and return a resulting vector based on a mathematical
     relationship.
 
