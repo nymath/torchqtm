@@ -1,16 +1,17 @@
 from torchqtm._C._rolling import *
-from torchqtm._libs.window.aggregations import (
+from pandas._libs.window.aggregations import (
     roll_rank,
     roll_quantile,
     roll_kurt,
     roll_var,
     roll_weighted_sum)
+from pandas._libs.algos import rank_1d, rank_2d
 import numpy as np
 from typing import Callable, Union
 from numpy.typing import NDArray
 import datetime
 import functools
-from pandas._libs.algos import rank_1d, rank_2d
+
 
 # PythonScalar = Union[str, float, bool]
 # DatetimeLikeScalar = Union["Period", "Timestamp", "Timedelta"]
@@ -89,7 +90,7 @@ def roll_apply_mean(array: NDArray[np.float64],
         return aux_func(array, start, end, window_size)
     if mode == "auto":
         if array.ndim == 2:
-            if window_size > 10:  # 这里使用500是个经验法则了吧
+            if window_size > 20 or array.shape[1] < 20:  # 这里使用500是个经验法则了吧
                 rlt = np.empty_like(array)
                 for i in range(array.shape[1]):
                     rlt[:, i] = aux_func(array[:, i], start, end, window_size)

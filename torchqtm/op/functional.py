@@ -7,8 +7,21 @@ from typing import overload
 from .algos import rank_1d, rank_2d
 from scipy.stats import norm
 import talib
+import typing
+
+CORR_METHOD = typing.Literal["pearson", "spearman"]
+
 
 # Arithmetic Operators
+
+
+def revert_type(raw, target):
+    if isinstance(target, np.ndarray):
+        return raw.values
+    elif isinstance(target, pd.Series):
+        return pd.Series(raw, index=target.index, name=target.name)
+    elif isinstance(target, pd.DataFrame):
+        return pd.DataFrame(raw, index=target.index, columns=target.columns)
 
 
 def abs(x):
@@ -270,7 +283,7 @@ def days_from_last_change(x, d):
 
 
 def ts_weighted_delay(x, k=0.5):
-    return add(k * x, (1-k) * ts_delay(x, 1))
+    return add(k * x, (1 - k) * ts_delay(x, 1))
 
 
 # 这俩函数有点抽象, 后边想想怎么实现
@@ -300,7 +313,7 @@ def jump_decay(x, d, sensitivity=0.5, force=0.1):
     If there is a huge jump in current data compare to previous one, apply force:
     我认为作用是滤平变动
     """
-    cond = abs(x-ts_delay(x, 1) > sensitivity * ts_std_dev(x, d))
+    cond = abs(x - ts_delay(x, 1) > sensitivity * ts_std_dev(x, d))
     value_if_true = ts_delay(x, 1) + ts_delta(x, 1) * force
     value_if_false = x
     return if_else(cond, value_if_true, value_if_false)
@@ -312,6 +325,19 @@ def kth_element(x, d, k):
 
 def last_diff_value(x, d):
     pass
+
+
+# def ts_arg_min(x, d):
+#     def aux_func(t):
+#         return np.nanargmin(t[::-1], axis=0)
+#     if len(x.shape) == 2 and x.shape[1] <= 301:
+#         raw = pd.DataFrame(x).rolling(d).argmin()
+#         return convert_type(raw, x)
+#     elif len(x.shape) == 1:
+#         raw = pd.Series(x).rolling(d).argmin()
+#         return convert_type(raw, x)
+#     else:
+#         return ts_apply(x, d, aux_func)
 
 
 def ts_arg_min(x, d):
@@ -344,14 +370,23 @@ def _ts_corr_single(x, y, d):
     pass
 
 
-def ts_corr(x, y, d):
+def ts_corr(x, y, d: int, method: CORR_METHOD = "pearson"):
     """
     Pearson correlation of x, y in the past d days.
     """
-    if len(x.shape) == 2:
-        rlt = pd.DataFrame(x).rolling(d).corr(pd.DataFrame(y))
+    if method == "pearson":
+        if len(x.shape) == 2:
+            rlt = pd.DataFrame(x).rolling(d).corr(pd.DataFrame(y))
+        else:
+            rlt = pd.Series(x).rolling(d).corr(pd.Series(y))
+    elif method == "spearman":
+        if len(x.shape) == 2:
+            rlt = pd.DataFrame(x).rank().rolling(d).corr(pd.DataFrame(y).rank())
+        else:
+            rlt = pd.Series(x).rank().rolling(d).corr(pd.Series(y).rank())
     else:
-        rlt = pd.Series(x).rolling(d).corr(pd.Series(y))
+        raise ValueError
+
     if isinstance(x, np.ndarray):
         return rlt.values
     elif isinstance(x, pd.Series):
@@ -382,8 +417,9 @@ def ts_decay_exp_window(x, d, factor):
 def ts_decay_linear(x, d, dense=False):
     # TODO: 想想怎么改进这个矩阵乘法, 目前会产生大量的NA
     def aux_func(data_slice):
-        filters = np.arange(1, d+1) / ( d * (d + 2) / 2 )
+        filters = np.arange(1, d + 1) / (d * (d + 2) / 2)
         return np.matmul(data_slice.T, filters)
+
     return ts_apply(x, d, aux_func)
 
 
@@ -409,6 +445,7 @@ def ts_max_diff(x, d):
 def ts_median(x, d):
     def aux_func(t):
         return np.nanmedian(x, axis=0)
+
     return ts_apply(x, d, aux_func)
 
 
@@ -452,7 +489,7 @@ def ts_product(x, d):
 
 def ts_rank(x, d, mode="auto"):
     def aux_func(array, window_size):
-        return roll_apply_rank(array, window_size, method=mode)
+        return roll_apply_rank(array, window_size, mode=mode)
 
     if isinstance(x, np.ndarray):
         return aux_func(x, d)
@@ -462,7 +499,14 @@ def ts_rank(x, d, mode="auto"):
         return pd.DataFrame(aux_func(x.values, d), index=x.index, columns=x.columns)
 
 
-def ts_regression(y, x, d, lag=0, rettype=0):
+def ts_beta(y, x, d, lag=0):
+    """
+    y 允许 多个纬度, x只能有一个纬度, 否则不是well-defined
+    """
+    pass
+
+
+def ts_regression(y, d, lag=0, rettype=0):
     pass
 
 
@@ -632,18 +676,18 @@ def _winsorize(X, method, param):
     n_stocks = X.shape[-1]
     n_axis = len(X.shape)
     if method == 'quantile':
-        lower_bound = np.nanquantile(X, param, axis=n_axis-1, keepdims=True)
-        upper_bound = np.nanquantile(X, 1-param, axis=n_axis-1, keepdims=True)
+        lower_bound = np.nanquantile(X, param, axis=n_axis - 1, keepdims=True)
+        upper_bound = np.nanquantile(X, 1 - param, axis=n_axis - 1, keepdims=True)
     elif method == 'std':
-        mean = np.nanmean(X, axis=n_axis-1, keepdims=True)
-        std = np.nanstd(X, axis=n_axis-1, keepdims=True)
+        mean = np.nanmean(X, axis=n_axis - 1, keepdims=True)
+        std = np.nanstd(X, axis=n_axis - 1, keepdims=True)
         lower_bound = mean - std * param
         upper_bound = mean + std * param
     else:
         raise ValueError('Unknown method')
     return np.clip(a=X,
-                   a_min=np.repeat(lower_bound, n_stocks, axis=n_axis-1),
-                   a_max=np.repeat(upper_bound, n_stocks, axis=n_axis-1))
+                   a_min=np.repeat(lower_bound, n_stocks, axis=n_axis - 1),
+                   a_max=np.repeat(upper_bound, n_stocks, axis=n_axis - 1))
 
 
 def winsorize(X, method='quantile', param=0.05):
@@ -660,12 +704,12 @@ def _normalize(X, useStd):
     assert isinstance(X, np.ndarray)
     n_axis = len(X.shape)
     n_stocks = X.shape[-1]
-    x_mean = np.nanmean(X, axis=n_axis-1, keepdims=True)
-    s_std = np.nanstd(X, axis=n_axis-1, keepdims=True)
+    x_mean = np.nanmean(X, axis=n_axis - 1, keepdims=True)
+    s_std = np.nanstd(X, axis=n_axis - 1, keepdims=True)
     if useStd:
-        return (X - np.repeat(x_mean, n_stocks, axis=n_axis-1)) / np.repeat(s_std, n_stocks, axis=n_axis-1)
+        return (X - np.repeat(x_mean, n_stocks, axis=n_axis - 1)) / np.repeat(s_std, n_stocks, axis=n_axis - 1)
     else:
-        return X - np.repeat(x_mean, n_stocks, axis=n_axis-1)
+        return X - np.repeat(x_mean, n_stocks, axis=n_axis - 1)
 
 
 def normalize(X, useStd=True):
@@ -791,7 +835,7 @@ def arc_tan(x):
 
 # def clamp(x, lower = 0, upper = 0, inverse = False, mask = ")
 
-def filter(x, h = "1, 2, 3, 4", t="0.5"):
+def filter(x, h="1, 2, 3, 4", t="0.5"):
     pass
 
 
