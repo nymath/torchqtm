@@ -19,12 +19,17 @@ git_remove_cached:
 
 
 BUNDLE_PATH := ~/.rqalpha
-download_bundle:
+rqalpha_download_bundle:
 	@rqalpha download-bundle -d $(BUNDLE_PATH)
 
-update_bundle:
+
+# download bundle from "http://bundle.assets.ricequant.com/bundles_v4/rqbundle_202306.tar.bz2"
+
+rqalpha_update_bundle:
 	@rqalpha update-bundle
 
+download_sample_data:
+	@aria2c -s 10 https://github.com/nymath/torchquantum/releases/download/V0.1/stocks_f64.pkl.zip
 
 # add hash
 

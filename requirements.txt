@@ -10,3 +10,4 @@ joblib~=1.1.0
 scipy~=1.9.1
 setuptools~=63.4.1
 cython~=0.29.34
+pandas_market_calendars
