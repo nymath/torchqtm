@@ -1,12 +1,22 @@
+import pandas as pd
+
 TRADING_DAYS_IN_YEAR = 252
 TRADING_HOURS_IN_DAY = 4
 MINUTES_IN_HOUR = 60
+
+GLOBAL_DEFAULT_START = pd.Timestamp('2005-01-04')
+GLOBAL_DEFAULT_END = pd.Timestamp.now().floor("D") + pd.DateOffset(years=1)
 
 ANNUALIZER = {'daily': TRADING_DAYS_IN_YEAR,
               'hourly': TRADING_DAYS_IN_YEAR * TRADING_HOURS_IN_DAY,
               'minute': TRADING_DAYS_IN_YEAR * TRADING_HOURS_IN_DAY *
               MINUTES_IN_HOUR}
 
+DEFAULT_PER_SHARE_COST = 0.001  # 0.1 cents per share
+DEFAULT_PER_CONTRACT_COST = 0.85  # 0.85 per future contract
+DEFAULT_PER_DOLLAR_COST = 0.0015  # 0.15 cents per dollar
+DEFAULT_MINIMUM_COST_PER_EQUITY_TRADE = 0.0  # $0 per trade
+DEFAULT_MINIMUM_COST_PER_FUTURE_TRADE = 0.0  # $0 per trade
 
 # NOTE: It may be worth revisiting how the keys for this dictionary are
 # specified, for instance making them ContinuousFuture objects instead of
