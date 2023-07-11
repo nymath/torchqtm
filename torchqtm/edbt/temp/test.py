@@ -1,8 +1,8 @@
 from matplotlib import gridspec
 import numpy as np
 import pandas as pd
-from datahandler import BarData, MultiBarData, ModifiedBarData
-from backtest import BacktestEngine
+from torchqtm.edbt.temp.datahandler import BarData
+from torchqtm.edbt.temp.backtest import BacktestEngine
 from sklearn.linear_model import LinearRegression
 import statsmodels.api as sm
 

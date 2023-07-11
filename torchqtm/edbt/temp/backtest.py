@@ -1,7 +1,7 @@
-from account import VirtualAccount
+from torchqtm.edbt.temp.account import VirtualAccount
 from abc import ABCMeta, abstractmethod
 from collections.abc import Iterable
-from datahandler import BarData
+from torchqtm.edbt.temp.datahandler import BarData
 from mycalendar import Calendar
 import pandas as pd
 
