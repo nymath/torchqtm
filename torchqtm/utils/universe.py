@@ -39,7 +39,7 @@ class DynamicUniverse(object):
     pass
 
 
-@joblib.Memory('./.cache', verbose=0).cache
+# @joblib.Memory('./.cache', verbose=0).cache
 class IndexComponents(object):
     def __init__(self,
                  index_code: str,
