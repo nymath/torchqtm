@@ -5,6 +5,7 @@ import numpy
 import glob
 
 extensions = glob.glob("torchqtm/_C/*.pyx")
+extensions.extend(glob.glob("torchqtm/window/*pyx"))
 
 install_requires = [
     'numpy',
