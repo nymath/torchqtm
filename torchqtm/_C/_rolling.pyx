@@ -1,5 +1,3 @@
-# cython: boundscheck=False, wraparound=False, cdivision=True, language_level=3,
-# distutils: language=c++
 from typing import Type
 
 import numpy as np
@@ -391,6 +389,8 @@ cdef inline void remove_mean(float64_t val, Py_ssize_t *nobs, float64_t *sum_x,
             neg_ct[0] = neg_ct[0] - 1
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def roll_mean(const float64_t[:] values, ndarray[int64_t] start,
               ndarray[int64_t] end, int64_t minp) -> np.ndarray:
     cdef:
@@ -441,6 +441,8 @@ def roll_mean(const float64_t[:] values, ndarray[int64_t] start,
     return output
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def roll_apply_1D(object obj,
                   ndarray[int64_t] start,
                   ndarray[int64_t] end,
@@ -481,6 +483,8 @@ def roll_apply_1D(object obj,
     return output
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def roll_apply_2D(object obj,
                   ndarray[int64_t] start,
                   ndarray[int64_t] end,
@@ -523,6 +527,8 @@ def roll_apply_2D(object obj,
     return output
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def roll_apply_3D(object obj,
                   ndarray[int64_t] start,
                   ndarray[int64_t] end,
@@ -559,12 +565,17 @@ def roll_apply_3D(object obj,
             output[i] = NaN
     return output
 
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def roll_weighted_sum(
     const float64_t[:] values, const float64_t[:] weights, int minp
 ) -> np.ndaray:
     return _roll_weighted_sum_mean(values, weights, minp, avg=0)
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def roll_weighted_mean(
     const float64_t[:] values, const float64_t[:] weights, int minp
 ) -> np.ndaray:

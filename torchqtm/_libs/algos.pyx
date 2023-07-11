@@ -1377,7 +1377,7 @@ ctypedef fused out_t:
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def diff_2d(
-    ndarray[diff_t, ndim=2] arr,  # TODO(cython3) update to "const diff_t[:, :] arr"
+    ndarray[diff_t, ndim=2] arr,  # TODO(cython3) handle_transaction to "const diff_t[:, :] arr"
     ndarray[out_t, ndim=2] out,
     Py_ssize_t periods,
     int axis,

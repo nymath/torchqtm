@@ -700,7 +700,7 @@ cdef class TextReader:
                                 and self.dtype.get(old_col) is not None
                                 and self.dtype.get(col) is None
                             ):
-                                self.dtype.update({col: self.dtype.get(old_col)})
+                                self.dtype.handle_transaction({col: self.dtype.get(old_col)})
 
                         this_header[i] = col
                         counts[col] = cur_count + 1
