@@ -1,11 +1,16 @@
 import pandas as pd
-
+import datetime
 TRADING_DAYS_IN_YEAR = 252
 TRADING_HOURS_IN_DAY = 4
 MINUTES_IN_HOUR = 60
 
 GLOBAL_DEFAULT_START = pd.Timestamp('2005-01-04')
 GLOBAL_DEFAULT_END = pd.Timestamp.now().floor("D") + pd.DateOffset(years=1)
+
+GLOBAL_DEFAULT_MARKET_OPEN = datetime.time(hour=9, minute=30)
+GLOBAL_DEFAULT_MARKET_CLOSE = datetime.time(hour=15, minute=0)
+GLOBAL_DEFAULT_BEFORE_TRADING_START_OFFSET = 15
+
 
 ANNUALIZER = {'daily': TRADING_DAYS_IN_YEAR,
               'hourly': TRADING_DAYS_IN_YEAR * TRADING_HOURS_IN_DAY,
