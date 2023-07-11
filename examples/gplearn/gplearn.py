@@ -1,6 +1,6 @@
 import numpy as np
-from torchqtm.autoalpha.gplearn import fitness
-from torchqtm.autoalpha.gplearn.genetic import SymbolicRegressor
+from torchqtm.alphas.autoalpha.gplearn import fitness
+from torchqtm.alphas.autoalpha.gplearn import SymbolicRegressor
 from torchqtm.utils.rebalance import Calendar
 from torchqtm.utils.universe import StaticUniverse, IndexComponents
 from torchqtm.tdbt.backtest import BackTestEnv, GPTestingIC

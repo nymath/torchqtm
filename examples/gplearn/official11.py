@@ -1,9 +1,8 @@
 # Out model is consistent with the official model.
 # In this example, we check the two dimentional symbolic regression
-from torchqtm.autoalpha.gplearn import fitness
-from torchqtm.autoalpha.gplearn.genetic import SymbolicRegressor
+from torchqtm.alphas.autoalpha.gplearn import fitness
+from torchqtm.alphas.autoalpha.gplearn import SymbolicRegressor
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.utils import check_random_state
 import graphviz
 

@@ -107,12 +107,12 @@ if __name__ == '__main__':
 
     dfs = load_data()
 
-    start = '20170101'
+    start = '20120101'
     end = '20230101'
     rebalance_alpha = Daily(start, end)
     rebalance_backtest = Weekly(start, end, [-1])
     benchmark = BenchMark('000852.SH', start, end)
-    universe = StaticUniverse(IndexComponents('000852.SH', start).data)
+    universe = StaticUniverse(IndexComponents('399300.SZ', start).data)
     # universe = StaticUniverse(list(dfs['Close'].columns))
 
     # Create the backtest environment
@@ -126,7 +126,8 @@ if __name__ == '__main__':
 
     # Create alpha
     # alpha = WQ.Alpha015(env=alphaEnv)
-    alpha = chatgpt.Alpha004(env=alphaEnv)
+    # alpha = chatgpt.Alpha004(env=alphaEnv)
+    alpha = NeutralizePE(env=alphaEnv)
     with Timer():
         with catch_warnings():
             alpha.forward()
