@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from bisect import bisect_right
 
+import typing
+
 
 def convert_date_to_int(dt):
     t = dt.year * 10000 + dt.month * 100 + dt.day
@@ -45,7 +47,7 @@ def _factor_for_date(dates, factors, d):
 def adjust_bars(
         bars: np.ndarray,
         ex_factors: np.ndarray,
-        fields: str,
+        fields: typing.Iterable[str],
         adjust_type: str,
         adjust_origin: pd.Timestamp,
 ):

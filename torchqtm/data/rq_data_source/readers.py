@@ -171,6 +171,8 @@ class StockDailyBarReader(object):
         ('volume', np.float64),
     ])
 
+    ATTRIBUTES = ["datetime", "open", "close", "high", "low", "limit_up", "limit_down", "volume", "total_turnover"]
+
     ATTRIBUTE_TO_INDEX = {
         "datetime": 0,
         "open": 1,
