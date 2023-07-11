@@ -33,3 +33,5 @@ class test_orders_tracker(unittest.TestCase):
     def test_get_transactions(self):
         tracker.order(asset=symbol, amount=100)
         print(tracker.get_transactions(data_portal))
+
+

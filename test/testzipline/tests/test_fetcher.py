@@ -575,7 +575,7 @@ def initialize(context):
                date_format = '%m/%d/%y')
     context.stock = symbol('NFLX')
 
-def before_trading_start(context, data):
+def on_before_trading_start(context, data):
     record(Short_Interest = data.current(context.stock, 'dtc'))
 """, sim_params=sim_params)
 

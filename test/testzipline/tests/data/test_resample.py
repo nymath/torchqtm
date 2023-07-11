@@ -314,13 +314,13 @@ class MinuteToDailyAggregationTestCase(WithBcolzEquityMinuteBarReader,
         # Set up a fresh data portal for each test, since order of calling
         # needs to be tested.
         self.equity_daily_aggregator = DailyHistoryAggregator(
-            self.nyse_calendar.schedule.market_open,
+            self.nyse_calendar.schedule.market_open_time,
             self.bcolz_equity_minute_bar_reader,
             self.nyse_calendar,
         )
 
         self.future_daily_aggregator = DailyHistoryAggregator(
-            self.us_futures_calendar.schedule.market_open,
+            self.us_futures_calendar.schedule.market_open_time,
             self.bcolz_future_minute_bar_reader,
             self.us_futures_calendar
         )

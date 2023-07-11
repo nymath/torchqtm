@@ -49,7 +49,7 @@ def initialize(context):
     context.sid3 = sid(3)
     context.num_bts = 0
 
-def before_trading_start(context, data):
+def on_before_trading_start(context, data):
     context.num_bts += 1
 
     # Get history at the second BTS (beginning of second day)
@@ -420,7 +420,7 @@ class TestAPIShim(WithCreateBarData,
 
     def test_old_new_history_bts_paths(self):
         """
-        Tests that calling history in before_trading_start gets us the correct
+        Tests that calling history in on_before_trading_start gets us the correct
         values, which involves 1) calling data_portal.get_history_window as of
         the previous market minute, 2) getting adjustments between the previous
         market minute and the current time, and 3) applying those adjustments

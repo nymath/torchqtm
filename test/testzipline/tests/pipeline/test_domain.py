@@ -346,12 +346,12 @@ class DataQueryCutoffForSessionTestCase(zf.ZiplineTestCase):
                                      domain,
                                      expected_cutoff_time,
                                      expected_cutoff_date_offset=0):
-        sessions = pd.DatetimeIndex(domain.calendar.all_sessions[:50])
+        sessions = pd.DatetimeIndex(domain.trading_calendar.all_sessions[:50])
 
         expected = days_at_time(
             sessions,
             expected_cutoff_time,
-            domain.calendar.tz,
+            domain.trading_calendar.tz,
             expected_cutoff_date_offset,
         )
         actual = domain.data_query_cutoff_for_sessions(sessions)
@@ -463,7 +463,7 @@ class DataQueryCutoffForSessionTestCase(zf.ZiplineTestCase):
         expected_msg = (
             'cannot resolve data query time for sessions that are not on the'
             ' %s calendar:\n%s'
-        ) % (domain.calendar.name, invalid_sessions)
+        ) % (domain.trading_calendar.name, invalid_sessions)
         assert_messages_equal(str(e.exception), expected_msg)
 
     Case = namedtuple('Case', 'time date_offset expected_timedelta')
@@ -557,16 +557,16 @@ class RollForwardTestCase(zf.ZiplineTestCase):
         # passing a date before the first session should return the
         # first session
         before_first_session = \
-            JP_EQUITIES.calendar.first_session - pd.Timedelta(days=20)
+            JP_EQUITIES.trading_calendar.first_session - pd.Timedelta(days=20)
 
         self.assertEqual(
             JP_EQUITIES.roll_forward(before_first_session),
-            JP_EQUITIES.calendar.first_session
+            JP_EQUITIES.trading_calendar.first_session
         )
 
         # requesting a session beyond the last session raises an ValueError
         after_last_session = \
-            JP_EQUITIES.calendar.last_session + pd.Timedelta(days=20)
+            JP_EQUITIES.trading_calendar.last_session + pd.Timedelta(days=20)
 
         with self.assertRaises(ValueError) as ve:
             JP_EQUITIES.roll_forward(after_last_session)
@@ -577,7 +577,7 @@ class RollForwardTestCase(zf.ZiplineTestCase):
             "EquityCalendarDomain('JP', 'XTKS'). The last session for "
             "this domain is {}.".format(
                 after_last_session.date(),
-                JP_EQUITIES.calendar.last_session.date(),
+                JP_EQUITIES.trading_calendar.last_session.date(),
             )
         )
 

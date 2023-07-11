@@ -76,8 +76,8 @@ class BcolzMinuteBarTestCase(WithTradingCalendars,
             TEST_CALENDAR_START:TEST_CALENDAR_STOP
         ]
 
-        cls.market_opens = cal.market_open
-        cls.market_closes = cal.market_close
+        cls.market_opens = cal.market_open_time
+        cls.market_closes = cal.market_close_time
 
         cls.test_calendar_start = cls.market_opens.index[0]
         cls.test_calendar_stop = cls.market_opens.index[-1]
@@ -1065,7 +1065,7 @@ class BcolzMinuteBarTestCase(WithTradingCalendars,
         # Truncate to first day with data.
         writer.truncate(days[0])
 
-        # Refresh the reader since truncate update the metadata.
+        # Refresh the reader since truncate handle_transaction the metadata.
         self.reader = BcolzMinuteBarReader(self.dest)
 
         self.assertEqual(self.writer.last_date_in_output_for_sid(sid), days[0])
@@ -1123,7 +1123,7 @@ class BcolzMinuteBarTestCase(WithTradingCalendars,
         # day with minute data.
         self.writer.truncate(self.test_calendar_start)
 
-        # Refresh the reader since truncate update the metadata.
+        # Refresh the reader since truncate handle_transaction the metadata.
         self.reader = BcolzMinuteBarReader(self.dest)
 
         self.assertEqual(
@@ -1234,7 +1234,7 @@ class BcolzMinuteBarTestCase(WithTradingCalendars,
         update_reader = H5MinuteBarUpdateReader(update_path)
         self.writer.write(update_reader.read(minutes, sids))
 
-        # Refresh the reader since truncate update the metadata.
+        # Refresh the reader since truncate handle_transaction the metadata.
         reader = BcolzMinuteBarReader(self.dest)
 
         columns = ['open', 'high', 'low', 'close', 'volume']

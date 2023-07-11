@@ -68,14 +68,14 @@ class FinanceTestCase(zf.WithAssetFinder,
     def test_partially_filled_orders(self):
 
         # create a scenario where order size and trade size are equal
-        # so that orders must be spread out over several trades.
+        # so that get_orders must be spread out over several trades.
         params = {
             'trade_count': 360,
             'trade_interval': timedelta(minutes=1),
             'order_count': 2,
             'order_amount': 100,
             'order_interval': timedelta(minutes=1),
-            # because we placed two orders for 100 shares each, and the volume
+            # because we placed two get_orders for 100 shares each, and the volume
             # of each trade is 100, and by default you can take up 10% of the
             # bar's volume (per FixedBasisPointsSlippage, the default slippage
             # model), the simulator should spread the order into 20 trades of
@@ -104,15 +104,15 @@ class FinanceTestCase(zf.WithAssetFinder,
     @timed(DEFAULT_TIMEOUT)
     def test_collapsing_orders(self):
         # create a scenario where order.amount <<< trade.volume
-        # to test that several orders can be covered properly by one trade,
-        # but are represented by multiple transactions.
+        # to test that several get_orders can be covered properly by one trade,
+        # but are represented by multiple get_transactions.
         params1 = {
             'trade_count': 6,
             'trade_interval': timedelta(hours=1),
             'order_count': 24,
             'order_amount': 1,
             'order_interval': timedelta(minutes=1),
-            # because we placed an orders totaling less than 25% of one trade
+            # because we placed an get_orders totaling less than 25% of one trade
             # the simulator should produce just one transaction.
             'expected_txn_count': 24,
             'expected_txn_volume': 24
@@ -162,7 +162,7 @@ class FinanceTestCase(zf.WithAssetFinder,
 
     def transaction_sim(self, **params):
         """This is a utility method that asserts expected
-        results for conversion of orders to transactions given a
+        results for conversion of get_orders to get_transactions given a
         trade history
         """
         trade_count = params['trade_count']
@@ -178,7 +178,7 @@ class FinanceTestCase(zf.WithAssetFinder,
         # if present, alternate between long and short sales
         alternate = params.get('alternate')
 
-        # if present, expect transaction amounts to match orders exactly.
+        # if present, expect transaction amounts to match get_orders exactly.
         complete_fill = params.get('complete_fill')
 
         asset1 = self.asset_finder.retrieve_asset(1)
@@ -288,7 +288,7 @@ class FinanceTestCase(zf.WithAssetFinder,
             )
 
             # replicate what tradesim does by going through every minute or day
-            # of the simulation and processing open orders each time
+            # of the simulation and processing open get_orders each time
             if sim_params.data_frequency == "minute":
                 ticks = minutes
             else:
@@ -308,9 +308,9 @@ class FinanceTestCase(zf.WithAssetFinder,
                         order_amount * direction,
                         MarketOrder(),
                     )
-                    order_list.append(blotter.orders[order_id])
+                    order_list.append(blotter.data[order_id])
                     order_date = order_date + order_interval
-                    # move after market orders to just after market next
+                    # move after market get_orders to just after market next
                     # market open.
                     if order_date.hour >= 21:
                         if order_date.minute >= 00:
@@ -357,18 +357,18 @@ class FinanceTestCase(zf.WithAssetFinder,
                 cumulative_pos = tracker.positions[asset1]
                 self.assertEqual(total_volume, cumulative_pos.amount)
 
-            # the open orders should not contain the asset.
+            # the open get_orders should not contain the asset.
             oo = blotter.open_orders
             self.assertNotIn(
                 asset1,
                 oo,
-                "Entry is removed when no open orders"
+                "Entry is removed when no open get_orders"
             )
 
     def test_blotter_processes_splits(self):
         blotter = SimulationBlotter(equity_slippage=FixedSlippage())
 
-        # set up two open limit orders with very low limit prices,
+        # set up two open limit get_orders with very low limit prices,
         # one for sid 1 and one for sid 2
         asset1 = self.asset_finder.retrieve_asset(1)
         asset2 = self.asset_finder.retrieve_asset(2)
@@ -377,7 +377,7 @@ class FinanceTestCase(zf.WithAssetFinder,
         blotter.order(asset1, 100, LimitOrder(10, asset=asset1))
         blotter.order(asset2, 100, LimitOrder(10, asset=asset2))
 
-        # send in splits for assets 133 and 2.  We have no open orders for
+        # send in splits for assets 133 and 2.  We have no open get_orders for
         # asset 133 so it should be ignored.
         blotter.process_splits([(asset133, 0.5), (asset2, 0.3333)])
 

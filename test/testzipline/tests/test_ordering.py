@@ -79,7 +79,7 @@ from zipline.api import sid, {order_func}
 def initialize(context):
     context.asset = sid(1)
 
-def before_trading_start(context, data):
+def on_before_trading_start(context, data):
     {order_func}(context.asset, {arg})
      """.format(order_func=order_method, arg=amount)
 
@@ -88,7 +88,7 @@ def before_trading_start(context, data):
             algo.run()
 
     @parameterized.expand([
-        # These should all be orders for the same amount.
+        # These should all be get_orders for the same amount.
         ('order', 5000),         # 5000 shares times $2 per share
         ('order_value', 10000),  # $10000
         ('order_percent', 1),    # 100% on a $10000 capital base.
@@ -116,18 +116,18 @@ def do_order(context, data):
      """.format(order_func=order_method, arg=amount)
         result = self.run_algorithm(script=algotext)
 
-        for orders in result.orders.values:
+        for orders in result.data.values:
             assert_equal(len(orders), 1)
             assert_equal(orders[0]['amount'], 5000)
             assert_equal(orders[0]['sid'], self.EQUITY)
 
-        for i, positions in enumerate(result.positions.values, start=1):
+        for i, positions in enumerate(result.data.values, start=1):
             assert_equal(len(positions), 1)
             assert_equal(positions[0]['amount'], 5000.0 * i)
             assert_equal(positions[0]['sid'], self.EQUITY)
 
     @parameterized.expand([
-        # These should all be orders for the same amount.
+        # These should all be get_orders for the same amount.
         ('order_target', 5000),         # 5000 shares times $2 per share
         ('order_target_value', 10000),  # $10000
         ('order_target_percent', 1),    # 100% on a $10000 capital base.
@@ -157,18 +157,18 @@ def do_order(context, data):
 
         result = self.run_algorithm(script=algotext)
 
-        assert_equal([len(ords) for ords in result.orders], [1, 0, 0, 0])
-        order = result.orders.iloc[0][0]
+        assert_equal([len(ords) for ords in result.data], [1, 0, 0, 0])
+        order = result.data.iloc[0][0]
         assert_equal(order['amount'], 5000)
         assert_equal(order['sid'], self.EQUITY)
 
-        for positions in result.positions.values:
+        for positions in result.data.values:
             assert_equal(len(positions), 1)
             assert_equal(positions[0]['amount'], 5000.0)
             assert_equal(positions[0]['sid'], self.EQUITY)
 
     @parameterized.expand([
-        # These should all be orders for the same amount.
+        # These should all be get_orders for the same amount.
         ('order', 500),          # 500 contracts times $2 per contract * 10x
                                  # multiplier.
         ('order_value', 10000),  # $10000
@@ -197,18 +197,18 @@ def do_order(context, data):
      """.format(order_func=order_method, arg=amount)
         result = self.run_algorithm(script=algotext)
 
-        for orders in result.orders.values:
+        for orders in result.data.values:
             assert_equal(len(orders), 1)
             assert_equal(orders[0]['amount'], 500)
             assert_equal(orders[0]['sid'], self.FUTURE)
 
-        for i, positions in enumerate(result.positions.values, start=1):
+        for i, positions in enumerate(result.data.values, start=1):
             assert_equal(len(positions), 1)
             assert_equal(positions[0]['amount'], 500.0 * i)
             assert_equal(positions[0]['sid'], self.FUTURE)
 
     @parameterized.expand([
-        # These should all be orders targeting the same amount.
+        # These should all be get_orders targeting the same amount.
         ('order_target', 500),          # 500 contracts * $2 per contract * 10x
                                         # multiplier.
         ('order_target_value', 10000),  # $10000
@@ -240,13 +240,13 @@ def do_order(context, data):
         result = self.run_algorithm(script=algotext)
 
         # We should get one order on the first day.
-        assert_equal([len(ords) for ords in result.orders], [1, 0, 0, 0])
-        order = result.orders.iloc[0][0]
+        assert_equal([len(ords) for ords in result.data], [1, 0, 0, 0])
+        order = result.data.iloc[0][0]
         assert_equal(order['amount'], 500)
         assert_equal(order['sid'], self.FUTURE)
 
         # Our position at the end of each day should be worth $10,000.
-        for positions in result.positions.values:
+        for positions in result.data.values:
             assert_equal(len(positions), 1)
             assert_equal(positions[0]['amount'], 500.0)
             assert_equal(positions[0]['sid'], self.FUTURE)
@@ -266,11 +266,11 @@ def do_order(context, data):
             api.schedule_function(
                 func=do_order,
                 date_rule=api.date_rules.every_day(),
-                time_rule=api.time_rules.market_open(),
+                time_rule=api.time_rules.market_open_time(),
             )
 
         def do_order(context, data):
-            assert len(context.portfolio.positions.keys()) == 0
+            assert len(context.portfolio.data.keys()) == 0
 
             order_method(
                 self.EQUITY,

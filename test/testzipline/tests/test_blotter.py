@@ -155,8 +155,8 @@ class BlotterTestCase(WithCreateBarData,
     def test_blotter_eod_cancellation(self):
         blotter = SimulationBlotter(cancel_policy=EODCancel())
 
-        # Make two orders for the same asset, so we can test that we are not
-        # mutating the orders list as we are cancelling orders
+        # Make two get_orders for the same asset, so we can test that we are not
+        # mutating the get_orders list as we are cancelling get_orders
         blotter.order(self.asset_24, 100, MarketOrder())
         blotter.order(self.asset_24, -100, MarketOrder())
 
@@ -172,7 +172,7 @@ class BlotterTestCase(WithCreateBarData,
 
         blotter.execute_cancel_policy(SESSION_END)
         for order_id in order_ids:
-            order = blotter.orders[order_id]
+            order = blotter.data[order_id]
             self.assertEqual(order.status, ORDER_STATUS.CANCELLED)
 
     def test_blotter_never_cancel(self):
@@ -245,7 +245,7 @@ class BlotterTestCase(WithCreateBarData,
         )
         txns, _, closed_orders = blotter.get_transactions(bar_data)
         for txn in txns:
-            filled_order = blotter.orders[txn.order_id]
+            filled_order = blotter.data[txn.order_id]
         blotter.prune_orders(closed_orders)
 
         self.assertEqual(filled_order.id, filled_id)
@@ -254,12 +254,12 @@ class BlotterTestCase(WithCreateBarData,
         self.assertNotIn(filled_order, blotter.open_orders[self.asset_24])
 
         blotter.reject(filled_id)
-        updated_order = blotter.orders[filled_id]
+        updated_order = blotter.data[filled_id]
         self.assertEqual(updated_order.status, ORDER_STATUS.FILLED)
 
     def test_order_hold(self):
         """
-        Held orders act almost identically to open orders, except for the
+        Held get_orders act almost identically to open get_orders, except for the
         status indication. When a fill happens, the order should switch
         status to OPEN/FILLED as necessary
         """
@@ -314,7 +314,7 @@ class BlotterTestCase(WithCreateBarData,
             )
             txns, _, _ = blotter.get_transactions(bar_data)
             for txn in txns:
-                filled_order = blotter.orders[txn.order_id]
+                filled_order = blotter.data[txn.order_id]
 
             self.assertEqual(filled_order.id, held_order.id)
             self.assertEqual(filled_order.status, expected_status)
@@ -333,7 +333,7 @@ class BlotterTestCase(WithCreateBarData,
         blotter.prune_orders([open_order])
         self.assertEqual(0, len(blotter.open_orders[self.asset_24]))
 
-        # prune an order that isn't in our our open orders list, make sure
+        # prune an order that isn't in our our open get_orders list, make sure
         # nothing blows up
 
         other_order = Order(

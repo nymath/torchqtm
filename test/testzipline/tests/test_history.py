@@ -2052,7 +2052,7 @@ class DailyEquityHistoryTestCase(WithHistory, zf.ZiplineTestCase):
 
         # Use a minute to force minute mode.
         first_minute = \
-            self.trading_calendar.schedule.market_open[self.TRADING_START_DT]
+            self.trading_calendar.schedule.market_open_time[self.TRADING_START_DT]
 
         with self.assertRaisesRegex(HistoryWindowStartsBeforeData, exp_msg):
             self.data_portal.get_history_window(

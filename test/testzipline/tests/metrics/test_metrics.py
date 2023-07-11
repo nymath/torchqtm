@@ -160,9 +160,9 @@ class TestConstantPrice(WithConstantEquityMinuteBarData,
 
         empty_lists = pd.Series([[]] * len(self.closes), self.closes)
         empty_list_fields = (
-            'orders',
+            'get_orders',
             'positions',
-            'transactions',
+            'get_transactions',
         )
         for field in empty_list_fields:
             assert_equal(
@@ -221,7 +221,7 @@ class TestConstantPrice(WithConstantEquityMinuteBarData,
                 )
 
                 if context.bar_count < 1:
-                    assert_equal(portfolio.positions, {})
+                    assert_equal(portfolio.data, {})
                     return
 
                 expected_amount = min(context.bar_count, 100)
@@ -242,7 +242,7 @@ class TestConstantPrice(WithConstantEquityMinuteBarData,
 
                 positions = {
                     asset: [{k: getattr(p, k) for k in expected_position}]
-                    for asset, p in portfolio.positions.items()
+                    for asset, p in portfolio.data.items()
                 }
 
                 assert_equal(positions, expected_positions)
@@ -402,7 +402,7 @@ class TestConstantPrice(WithConstantEquityMinuteBarData,
                 )
 
                 if context.bar_count < 1:
-                    assert_equal(portfolio.positions, {})
+                    assert_equal(portfolio.data, {})
                     return
 
                 expected_amount = min(context.bar_count, 100)
@@ -426,7 +426,7 @@ class TestConstantPrice(WithConstantEquityMinuteBarData,
 
                 positions = {
                     asset: [{k: getattr(p, k) for k in expected_position}]
-                    for asset, p in portfolio.positions.items()
+                    for asset, p in portfolio.data.items()
                 }
 
                 assert_equal(positions, expected_positions)
@@ -568,7 +568,7 @@ class TestConstantPrice(WithConstantEquityMinuteBarData,
                     portfolio,
                 )
 
-                positions = portfolio.positions
+                positions = portfolio.data
                 if first_bar:
                     assert_equal(positions, {})
                     return
@@ -798,7 +798,7 @@ class TestConstantPrice(WithConstantEquityMinuteBarData,
                 msg=field,
             )
 
-        orders = perf['orders']
+        orders = perf['get_orders']
 
         expected_single_order = {
             'amount': shares,
@@ -833,7 +833,7 @@ class TestConstantPrice(WithConstantEquityMinuteBarData,
             check_names=False,
         )
 
-        transactions = perf['transactions']
+        transactions = perf['get_transactions']
 
         expected_single_transaction = {
             'amount': shares,
@@ -983,7 +983,7 @@ class TestConstantPrice(WithConstantEquityMinuteBarData,
                     portfolio,
                 )
 
-                positions = portfolio.positions
+                positions = portfolio.data
                 if first_bar:
                     assert_equal(positions, {})
                     return
@@ -1179,7 +1179,7 @@ class TestConstantPrice(WithConstantEquityMinuteBarData,
                 msg=field,
             )
 
-        orders = perf['orders']
+        orders = perf['get_orders']
 
         # we only order on the first day
         expected_orders = [
@@ -1211,7 +1211,7 @@ class TestConstantPrice(WithConstantEquityMinuteBarData,
             check_names=False,
         )
 
-        transactions = perf['transactions']
+        transactions = perf['get_transactions']
 
         # since we only order on the first day, we should only transact on the
         # first day
@@ -1539,7 +1539,7 @@ class TestFixedReturns(WithMakeAlgo, WithWerror, ZiplineTestCase):
                     portfolio,
                 )
 
-                positions = portfolio.positions
+                positions = portfolio.data
                 if first_bar:
                     assert_equal(positions, {})
                     return
@@ -1732,7 +1732,7 @@ class TestFixedReturns(WithMakeAlgo, WithWerror, ZiplineTestCase):
             check_names=False,
         )
 
-        orders = perf['orders']
+        orders = perf['get_orders']
 
         expected_single_order = {
             'amount': shares,
@@ -1767,7 +1767,7 @@ class TestFixedReturns(WithMakeAlgo, WithWerror, ZiplineTestCase):
             check_names=False,
         )
 
-        transactions = perf['transactions']
+        transactions = perf['get_transactions']
 
         expected_single_transaction = {
             'amount': shares,
@@ -1956,7 +1956,7 @@ class TestFixedReturns(WithMakeAlgo, WithWerror, ZiplineTestCase):
                     portfolio,
                 )
 
-                positions = portfolio.positions
+                positions = portfolio.data
                 if first_bar:
                     assert_equal(positions, {})
                     return
@@ -2150,7 +2150,7 @@ class TestFixedReturns(WithMakeAlgo, WithWerror, ZiplineTestCase):
             check_names=False,
         )
 
-        orders = perf['orders']
+        orders = perf['get_orders']
 
         expected_single_order = {
             'amount': contracts,
@@ -2185,7 +2185,7 @@ class TestFixedReturns(WithMakeAlgo, WithWerror, ZiplineTestCase):
             check_names=False,
         )
 
-        transactions = perf['transactions']
+        transactions = perf['get_transactions']
 
         dt = self.future_minutes[1]
         expected_single_transaction = {

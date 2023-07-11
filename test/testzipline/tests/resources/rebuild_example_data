@@ -39,7 +39,7 @@ To do this, please inspect `new` and `old` which are mappings from the name of
 the example to the results.
 
 The name `cols_to_check` has been bound to a list of perf columns that we
-expect to be reliably deterministic (excluding, e.g. `orders`, which contains
+expect to be reliably deterministic (excluding, e.g. `get_orders`, which contains
 UUIDs).
 
 Calling `changed_results(new, old)` will compute a list of names of results

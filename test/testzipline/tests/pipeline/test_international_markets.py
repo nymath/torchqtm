@@ -214,7 +214,7 @@ class InternationalEquityTestCase(WithInternationalPricingPipelineEngine,
 
     @parameter_space(domain=[CA_EQUITIES, US_EQUITIES, GB_EQUITIES])
     def test_generic_pipeline_with_explicit_domain(self, domain):
-        calendar = domain.calendar
+        calendar = domain.trading_calendar
         pipe = Pipeline({
             'open': EquityPricing.open.latest,
             'high': EquityPricing.high.latest,

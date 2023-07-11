@@ -246,7 +246,7 @@ class ClosesAndVolumes(WithMakeAlgo, ZiplineTestCase):
             algo.run()
 
         def barf(context, data):
-            raise AssertionError("Shouldn't make it past before_trading_start")
+            raise AssertionError("Shouldn't make it past on_before_trading_start")
 
         algo = self.make_algo(
             initialize=initialize,
@@ -289,7 +289,7 @@ class ClosesAndVolumes(WithMakeAlgo, ZiplineTestCase):
             attach_pipeline(Pipeline(), 'test')
 
         def handle_data(context, data):
-            raise AssertionError("Shouldn't make it past before_trading_start")
+            raise AssertionError("Shouldn't make it past on_before_trading_start")
 
         def before_trading_start(context, data):
             pipeline_output('not_test')
@@ -645,7 +645,7 @@ class PipelineAlgorithmTestCase(WithMakeAlgo,
                     # unfortunate.
                     assert_almost_equal(computed, expected, decimal=2)
 
-        # Do the same checks in before_trading_start
+        # Do the same checks in on_before_trading_start
         before_trading_start = handle_data
 
         self.run_algorithm(
@@ -663,7 +663,7 @@ class PipelineAlgorithmTestCase(WithMakeAlgo,
 
     def test_empty_pipeline(self):
 
-        # For ensuring we call before_trading_start.
+        # For ensuring we call on_before_trading_start.
         count = [0]
 
         def initialize(context):
@@ -704,7 +704,7 @@ class PipelineAlgorithmTestCase(WithMakeAlgo,
         of the daily bars.
         """
 
-        # For ensuring we call before_trading_start.
+        # For ensuring we call on_before_trading_start.
         count = [0]
 
         current_day = self.trading_calendar.next_session_label(

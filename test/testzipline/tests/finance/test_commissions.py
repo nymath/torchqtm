@@ -372,7 +372,7 @@ class CommissionAlgorithmTests(WithMakeAlgo, ZiplineTestCase):
         # should be 3 fills at 100 shares apiece
         # one order split among 3 days, each copy of the order should have a
         # commission of one dollar
-        for orders in results.orders[1:4]:
+        for orders in results.data[1:4]:
             self.assertEqual(1, orders[0]["commission"])
 
         self.verify_capital_used(results, [-1001, -1000, -1000])
@@ -391,7 +391,7 @@ class CommissionAlgorithmTests(WithMakeAlgo, ZiplineTestCase):
         # The capital used is only -1.0 (the commission cost) because no
         # capital is actually spent to enter into a long position on a futures
         # contract.
-        self.assertEqual(results.orders[1][0]['commission'], 1.0)
+        self.assertEqual(results.data[1][0]['commission'], 1.0)
         self.assertEqual(results.capital_used[1], -1.0)
 
     def test_per_share_no_minimum(self):
@@ -406,7 +406,7 @@ class CommissionAlgorithmTests(WithMakeAlgo, ZiplineTestCase):
         # should be 3 fills at 100 shares apiece
         # one order split among 3 days, each fill generates an additional
         # 100 * 0.05 = $5 in commission
-        for i, orders in enumerate(results.orders[1:4]):
+        for i, orders in enumerate(results.data[1:4]):
             self.assertEqual((i + 1) * 5, orders[0]["commission"])
 
         self.verify_capital_used(results, [-1005, -1005, -1005])
@@ -422,7 +422,7 @@ class CommissionAlgorithmTests(WithMakeAlgo, ZiplineTestCase):
         )
 
         # commissions should be 5, 10, 15
-        for i, orders in enumerate(results.orders[1:4]):
+        for i, orders in enumerate(results.data[1:4]):
             self.assertEqual((i + 1) * 5, orders[0]["commission"])
 
         self.verify_capital_used(results, [-1005, -1005, -1005])
@@ -437,9 +437,9 @@ class CommissionAlgorithmTests(WithMakeAlgo, ZiplineTestCase):
         )
 
         # commissions should be 8, 10, 15
-        self.assertEqual(8, results.orders[1][0]["commission"])
-        self.assertEqual(10, results.orders[2][0]["commission"])
-        self.assertEqual(15, results.orders[3][0]["commission"])
+        self.assertEqual(8, results.data[1][0]["commission"])
+        self.assertEqual(10, results.data[2][0]["commission"])
+        self.assertEqual(15, results.data[3][0]["commission"])
 
         self.verify_capital_used(results, [-1008, -1002, -1005])
 
@@ -453,9 +453,9 @@ class CommissionAlgorithmTests(WithMakeAlgo, ZiplineTestCase):
         )
 
         # commissions should be 12, 12, 15
-        self.assertEqual(12, results.orders[1][0]["commission"])
-        self.assertEqual(12, results.orders[2][0]["commission"])
-        self.assertEqual(15, results.orders[3][0]["commission"])
+        self.assertEqual(12, results.data[1][0]["commission"])
+        self.assertEqual(12, results.data[2][0]["commission"])
+        self.assertEqual(15, results.data[3][0]["commission"])
 
         self.verify_capital_used(results, [-1012, -1000, -1003])
 
@@ -469,9 +469,9 @@ class CommissionAlgorithmTests(WithMakeAlgo, ZiplineTestCase):
         )
 
         # commissions should be 18, 18, 18
-        self.assertEqual(18, results.orders[1][0]["commission"])
-        self.assertEqual(18, results.orders[2][0]["commission"])
-        self.assertEqual(18, results.orders[3][0]["commission"])
+        self.assertEqual(18, results.data[1][0]["commission"])
+        self.assertEqual(18, results.data[2][0]["commission"])
+        self.assertEqual(18, results.data[3][0]["commission"])
 
         self.verify_capital_used(results, [-1018, -1000, -1000])
 
@@ -498,7 +498,7 @@ class CommissionAlgorithmTests(WithMakeAlgo, ZiplineTestCase):
         )
 
         self.assertEqual(
-            results.orders[1][0]['commission'], expected_commission,
+            results.data[1][0]['commission'], expected_commission,
         )
         self.assertEqual(results.capital_used[1], -expected_commission)
 
@@ -515,7 +515,7 @@ class CommissionAlgorithmTests(WithMakeAlgo, ZiplineTestCase):
         # incremental commission of $1000 * 0.01 = $10
 
         # commissions should be $10, $20, $30
-        for i, orders in enumerate(results.orders[1:4]):
+        for i, orders in enumerate(results.data[1:4]):
             self.assertEqual((i + 1) * 10, orders[0]["commission"])
 
         self.verify_capital_used(results, [-1010, -1010, -1010])

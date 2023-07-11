@@ -237,13 +237,13 @@ class TestMiscellaneousAPI(zf.WithMakeAlgo, zf.ZiplineTestCase):
 
     def test_cancel_policy_outside_init(self):
         code = """
-from zipline.api import cancel_policy, set_cancel_policy
+from zipline.api import cancel_policy.py, set_cancel_policy
 
 def initialize(algo):
     pass
 
 def handle_data(algo, data):
-    set_cancel_policy(cancel_policy.NeverCancel())
+    set_cancel_policy(cancel_policy.py.NeverCancel())
 """
         algo = self.make_algo(script=code)
         with self.assertRaises(SetCancelPolicyPostInit):
@@ -319,7 +319,7 @@ def handle_data(context, data):
     ])
     def test_invalid_capital_base(self, cap_base, name):
         """
-        Test that the appropriate error is being raised and orders aren't
+        Test that the appropriate error is being raised and get_orders aren't
         filled for algos with capital base <= 0
         """
         algo_text = """
@@ -891,18 +891,18 @@ class TestPositions(zf.WithMakeAlgo, zf.ZiplineTestCase):
 
             if not context.exited:
                 amounts = [pos.amount for pos
-                           in itervalues(context.portfolio.positions)]
+                           in itervalues(context.portfolio.data)]
 
                 if (
                     len(amounts) > 0 and
                     all([(amount == 1) for amount in amounts])
                 ):
-                    for stock in context.portfolio.positions:
+                    for stock in context.portfolio.data:
                         context.order(context.sid(stock), -1)
                     context.exited = True
 
             # Should be 0 when all positions are exited.
-            context.record(num_positions=len(context.portfolio.positions))
+            context.record(num_positions=len(context.portfolio.data))
 
         result = self.run_algorithm(
             initialize=initialize,
@@ -972,7 +972,7 @@ class TestPositions(zf.WithMakeAlgo, zf.ZiplineTestCase):
         daily_stats = self.run_algorithm(handle_data=handle_data)
 
         # Verify that positions are empty for all dates.
-        empty_positions = daily_stats.positions.map(lambda x: len(x) == 0)
+        empty_positions = daily_stats.data.map(lambda x: len(x) == 0)
         self.assertTrue(empty_positions.all())
 
     def test_position_weights(self):
@@ -1119,7 +1119,7 @@ class TestBeforeTradingStart(zf.WithMakeAlgo, zf.ZiplineTestCase):
         def initialize(context):
             context.history_values = []
 
-        def before_trading_start(context, data):
+        def on_before_trading_start(context, data):
             record(the_price1=data.current(sid(1), "price"))
             record(the_high1=data.current(sid(1), "high"))
             record(the_price2=data.current(sid(2), "price"))
@@ -1186,7 +1186,7 @@ class TestBeforeTradingStart(zf.WithMakeAlgo, zf.ZiplineTestCase):
         def initialize(context):
             context.history_values = []
 
-        def before_trading_start(context, data):
+        def on_before_trading_start(context, data):
             record(the_price1=data.current(sid(1), "price"))
             record(the_high1=data.current(sid(1), "high"))
             record(the_price2=data.current(sid(2), "price"))
@@ -1228,7 +1228,7 @@ class TestBeforeTradingStart(zf.WithMakeAlgo, zf.ZiplineTestCase):
             context.ordered = False
             context.hd_portfolio = context.portfolio
 
-        def before_trading_start(context, data):
+        def on_before_trading_start(context, data):
             bts_portfolio = context.portfolio
 
             # Assert that the portfolio in BTS is the same as the last
@@ -1262,7 +1262,7 @@ class TestBeforeTradingStart(zf.WithMakeAlgo, zf.ZiplineTestCase):
             context.hd_account = context.account
             set_slippage(slippage.VolumeShareSlippage())
 
-        def before_trading_start(context, data):
+        def on_before_trading_start(context, data):
             bts_account = context.account
 
             # Assert that the account in BTS is the same as the last account
@@ -1297,7 +1297,7 @@ class TestBeforeTradingStart(zf.WithMakeAlgo, zf.ZiplineTestCase):
             context.ordered = False
             context.hd_portfolio = context.portfolio
 
-        def before_trading_start(context, data):
+        def on_before_trading_start(context, data):
             bts_portfolio = context.portfolio
             # Assert that the portfolio in BTS is the same as the last
             # portfolio in handle_data, except for the positions
@@ -1342,7 +1342,7 @@ class TestBeforeTradingStart(zf.WithMakeAlgo, zf.ZiplineTestCase):
             set_slippage(slippage.VolumeShareSlippage())
 
 
-        def before_trading_start(context, data):
+        def on_before_trading_start(context, data):
             bts_account = context.account
             # Assert that the account in BTS is the same as the last account
             # in handle_data
@@ -1512,7 +1512,7 @@ def handle_data(context, data):
         results = test_algo.run()
 
         # flatten the list of txns
-        all_txns = [val for sublist in results["transactions"].tolist()
+        all_txns = [val for sublist in results["get_transactions"].tolist()
                     for val in sublist]
 
         self.assertEqual(len(all_txns), 1)
@@ -1528,7 +1528,7 @@ def handle_data(context, data):
         # for that day was therefore 9.95k, but after the $100 commission,
         # it should be 9.85k.
         self.assertEqual(9850, results.capital_used[1])
-        self.assertEqual(100, results["orders"].iloc[1][0]["commission"])
+        self.assertEqual(100, results["get_orders"].iloc[1][0]["commission"])
 
     @parameterized.expand(
         [
@@ -1588,13 +1588,13 @@ def handle_data(context, data):
             results = test_algo.run()
 
             all_txns = [
-                val for sublist in results["transactions"].tolist()
+                val for sublist in results["get_transactions"].tolist()
                 for val in sublist]
 
             self.assertEqual(len(all_txns), 67)
             # all_orders are all the incremental versions of the
-            # orders as each new fill comes in.
-            all_orders = list(toolz.concat(results['orders']))
+            # get_orders as each new fill comes in.
+            all_orders = list(toolz.concat(results['get_orders']))
 
             if minimum_commission == 0:
                 # for each incremental version of each order, the commission
@@ -1693,12 +1693,12 @@ def handle_data(context, data):
 
                 def handle_data(context, data):
                     if not context.placed:
-                        orders = batch_market_order(pd.Series(
+                        get_orders = batch_market_order(pd.Series(
                             index=context.assets, data={share_counts}
                         ))
-                        assert len(orders) == 2, \
-                            "len(orders) was %s but expected 2" % len(orders)
-                        for o in orders:
+                        assert len(get_orders) == 2, \
+                            "len(get_orders) was %s but expected 2" % len(get_orders)
+                        for o in get_orders:
                             assert o is not None, "An order is None"
 
                         context.placed = True
@@ -1710,10 +1710,10 @@ def handle_data(context, data):
         self.assertTrue(batch_blotter.order_batch_called)
 
         for stats in (multi_stats, batch_stats):
-            stats.orders = stats.orders.apply(
+            stats.data = stats.data.apply(
                 lambda orders: [toolz.dissoc(o, 'id') for o in orders]
             )
-            stats.transactions = stats.transactions.apply(
+            stats.get_transactions = stats.get_transactions.apply(
                 lambda txns: [toolz.dissoc(txn, 'order_id') for txn in txns]
             )
         assert_equal(multi_stats, batch_stats)
@@ -1734,12 +1734,12 @@ def handle_data(context, data):
 
                 def handle_data(context, data):
                     if not context.placed:
-                        orders = batch_market_order(pd.Series(
+                        get_orders = batch_market_order(pd.Series(
                             index=context.assets, data={share_counts}
                         ))
-                        assert len(orders) == 1, \
-                            "len(orders) was %s but expected 1" % len(orders)
-                        for o in orders:
+                        assert len(get_orders) == 1, \
+                            "len(get_orders) was %s but expected 1" % len(get_orders)
+                        for o in get_orders:
                             assert o is not None, "An order is None"
 
                         context.placed = True
@@ -2083,12 +2083,12 @@ def order_stuff(context, data):
              'target': 151000.0 if change_type == 'target' else None,
              'delta': 50000.0})
 
-        # 1/03: price = 10, place orders
-        # 1/04: orders execute at price = 11, place orders
-        # 1/05: orders execute at price = 12, place orders
+        # 1/03: price = 10, place get_orders
+        # 1/04: get_orders execute at price = 11, place get_orders
+        # 1/05: get_orders execute at price = 12, place get_orders
         # 1/06: +50000 capital change,
-        #       orders execute at price = 13, place orders
-        # 1/09: orders execute at price = 14, place orders
+        #       get_orders execute at price = 13, place get_orders
+        # 1/09: get_orders execute at price = 14, place get_orders
 
         expected_daily = {}
 
@@ -2250,11 +2250,11 @@ def order_stuff(context, data):
             for val in values]
         self.assertEqual(capital_change_packets, expected)
 
-        # 1/03: place orders at price = 100, execute at 101
-        # 1/04: place orders at price = 490, execute at 491,
+        # 1/03: place get_orders at price = 100, execute at 101
+        # 1/04: place get_orders at price = 490, execute at 491,
         #       +500 capital change at 17:00 and 18:00 (intraday)
         #       or +1000 at 00:00 (interday),
-        # 1/05: place orders at price = 880, execute at 881
+        # 1/05: place get_orders at price = 880, execute at 881
 
         expected_daily = {}
 
@@ -2417,11 +2417,11 @@ def order_stuff(context, data):
             for val in values]
         self.assertEqual(capital_change_packets, expected)
 
-        # 1/03: place orders at price = 100, execute at 101
-        # 1/04: place orders at price = 490, execute at 491,
+        # 1/03: place get_orders at price = 100, execute at 101
+        # 1/04: place get_orders at price = 490, execute at 491,
         #       +500 capital change at 17:00 and 18:00 (intraday)
         #       or +1000 at 00:00 (interday),
-        # 1/05: place orders at price = 880, execute at 881
+        # 1/05: place get_orders at price = 880, execute at 881
 
         # Minute perfs are cumulative for the day
         expected_minute = {}
@@ -3023,7 +3023,7 @@ class TestTradingControls(zf.WithMakeAlgo,
 
         self.assertEqual(algo.order_count, 9)
 
-        # Set a limit of 5 orders per day, and order 5 times in the first
+        # Set a limit of 5 get_orders per day, and order 5 times in the first
         # minute of each day. This should succeed because the counter gets
         # reset each day.
         def handle_data(algo, data):
@@ -3042,7 +3042,7 @@ class TestTradingControls(zf.WithMakeAlgo,
         )
         algo.run()
 
-        # 5 orders per day times 4 days.
+        # 5 get_orders per day times 4 days.
         self.assertEqual(algo.order_count, 20)
 
     def test_long_only(self):
@@ -3417,9 +3417,9 @@ class TestFuturesAlgo(zf.WithMakeAlgo, zf.ZiplineTestCase):
         )
         results = algo.run()
 
-        # Flatten the list of transactions.
+        # Flatten the list of get_transactions.
         all_txns = [
-            val for sublist in results['transactions'].tolist()
+            val for sublist in results['get_transactions'].tolist()
             for val in sublist
         ]
 
@@ -3432,7 +3432,7 @@ class TestFuturesAlgo(zf.WithMakeAlgo, zf.ZiplineTestCase):
         expected_price = (algo.order_price + 1) + expected_spread
 
         self.assertEqual(txn['price'], expected_price)
-        self.assertEqual(results['orders'][0][0]['commission'], 0.0)
+        self.assertEqual(results['get_orders'][0][0]['commission'], 0.0)
 
     def test_volume_contract_slippage(self):
         algo_code = self.algo_with_slippage(
@@ -3445,16 +3445,16 @@ class TestFuturesAlgo(zf.WithMakeAlgo, zf.ZiplineTestCase):
         results = algo.run()
 
         # There should be no commissions.
-        self.assertEqual(results['orders'][0][0]['commission'], 0.0)
+        self.assertEqual(results['get_orders'][0][0]['commission'], 0.0)
 
-        # Flatten the list of transactions.
+        # Flatten the list of get_transactions.
         all_txns = [
-            val for sublist in results['transactions'].tolist()
+            val for sublist in results['get_transactions'].tolist()
             for val in sublist
         ]
 
         # With a volume limit of 0.05, and a total volume of 100 contracts
-        # traded per minute, we should require 2 transactions to order 10
+        # traded per minute, we should require 2 get_transactions to order 10
         # contracts.
         self.assertEqual(len(all_txns), 2)
 
@@ -3504,7 +3504,7 @@ class TestOrderCancelation(zf.WithMakeAlgo, zf.ZiplineTestCase):
         """
         from zipline.api import (
             sid, order, set_slippage, slippage, VolumeShareSlippage,
-            set_cancel_policy, cancel_policy, EODCancel
+            set_cancel_policy, cancel_policy.py, EODCancel
         )
 
 
@@ -3589,7 +3589,7 @@ class TestOrderCancelation(zf.WithMakeAlgo, zf.ZiplineTestCase):
         # order 1000 shares of asset1.  the volume is only 1 share per bar,
         # so the order should be cancelled at the end of the day.
         algo = self.prep_algo(
-            "set_cancel_policy(cancel_policy.EODCancel())",
+            "set_cancel_policy(cancel_policy.py.EODCancel())",
             amount=np.copysign(1000, direction),
             minute_emission=minute_emission
         )
@@ -3598,23 +3598,23 @@ class TestOrderCancelation(zf.WithMakeAlgo, zf.ZiplineTestCase):
         with log_catcher:
             results = algo.run()
 
-            for daily_positions in results.positions:
+            for daily_positions in results.data:
                 self.assertEqual(1, len(daily_positions))
                 self.assertEqual(
                     np.copysign(389, direction),
                     daily_positions[0]["amount"],
                 )
-                self.assertEqual(1, results.positions[0][0]["sid"])
+                self.assertEqual(1, results.data[0][0]["sid"])
 
-            # should be an order on day1, but no more orders afterwards
+            # should be an order on day1, but no more get_orders afterwards
             np.testing.assert_array_equal([1, 0, 0],
-                                          list(map(len, results.orders)))
+                                          list(map(len, results.data)))
 
             # should be 389 txns on day 1, but no more afterwards
             np.testing.assert_array_equal([389, 0, 0],
-                                          list(map(len, results.transactions)))
+                                          list(map(len, results.get_transactions)))
 
-            the_order = results.orders[0][0]
+            the_order = results.data[0][0]
 
             self.assertEqual(ORDER_STATUS.CANCELLED, the_order["status"])
             self.assertEqual(np.copysign(389, direction), the_order["filled"])
@@ -3650,20 +3650,20 @@ class TestOrderCancelation(zf.WithMakeAlgo, zf.ZiplineTestCase):
 
             # order stays open throughout simulation
             np.testing.assert_array_equal([1, 1, 1],
-                                          list(map(len, results.orders)))
+                                          list(map(len, results.data)))
 
             # one txn per minute.  389 the first day (since no order until the
             # end of the first minute).  390 on the second day.  221 on the
             # the last day, sum = 1000.
             np.testing.assert_array_equal([389, 390, 221],
-                                          list(map(len, results.transactions)))
+                                          list(map(len, results.get_transactions)))
 
             self.assertFalse(log_catcher.has_warnings)
 
     def test_eod_order_cancel_daily(self):
         # in daily mode, EODCancel does nothing.
         algo = self.prep_algo(
-            "set_cancel_policy(cancel_policy.EODCancel())",
+            "set_cancel_policy(cancel_policy.py.EODCancel())",
             "daily"
         )
 
@@ -3673,11 +3673,11 @@ class TestOrderCancelation(zf.WithMakeAlgo, zf.ZiplineTestCase):
 
             # order stays open throughout simulation
             np.testing.assert_array_equal([1, 1, 1],
-                                          list(map(len, results.orders)))
+                                          list(map(len, results.data)))
 
             # one txn per day
             np.testing.assert_array_equal([0, 1, 1],
-                                          list(map(len, results.transactions)))
+                                          list(map(len, results.get_transactions)))
 
             self.assertFalse(log_catcher.has_warnings)
 
@@ -3778,7 +3778,7 @@ class TestDailyEquityAutoClose(zf.WithMakeAlgo, zf.ZiplineTestCase):
                 context.ordered = True
 
             context.cash.append(context.portfolio.cash)
-            context.num_positions.append(len(context.portfolio.positions))
+            context.num_positions.append(len(context.portfolio.data))
 
         return handle_data
 
@@ -3800,7 +3800,7 @@ class TestDailyEquityAutoClose(zf.WithMakeAlgo, zf.ZiplineTestCase):
             for asset in assets
         }
 
-        # Prices at which we expect our orders to be filled.
+        # Prices at which we expect our get_orders to be filled.
         initial_fill_prices = self.daily_prices_on_tick(1)
         cost_basis = sum(initial_fill_prices) * order_size
 
@@ -3878,9 +3878,9 @@ class TestDailyEquityAutoClose(zf.WithMakeAlgo, zf.ZiplineTestCase):
         expected_num_positions.insert(3, 3)
         self.assertEqual(algo.num_positions, expected_num_positions[:-1])
 
-        # Check expected transactions.
+        # Check expected get_transactions.
         # We should have a transaction of order_size shares per sid.
-        transactions = output['transactions']
+        transactions = output['get_transactions']
         initial_fills = transactions.iloc[1]
         self.assertEqual(len(initial_fills), len(assets))
 
@@ -3942,8 +3942,8 @@ class TestDailyEquityAutoClose(zf.WithMakeAlgo, zf.ZiplineTestCase):
 
     def test_cancel_open_orders(self):
         """
-        Test that any open orders for an equity that gets delisted are
-        canceled.  Unless an equity is auto closed, any open orders for that
+        Test that any open get_orders for an equity that gets delisted are
+        canceled.  Unless an equity is auto closed, any open get_orders for that
         equity will persist indefinitely.
         """
         assets = self.assets
@@ -3973,7 +3973,7 @@ class TestDailyEquityAutoClose(zf.WithMakeAlgo, zf.ZiplineTestCase):
                 context.order(context.sid(0), 10)
                 assert len(context.get_open_orders()) == 1
             elif today_session == first_asset_auto_close_date:
-                # We do not cancel open orders until the end of the auto close
+                # We do not cancel open get_orders until the end of the auto close
                 # date, so our open order should still exist at this point.
                 assert len(context.get_open_orders()) == 1
             elif today_session == day_after_auto_close:
@@ -3988,7 +3988,7 @@ class TestDailyEquityAutoClose(zf.WithMakeAlgo, zf.ZiplineTestCase):
         )
         results = algo.run()
 
-        orders = results['orders']
+        orders = results['get_orders']
 
         def orders_for_date(date):
             return orders.iloc[self.test_days.get_loc(date)]
@@ -4129,7 +4129,7 @@ class TestMinutelyEquityAutoClose(zf.WithMakeAlgo,
                 context.ordered = True
 
             context.cash.append(context.portfolio.cash)
-            context.num_positions.append(len(context.portfolio.positions))
+            context.num_positions.append(len(context.portfolio.data))
 
         return handle_data
 
@@ -4205,11 +4205,11 @@ class TestMinutelyEquityAutoClose(zf.WithMakeAlgo,
             [3, 3, 3, 2, 2, 1, 1],
         )
 
-        # Check expected transactions.
+        # Check expected get_transactions.
         # We should have a transaction of order_size shares per sid.
-        transactions = output['transactions']
+        transactions = output['get_transactions']
 
-        # Note that the transactions appear on the first day rather than the
+        # Note that the get_transactions appear on the first day rather than the
         # second in minute mode, because the fills happen on the second tick of
         # the backtest, which is still on the first day in minute mode.
         initial_fills = transactions.iloc[0]
@@ -4377,7 +4377,7 @@ class AlgoInputValidationTestCase(zf.WithMakeAlgo,
             def handle_data(context, data):
                 pass
 
-            def before_trading_start(context, data):
+            def on_before_trading_start(context, data):
                 pass
 
             def analyze(context, results):
@@ -4386,7 +4386,7 @@ class AlgoInputValidationTestCase(zf.WithMakeAlgo,
         )
         for method in ('initialize',
                        'handle_data',
-                       'before_trading_start',
+                       'on_before_trading_start',
                        'analyze'):
 
             with self.assertRaises(ValueError):

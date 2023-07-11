@@ -1,10 +1,5 @@
-import pickle
-import os
-from torchqtm.autoalpha.gplearn import fitness
-from torchqtm.autoalpha.gplearn.genetic import SymbolicRegressor, SymbolicTransformer
-from datetime import datetime
-import graphviz
-from gplearn.functions import make_function
+from torchqtm.alphas.autoalpha.gplearn import fitness
+from torchqtm.alphas.autoalpha.gplearn import SymbolicRegressor
 import numpy as np
 
 

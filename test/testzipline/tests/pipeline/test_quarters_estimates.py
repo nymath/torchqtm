@@ -479,7 +479,7 @@ class WithEstimatesTimeZero(WithEstimates):
     # that doesn't match the actual release. This could be done by dynamically
     # generating more combinations with different release dates, but that
     # significantly increases the amount of time it takes to run the tests.
-    # These hard-coded cases are sufficient to know that we can update our
+    # These hard-coded cases are sufficient to know that we can handle_transaction our
     # beliefs when we get new information.
     q1_release_dates = [pd.Timestamp('2015-01-13'),
                         pd.Timestamp('2015-01-14')]  # One day late

@@ -27,7 +27,7 @@ def handle_data(context: TradingAlgorithm, data: BarData):
     print(context.portfolio)
     # # Compute averages
     # if short_mavg > long_mavg:
-    #     # order_target orders as many shares as needed to
+    #     # order_target get_orders as many shares as needed to
     #     # achieve the desired number of shares.
     #     for i in range(3):
     #         context.order_target(context.sym, 1)

@@ -121,6 +121,6 @@ def initialize(context):
         # run through the algo's simulation
         list(algo_simulator.transform())
 
-        # since the clock only ever emitted a single before_trading_start
+        # since the clock only ever emitted a single on_before_trading_start
         # event, we can check that the simulation_dt was properly set
         self.assertEqual(dt, algo_simulator.simulation_dt)

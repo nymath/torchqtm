@@ -966,12 +966,12 @@ class OrdersStopTestCase(WithSimParams,
         cls.ASSET133 = cls.asset_finder.retrieve_asset(133)
 
     STOP_ORDER_CASES = {
-        # Stop orders can be long/short and have their price greater or
+        # Stop get_orders can be long/short and have their price greater or
         # less than the stop.
         #
         # A stop being reached is conditional on the order direction.
-        # Long orders reach the stop when the price is greater than the stop.
-        # Short orders reach the stop when the price is less than the stop.
+        # Long get_orders reach the stop when the price is greater than the stop.
+        # Short get_orders reach the stop when the price is less than the stop.
         #
         # Which leads to the following 4 cases:
         #
@@ -1240,7 +1240,7 @@ class FixedBasisPointsSlippageTestCase(WithCreateBarData,
 
     @parameterized.expand([
         # Volume limit for the bar is 20. We've ordered 10 total shares.
-        # We should fill both orders completely.
+        # We should fill both get_orders completely.
         ('order_under_limit', 9, 1, 9, 1),
         # Volume limit for the bar is 20. We've ordered 21 total shares.
         # The second order should have one share remaining after fill.
@@ -1329,7 +1329,7 @@ class FixedBasisPointsSlippageTestCase(WithCreateBarData,
 
         self.assertEqual(1, len(orders_txns))
 
-        # ordering zero shares should result in zero transactions
+        # ordering zero shares should result in zero get_transactions
         open_orders = [
             Order(
                 dt=datetime.datetime(2006, 1, 5, 14, 30, tzinfo=pytz.utc),
