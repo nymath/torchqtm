@@ -1,4 +1,4 @@
-<img src="https://github.com/nymath/torchquantum/blob/main/resources/fig/logo.png" align="right" width="196" />
+<img src="https://github.com/nymath/torchqtm/blob/main/resources/fig/logo.png" align="right" width="196" />
 
 # torchquantum
 
@@ -47,9 +47,19 @@ cd ../
 cd ../
 git checkout dev
 ```
+As for the backtesting dataset, we use the bundle provided by [ricequant](https://www.ricequant.com/welcome/).
+We have wrapped the code into Makefile, you can just run the following command to download the bundle.
+```shell
+make rqalpha_download_bundle
+```
 
-## Example
 
+for windows:
+We highly recommend you to use WSL2 to run torchquantum.
+
+## Examples
+
+### alpha mining
 You can easily create an alpha through torchquantum!
 
 ```python
@@ -75,6 +85,30 @@ class NeutralizePE(op.Fundamental):
 - `F` is library that contains the operators defined by WorldQuant.
 - `op.Fundamental` implies the NeutralizePE belongs to fundamental alpha.
 - `self.lag` is the parameter of rolling mean, which can be optimized through grid search.
+
+### backtesting
+Here we create a buy and hold strategy for illustration.
+
+```python
+from torchqtm.edbt.algorithm import TradingAlgorithm
+from torchqtm.assets import Equity
+
+class BuyAndHold(TradingAlgorithm):
+    def initialize(self):
+        self.safe_set_attr("s0", Equity("000001.XSHE"))
+        self.safe_set_attr("count", 0)
+
+    def before_trading_start(self):
+        pass
+
+    def handle_data(self):
+        if self.count == 0:
+            self.order(self.s0, 10000)
+        self.count += 1
+
+    def analyze(self):
+        pass
+```
 
 ## Features
 
