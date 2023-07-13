@@ -8,7 +8,7 @@ from torchqtm.constants import ROOT_SYMBOL_TO_ETA
 from torchqtm.finance.transaction import Transaction
 from torchqtm.data.data_portal import DataPortal
 from typing import Iterable, Tuple, Optional, List
-from zipline.utils.cache import ExpiringCache  # TODO: remove it
+# from zipline.utils.cache import ExpiringCache  # TODO: remove it
 from torchqtm.types import ASSET_TYPE
 
 SELL = 1 << 0
@@ -20,6 +20,9 @@ SQRT_252 = math.sqrt(252)
 
 DEFAULT_EQUITY_VOLUME_SLIPPAGE_BAR_LIMIT = 0.025
 DEFAULT_FUTURE_VOLUME_SLIPPAGE_BAR_LIMIT = 0.05
+
+DEFAULT_PER_CONTRACT_COST = 0.
+FUTURE_EXCHANGE_FEES_BY_SYMBOL = 0.
 
 
 class LiquidityExceeded(Exception):
@@ -140,7 +143,7 @@ class SlippageModel(object, metaclass=ABCMeta):
         volume = data.current(asset, "volume")
 
         if volume == 0:
-            return None
+            return
 
         # We should use "close" price, since we need verified there's volume in this bar.
         # FIXME: 注意下这里price的类型

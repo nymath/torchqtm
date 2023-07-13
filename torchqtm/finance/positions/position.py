@@ -92,8 +92,7 @@ class Position:
         pass
 
     def __repr__(self):
-        template = """
-        asset: {asset}, amount: {amount}, cost_basis: {cost_basis}, last_sale_price: {last_sale_price}
+        template = """Position(asset: {asset}, amount: {amount}, cost_basis: {cost_basis}, last_sale_price: {last_sale_price})
         """
         return template.format(
             asset=self.asset,

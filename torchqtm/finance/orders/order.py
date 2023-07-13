@@ -146,7 +146,7 @@ class Order:
         if self.broker_order_id is None:
             del dct["broker_order_id"]
 
-        dct['status'] = self._status
+        dct['status'] = self.status
         return dct
 
     def check_trigger(self, price: float, dt: pd.Timestamp) -> None:
@@ -244,8 +244,17 @@ class Order:
         self.reason = reason
 
     @property
+    def status(self):
+        if not self.open_amount:
+            return ORDER_STATUS.FILLED
+        elif self._status == ORDER_STATUS.HELD and self.filled:
+            return ORDER_STATUS.OPEN
+        else:
+            return self._status
+
+    @property
     def open(self):
-        return self._status in [ORDER_STATUS.OPEN, ORDER_STATUS.HELD]
+        return self.status in [ORDER_STATUS.OPEN, ORDER_STATUS.HELD]
 
     @property
     def triggered(self) -> bool:
@@ -267,5 +276,17 @@ class Order:
         return self.amount - self.filled
 
     def __repr__(self):
+#         template = """
+# {class_name}(
+#     id={id},
+#     dt={dt},
+#     asset={asset},
+#     amount={amount},
+#     stop={stop},
+#     limit={limit},
+#     filled={filled},
+#     status={status},
+# )
+#         """
         return f"Order({self.to_dict().__repr__()})"
 

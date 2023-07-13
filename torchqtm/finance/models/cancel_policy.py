@@ -1,12 +1,12 @@
 from abc import ABCMeta, abstractmethod
 
-from torchqtm.edbt.gens.sim_engine import Event
+from torchqtm.types import EVENT_TYPE
 
 
 class CancelPolicy(object, metaclass=ABCMeta):
 
     @abstractmethod
-    def should_cancel(self, event: Event):
+    def should_cancel(self, event: EVENT_TYPE):
         raise NotImplementedError
 
 
@@ -18,8 +18,8 @@ class EODCancel(CancelPolicy):
     def __init__(self, warn_on_cancel: bool = True):
         self.warn_on_cancel = warn_on_cancel
 
-    def should_cancel(self, event: Event):
-        return event == Event.SESSION_END
+    def should_cancel(self, event: EVENT_TYPE):
+        return event == EVENT_TYPE.SESSION_END
 
 
 class NeverCancel(CancelPolicy):
@@ -29,6 +29,6 @@ class NeverCancel(CancelPolicy):
     def __init__(self):
         self.warn_on_cancel = False
 
-    def should_cancel(self, event: Event):
+    def should_cancel(self, event: EVENT_TYPE):
         return False
 

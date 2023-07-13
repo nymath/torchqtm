@@ -23,7 +23,53 @@ class AccountTracker(object):
     pass
 
 
-class Account(object, DateTimeMixin):
+class Ledger:
+    """Provide access to accounting infos
+    """
+    def __init__(
+            self,
+            start_date: pd.Timestamp,
+            capital_base: float = 0.0,
+            positions_tracker: PositionsTracker = None,
+    ):
+        self.cash_flow: float = 0.0
+        self.starting_cash: float = capital_base
+        self.portfolio_value: float = capital_base
+        self.pnl: float = 0.0
+        self.returns: float = 0.0
+        self.cash: float = capital_base
+        self.positions_tracker: PositionsTracker = positions_tracker
+        self.start_date: pd.Timestamp = start_date
+        self.positions_value: float = 0.0
+        self.positions_exposure: float = 0.0
+
+    @property
+    def capital_used(self):
+        return self.cash_flow
+
+    @property
+    def current_portfolio_weights(self):
+        """
+        Compute each asset's weight in the portfolio by calculating its held
+        value divided by the total value of all positions.
+
+        Each equity's value is its price times the number of shares held. Each
+        futures contract's value is its unit price times number of shares held
+        times the multiplier.
+        """
+        position_values = pd.Series(
+            {
+                asset: (
+                    position.last_sale_price * position.amount * asset.price_multiplier
+                )
+                for asset, position in self.positions_tracker.data.items()
+            },
+            dtype=float,
+        )
+        return position_values / self.portfolio_value
+
+
+class Account(DateTimeMixin):
     """
     The account trackers all get_orders and get_transactions as well as the current state of
     the portfolio and positions.
@@ -35,39 +81,34 @@ class Account(object, DateTimeMixin):
             capital_base: float,
             data_frequency: DATA_FREQUENCIES,
     ):
+        DateTimeMixin.__init__(self, datetime_manager)
+
         if len(trading_sessions):
             start = trading_sessions[0]
         else:
             start = None
 
-        DateTimeMixin.__init__(self, datetime_manager)
-
         # TODO: initialize
         self.positions_tracker: PositionsTracker = PositionsTracker(data_frequency)
-        self.orders_tracker: OrdersTracker = OrdersTracker()
+        self.orders_tracker: OrdersTracker = OrdersTracker(
+            datetime_manager=datetime_manager,
+        )
         self.slippage_models = self.orders_tracker.slippage_models
         self.commission_models = self.orders_tracker.commission_models
 
-        self.cash_flow: float = 0.0
-        self.starting_cash: float = capital_base
-        self.portfolio_value: float = capital_base
-        self.pnl: float = 0.0
-        self.returns: float = 0.0
-        self.cash: float = 0.0
+        # ledger info
+        self._ledger = Ledger(start, capital_base, self.positions_tracker)
+
         # 构建一个reference
         self.positions: typing.Dict = self.positions_tracker.data
         self.start_date: pd.Timestamp = start
-        self.positions_value: float = 0.0
-        self.positions_exposure: float = 0.0
 
-        self._dirty_portfolio = False
+        self._need_update_ledger = False
         self.daily_returns_series: pd.Series = pd.Series(np.nan, index=trading_sessions)
 
         self._previous_total_returns: float = 0.0
 
         self._position_stats: Optional[Any] = None
-
-        self._dirty_account: bool = True
 
         self._processed_transactions_by_dt: Dict[pd.Timestamp, Transaction] = {}
 
@@ -77,48 +118,38 @@ class Account(object, DateTimeMixin):
 
         self._payout_last_sale_prices: Dict[Asset, float] = {}
 
-        self._session_count: int = 0
-
     @property
     def todays_returns(self):
         # compute today's returns in returns space instead of portfolio-value
         # space to work even when we have capital changes
-        return (self.returns + 1) / (self._previous_total_returns + 1) - 1
+        return (self.ledger.returns + 1) / (self._previous_total_returns + 1) - 1
 
-    def start_of_session(self):
-        self._processed_transactions_by_dt.clear()
-        self._orders_by_dt.clear()
-        self._orders_by_id.clear()
-        self._previous_total_returns = self.returns
+    @property
+    def ledger(self):
+        self.update_ledger()
+        return self._ledger
 
-    def end_of_bar(self, session_idx):
-        self.daily_returns_series.values[session_idx] = self.todays_returns
-
-    # TODO: 感觉会出KeyError
-    def end_of_session(self, session_idx):
-        self.daily_returns_series.values[session_idx] = self.todays_returns
-
-    def sync_last_sale_prices(
+    def sync_last_sale_price(
             self,
             dt: pd.Timestamp,
             data_portal: DataPortal,
-            handle_onn_market_minutes: bool = False,
+            handle_non_market_minutes: bool = False,
     ):
         self.positions_tracker.sync_last_sale_price(
             dt,
             data_portal,
-            handle_onn_market_minutes,
+            handle_non_market_minutes,
         )
-        self._dirty_portfolio = True
+        self._need_update_ledger = True
 
     @staticmethod
     def _calculate_payout(multiplier, amount, old_price, price):
         return (price - old_price) * multiplier * amount
 
     def update_cash_flow(self, amount: float):
-        self._dirty_portfolio = True
-        self.cash_flow += amount
-        self.cash += amount
+        self._need_update_ledger = True
+        self._ledger.cash_flow += amount
+        self._ledger.cash += amount
 
     def handle_transaction(self, txn: Transaction):
         """Add a transaction to ledger, updating the current state as needed.
@@ -231,9 +262,9 @@ class Account(object, DateTimeMixin):
         pass
 
     def capital_change(self, change_amount: float) -> None:
-        self.update_portfolio()
-        self.portfolio_value += change_amount
-        self.cash += change_amount
+        self.update_ledger()
+        self._ledger.portfolio_value += change_amount
+        self._ledger.cash += change_amount
 
     def get_transactions(self, dt: Optional[pd.Timestamp] = None):
         """Retrieve the dict-form of all of the get_transactions in a given bar or
@@ -275,7 +306,8 @@ class Account(object, DateTimeMixin):
         total = 0
         for asset, old_price in payout_last_sale_prices.items():
             position = positions[asset]
-            payout_last_sale_prices[asset] = price = position.last_sale_price
+            payout_last_sale_prices[asset] = position.last_sale_price
+            price = position.last_sale_price
             amount = position.amount
             total += calculate_payout(
                 asset.price_multiplier,
@@ -286,20 +318,20 @@ class Account(object, DateTimeMixin):
 
         return total
 
-    def update_portfolio(self):
-        if not self._dirty_portfolio:
+    def update_ledger(self):
+        if not self._need_update_ledger:
             return None
 
-        self.positions_value = self.positions_tracker.stats.net_value
+        self._ledger.positions_value = self.positions_tracker.stats.net_value
         position_value = self.positions_tracker.stats.net_value
-        self.positions_exposure = self.positions_tracker.stats.net_exposure
+        self._ledger.positions_exposure = self.positions_tracker.stats.net_exposure
         self.update_cash_flow(self._get_payout_total(self.positions_tracker.data))
 
-        start_value = self.portfolio_value
+        start_value = self._ledger.portfolio_value
 
         # update the new starting value
-        self.portfolio_value = self.cash + position_value
-        end_value = self.cash + position_value
+        self._ledger.portfolio_value = self._ledger.cash + position_value
+        end_value = self._ledger.cash + position_value
 
         pnl = end_value - start_value
         if start_value != 0:
@@ -307,11 +339,11 @@ class Account(object, DateTimeMixin):
         else:
             returns = 0.0
 
-        self.pnl += pnl
-        self.returns = (1 + self.returns) * (1 + returns) - 1
+        self._ledger.pnl += pnl
+        self._ledger.returns = (1 + self._ledger.returns) * (1 + returns) - 1
 
         # the portfolio has been fully synced
-        self._dirty_portfolio = False
+        self._need_update_ledger = False
 
     def subscribe_cash(self, amount: float):
         log.warning("有外部资金流入, 风险测度可能不再准确")
@@ -326,20 +358,21 @@ class Account(object, DateTimeMixin):
         the portfolio may have changed.
         """
         # 这么搞一波相当于是每次调用portfolio的时候都会更新一次
-        self.update_portfolio()
+        self.update_ledger()
         return self._portfolio
 
     def calculate_period_stats(self):
-        if self.portfolio_value == 0:
+        self.update_ledger()
+        if self._portfolio_value == 0:
             gross_leverage = net_leverage = np.inf
         else:
-            gross_leverage = self.positions_tracker.stats.gross_exposure / self.portfolio_value
-            net_leverage = self.positions_tracker.stats.net_exposure / self.portfolio_value
-        return self.portfolio_value, gross_leverage, net_leverage
+            gross_leverage = self.positions_tracker.stats.gross_exposure / self._portfolio_value
+            net_leverage = self.positions_tracker.stats.net_exposure / self._portfolio_value
+        return self._portfolio_value, gross_leverage, net_leverage
 
     # 提供orders_tracker的封装
     def set_dt(self, dt):
-        return self.orders_tracker.set_date(dt)
+        return self.orders_tracker.set_dt(dt)
 
     def order(
             self,
@@ -372,25 +405,34 @@ class Account(object, DateTimeMixin):
     def execute_cancel_policy(self, event: EVENT_TYPE) -> None:
         return self.orders_tracker.execute_cancel_policy(event)
 
+    # Provide a consistent interface for metrics
+    def start_of_session(self, session_label: pd.Timestamp):
+        # We don not use the parameter session_label
+        self._processed_transactions_by_dt.clear()
+        self._orders_by_dt.clear()
+        self._orders_by_id.clear()
+        # 这里只是存了一波信息, 因为在start_of_session时我们似乎没有调用能够切换状态的函数
+        self._previous_total_returns = self.ledger.returns
 
+    def end_of_bar(self, session_idx):
+        self.daily_returns_series.values[session_idx] = self.todays_returns
 
+    def end_of_session(self, session_idx: int):
+        self.daily_returns_series.values[session_idx] = self.todays_returns
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    # def handle_start_of_session(
+    #         self,
+    #         session_label: pd.Timestamp,
+    #         data_portal: DataPortal,
+    # ):
+    #     self.start_of_session(session_label)
+    #     # self.process_dividends
+    #     # self._current_session = session_label
+    #
+    # def handle_end_of_session(
+    #         self,
+    #         dt: pd.Timestamp,
+    #         data_portal: DataPortal,
+    # ):
+    #     self.sync_last_sale_price(dt, data_portal)
+    #     self.end_of_session()

@@ -16,13 +16,15 @@ from torchqtm.assets import Asset, Equity, Future
 from torchqtm.data.data_portal import DataPortal
 from torchqtm.finance.transaction import Transaction
 from torchqtm.finance.models.commission import (
-    DEFAULT_PER_CONTRACT_COST,
-    FUTURE_EXCHANGE_FEES_BY_SYMBOL,
+    # DEFAULT_PER_CONTRACT_COST,
+    # FUTURE_EXCHANGE_FEES_BY_SYMBOL,
     PerContract,
     PerShare,
 )
 from torchqtm.finance.models.slippage import (
     DEFAULT_FUTURE_VOLUME_SLIPPAGE_BAR_LIMIT,
+    DEFAULT_PER_CONTRACT_COST,
+    FUTURE_EXCHANGE_FEES_BY_SYMBOL,
     VolatilityVolumeShare,
     FixedBasisPointsSlippage,
 )
@@ -34,7 +36,7 @@ log = logging.getLogger("Blotter")
 warning_logger = logging.getLogger("AlgoWarning")
 
 
-class OrdersTracker(object, DateTimeMixin):
+class OrdersTracker(DateTimeMixin):
     def __init__(
             self,
             datetime_manager: DateTimeManager = None,
@@ -42,7 +44,8 @@ class OrdersTracker(object, DateTimeMixin):
             future_slippage: SlippageModel = None,
             equity_commission: CommissionModel = None,
             future_commission: CommissionModel = None,
-            cancel_policy: CancelPolicy = None):
+            cancel_policy: CancelPolicy = None,
+    ):
 
         DateTimeMixin.__init__(self, datetime_manager)
         self.cancel_policy = cancel_policy
@@ -113,7 +116,6 @@ class OrdersTracker(object, DateTimeMixin):
         self.open_orders[order.asset].append(order)
         self.data[order.id] = order
         self.new_orders.append(order)
-
         return order.id
 
     def cancel(
@@ -325,28 +327,36 @@ class OrdersTracker(object, DateTimeMixin):
                 slippage_model = self.slippage_models[asset.type]
 
                 # 注意一下, 这里的order是asset_orders中的一个reference, 所以order状态的改变将直接体现在asset_orders中
-                for order, txn in slippage_model.simulate(data, asset, asset_orders):
-                    commission_model = self.commission_models[asset.type]
-                    additional_commission = commission_model.calculate(order, txn)
+                try:
+                    it = iter(slippage_model.simulate(data, asset, asset_orders))
+                except TypeError:
+                    return transactions, commissions, closed_orders
+                while True:
+                    try:
+                        order, txn = next(it)
+                        commission_model = self.commission_models[asset.type]
+                        additional_commission = commission_model.calculate(order, txn)
 
-                    if additional_commission > 0:
-                        commissions.append(
-                            {
-                                "asset": order.asset,
-                                "order": order,
-                                "cost": additional_commission
-                            }
-                        )
+                        if additional_commission > 0:
+                            commissions.append(
+                                {
+                                    "asset": order.asset,
+                                    "order": order,
+                                    "cost": additional_commission
+                                }
+                            )
 
-                    order.filled += txn.amount
-                    order.commission += additional_commission
+                        order.filled += txn.amount
+                        order.commission += additional_commission
 
-                    order.dt = txn.dt
+                        order.dt = txn.dt
 
-                    transactions.append(txn)
+                        transactions.append(txn)
 
-                    if not order.open:
-                        closed_orders.append(order)
+                        if not order.open:
+                            closed_orders.append(order)
+                    except StopIteration:
+                        break
         return transactions, commissions, closed_orders
 
     def get_new_orders(self):
@@ -367,6 +377,6 @@ class OrdersTracker(object, DateTimeMixin):
             except ValueError:
                 continue
 
-        for asset in self.open_orders:
+        for asset in list(self.open_orders.keys()):
             if len(self.open_orders[asset]) == 0:
                 del self.open_orders[asset]
