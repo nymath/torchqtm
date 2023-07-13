@@ -2,7 +2,7 @@
 
 # torchquantum
 
-TorchQuantum is a backtesting framework that" integrates
+TorchQuantum is a backtesting framework that""" integrates
 the structure of PyTorch and WorldQuant's Operator for
 efficient quantitative financial analysis.
 
