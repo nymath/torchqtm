@@ -3763,7 +3763,7 @@ class TestDailyEquityAutoClose(zf.WithMakeAlgo, zf.ZiplineTestCase):
             context.set_commission(PerShare(0, 0))
             context.set_slippage(FixedSlippage(spread=0))
             context.num_positions = []
-            context.cash = []
+            context._cash = []
 
         return initialize
 
@@ -3777,7 +3777,7 @@ class TestDailyEquityAutoClose(zf.WithMakeAlgo, zf.ZiplineTestCase):
                     context.order(asset, order_size)
                 context.ordered = True
 
-            context.cash.append(context.portfolio.cash)
+            context._cash.append(context.portfolio._cash)
             context.num_positions.append(len(context.portfolio.data))
 
         return handle_data
@@ -3849,7 +3849,7 @@ class TestDailyEquityAutoClose(zf.WithMakeAlgo, zf.ZiplineTestCase):
         # The cash recorded by the algo should be behind by a day from the
         # computed ending cash.
         expected_cash.insert(3, after_fills)
-        self.assertEqual(algo.cash, expected_cash[:-1])
+        self.assertEqual(algo._cash, expected_cash[:-1])
 
         # Check expected long/short counts.
         # We have longs if order_size > 0.
@@ -3956,7 +3956,7 @@ class TestDailyEquityAutoClose(zf.WithMakeAlgo, zf.ZiplineTestCase):
         def handle_data(context, data):
             # The only order we place in this test should never be filled.
             assert (
-                context.portfolio.cash == context.portfolio.starting_cash
+                    context.portfolio._cash == context.portfolio._starting_cash
             )
 
             today_session = self.trading_calendar.minute_to_session_label(
@@ -4114,7 +4114,7 @@ class TestMinutelyEquityAutoClose(zf.WithMakeAlgo,
             context.set_commission(PerShare(0, 0))
             context.set_slippage(FixedSlippage(spread=0))
             context.num_positions = []
-            context.cash = []
+            context._cash = []
 
         return initialize
 
@@ -4128,7 +4128,7 @@ class TestMinutelyEquityAutoClose(zf.WithMakeAlgo,
                     context.order(asset, order_size)
                 context.ordered = True
 
-            context.cash.append(context.portfolio.cash)
+            context._cash.append(context.portfolio._cash)
             context.num_positions.append(len(context.portfolio.data))
 
         return handle_data
@@ -4183,9 +4183,9 @@ class TestMinutelyEquityAutoClose(zf.WithMakeAlgo,
         expected_position_counts.extend([1] * 390)
 
         # Check list lengths first to avoid expensive comparison
-        self.assertEqual(len(algo.cash), len(expected_cash))
+        self.assertEqual(len(algo._cash), len(expected_cash))
         # TODO find more efficient way to compare these lists
-        self.assertEqual(algo.cash, expected_cash)
+        self.assertEqual(algo._cash, expected_cash)
         self.assertEqual(
             list(output['ending_cash']),
             [

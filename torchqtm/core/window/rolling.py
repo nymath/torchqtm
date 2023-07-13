@@ -4,7 +4,8 @@ from pandas._libs.window.aggregations import (
     roll_quantile,
     roll_kurt,
     roll_var,
-    roll_weighted_sum)
+    roll_weighted_sum
+)
 from pandas._libs.algos import rank_1d, rank_2d
 import numpy as np
 from typing import Callable, Union

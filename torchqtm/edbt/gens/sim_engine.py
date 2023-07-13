@@ -13,11 +13,13 @@ from torchqtm.types import EVENT_TYPE
 
 
 class DailySimulationClock(object):
-    def __init__(self,
-                 sessions: pd.DatetimeIndex,
-                 market_open: datetime.time = GLOBAL_DEFAULT_MARKET_OPEN,
-                 market_close: datetime.time = GLOBAL_DEFAULT_MARKET_CLOSE,
-                 offset: int = GLOBAL_DEFAULT_BEFORE_TRADING_START_OFFSET):
+    def __init__(
+            self,
+            sessions: pd.DatetimeIndex,
+            market_open: datetime.time = GLOBAL_DEFAULT_MARKET_OPEN,
+            market_close: datetime.time = GLOBAL_DEFAULT_MARKET_CLOSE,
+            offset: int = GLOBAL_DEFAULT_BEFORE_TRADING_START_OFFSET,
+    ):
         self.sessions_nanos = sessions.values.astype(np.int64)
         duration_0 = (market_open.hour * 60 + market_open.minute - offset) * 60 * 1e9
         duration_1 = (market_close.hour * 60 + market_close.minute) * 60 * 1e9
@@ -57,4 +59,3 @@ class MinuteSimulationClock(object):
         #     yield pd.Timestamp(market_close_nano), Event.BAR
         #     yield pd.Timestamp(market_close_nano), Event.SESSION_END
         pass
-

@@ -5,7 +5,8 @@ import numpy
 import glob
 
 extensions = glob.glob("torchqtm/_C/*.pyx")
-extensions.extend(glob.glob("torchqtm/window/*pyx"))
+extensions.extend(glob.glob("torchqtm/window/*.pyx"))
+extensions.extend(glob.glob("torchqtm/finance/*.pyx"))
 
 install_requires = [
     'numpy',
@@ -17,7 +18,7 @@ install_requires = [
 
 def main():
     setup(
-        ext_modules=cythonize(extensions, language='c++'),
+        ext_modules=cythonize(extensions, annotate=True),
         include_dirs=[numpy.get_include()],
         name="torchqtm",
         version="0.1.0",
@@ -27,15 +28,15 @@ def main():
         description="None",
         long_description=open('README.md', 'r').read(),
         long_description_content_type="text/markdown",
-        url="https://github.com/nymath/torchquantum/tree/main",
-        download_url="https://github.com/nymath/torchquantum/releases/tag/",
+        url="https://github.com/nymath/torchqtm",
+        download_url="https://github.com/nymath/torchqtm/releases/tag/",
         packages=find_packages(),
         classifiers=[
             "Programming Language :: Python :: 3",
             "License :: OSI Approved :: MIT License",
             "Operating System :: Unix",
         ],
-        python_requires='>=3.6',
+        python_requires='>=3.9',
     )
 
 

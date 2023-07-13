@@ -1,7 +1,6 @@
 pandas~=2.0.0
 numpy~=1.24.2
-graphviz~=2.50.0
-gplearn~=0.4.2
+# gplearn~=0.4.2
 scikit-learn~=1.0.2
 matplotlib~=3.5.2
 python-dateutil~=2.8.2

@@ -202,7 +202,7 @@ class ReadersTracker(object):
         _, bars = self._all_day_bars_of(asset)
         return bars[bars['volume'] > 0]
 
-    def get_bar(self, asset: Asset, dt: pd.Timestamp, frequency='1d'):
+    def get_bar(self, asset: Asset, dt: pd.Timestamp, frequency='1d') -> pd.DataFrame:
         if frequency != '1d':
             raise NotImplementedError
 
@@ -272,6 +272,36 @@ class ReadersTracker(object):
     #     bars = df_bars.to_records()
     #     return bars
 
+    def history_true_bars(
+            self,
+            asset,
+            fields,
+            bar_count,
+            frequency,
+            dt,
+    ):
+        if frequency != 'daily' and frequency != '1w':
+            raise NotImplementedError
+
+        else:
+            attrs, bars = self._all_day_bars_of(asset)
+
+        if len(bars) <= 0:
+            return bars
+
+        dt = np.uint64(convert_date_to_int(dt))
+        i = bars['datetime'].searchsorted(dt, side='right')
+        left = i - bar_count if i >= bar_count else 0
+        bars = bars[left:i+1]
+
+        if isinstance(fields, str) and fields not in FIELDS_REQUIRE_ADJUSTMENT:
+            return bars if fields is None else bars[fields]
+
+        rlt = pd.DataFrame(bars)
+        rlt['datetime'] /= 1e6
+        rlt.index = pd.DatetimeIndex(rlt['datetime'].astype(int).astype(str))
+        return rlt[fields]
+
     def history_bars(
             self,
             asset: Asset,
@@ -284,7 +314,7 @@ class ReadersTracker(object):
             adjust_origin: pd.Timestamp = None,
     ):
 
-        if frequency != '1d' and frequency != '1w':
+        if frequency != 'daily' and frequency != '1w':
             raise NotImplementedError
 
         if skip_suspended and asset.type == ASSET_TYPE.Equity:

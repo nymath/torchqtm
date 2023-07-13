@@ -508,7 +508,7 @@ class TestAPIShim(WithCreateBarData,
             self.assertEqual(2342, algo.mavg)
             self.assertAlmostEqual(2428.92599, algo.vwap, places=5)
             self.assertAlmostEqual(451.34355, algo.stddev, places=5)
-            self.assertAlmostEqual(346, algo.returns)
+            self.assertAlmostEqual(346, algo._returns)
 
     def test_manipulation(self):
         with warnings.catch_warnings(record=True) as w:

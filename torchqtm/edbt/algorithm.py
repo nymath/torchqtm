@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 
 from torchqtm.edbt.sim_params import SimulationParameters
+from torchqtm.finance.metrics.tracker import MetricsTracker
 from torchqtm.finance.orders.order import Order
 from torchqtm.finance.orders.tracker import OrdersTracker
 from torchqtm.assets import Asset, Equity, Future
@@ -17,7 +18,7 @@ from torchqtm.utils.exchange_calendar import XSHGExchangeCalendar
 from torchqtm.utils.datetime_utils import DateTimeManager, DateTimeMixin
 
 
-class TradingAlgorithm(object, DateTimeMixin):
+class TradingAlgorithm(DateTimeMixin):
     _allow_setattr: bool = False
 
     def __init__(
@@ -27,14 +28,15 @@ class TradingAlgorithm(object, DateTimeMixin):
             namespace=None,
             trading_calendar: XSHGExchangeCalendar = None,
             datetime_manager: DateTimeManager = None,
-            metrics_set=None,
             benchmark_returns=None,
-            account: OrdersTracker = None,
+            account: Account = None,
+            metrics_tracker: MetricsTracker = None,
     ):
-
         self._allow_setattr = True
         # Create a reference to the data_portal datetime
         DateTimeMixin.__init__(self, datetime_manager)
+        assert account is not None
+        assert metrics_tracker is not None
 
         self.data_portal = data_portal
 
@@ -45,10 +47,10 @@ class TradingAlgorithm(object, DateTimeMixin):
         self.trading_calendar = trading_calendar
 
         self._last_sync_time = None
-        self.metrics_set = metrics_set
+        self.metrics_tracker = metrics_tracker
 
-        if self._metrics_set is None:
-            self._metrics_set = load_metrics_set("default")
+        # if self._metrics_set is None:
+        #     self._metrics_set = load_metrics_set("default")
 
         # TODO: initialize this, 我认为不需要创建account, 只需要创建account的引用就行了
         self.account = account
@@ -56,6 +58,7 @@ class TradingAlgorithm(object, DateTimeMixin):
         self.initialized = False
 
         self.capital_changes = {}
+        self.recorded_vars = {}
 
         # self.restrictions = NoRestrictions()
         self._allow_setattr = False
@@ -117,7 +120,7 @@ class TradingAlgorithm(object, DateTimeMixin):
         pass
 
     def _handle_data(self):
-        self.rule.should_trigger(self.current_dt) # FIXME
+        # self.rule.should_trigger(self.current_dt) # FIXME
         self.handle_data()
 
     def analyze(self, perf):
@@ -162,16 +165,17 @@ class TradingAlgorithm(object, DateTimeMixin):
             sim_params=self.sim_params,
             data_portal=self.data_portal,
             sim_engine=sim_engine,
-            benchmark_source=,
+            benchmark_source=None, # TODO: fixme
             restrictions=None,
         )
-
+        return algo_iter
         # metrics_tracker.handle_start_of_simulation(benchmark_source)
 
-    def compute_eager_pipelines(self):
-        raise NotImplementedError
+    # def compute_eager_pipelines(self):
+    #     raise NotImplementedError
 
     def get_generator(self):
+        self._initialize()
         return self._create_generator(self.sim_params)
 
     def _create_daily_stats(self):
@@ -194,20 +198,22 @@ class TradingAlgorithm(object, DateTimeMixin):
 
         self._sync_last_sale_prices()
 
-    def run(self):
-        try:
-            perfs = []
-            it = self.get_generator()
-        while True:
-            try:
-                perf = next(it)
-                perfs.append(perf)
-            except StopIteration:
-                break
 
-        daily_stats = self._create_daily_stats(perfs)
-        self._analyze(daily_stats)
-        return daily_stats
+    def run(self):
+        # try:
+        #     perfs = []
+        #     it = self.get_generator()
+        # while True:
+        #     try:
+        #         perf = next(it)
+        #         perfs.append(perf)
+        #     except StopIteration:
+        #         break
+        #
+        # daily_stats = self._create_daily_stats(perfs)
+        # self._analyze(daily_stats)
+        # return daily_stats
+        pass
 
     def record(self):
         """
@@ -310,12 +316,11 @@ class TradingAlgorithm(object, DateTimeMixin):
             dt = self.current_dt
 
         if dt != self._last_sync_time:
-            self.account.sync_last_sale_prices(
+            self.account.sync_last_sale_price(
                 dt,
                 self.data_portal,
             )
             self._last_sync_time = dt
-
 
     def on_dt_changed(self, dt: pd.Timestamp):
         self.datetime_manager.set_dt(dt)
@@ -377,6 +382,10 @@ class TradingAlgorithm(object, DateTimeMixin):
             order_id = order_param.id
         self.account.cancel(order_id)
 
+    # the interface of data_portal
+    def history(self, symbol, field, bar_count, frequency):
+        self.data_portal.get_history_window(symbol, field, bar_count, frequency)
+
     def __repr__(self):
         template = """
 {class_name}(
@@ -393,13 +402,13 @@ account={account}
             capital_base=self.sim_params.capital_base,
             sim_params=repr(self.sim_params),
             initialized=self.initialized,
-            slippage_models=repr(self.slippage_models),
-            commission_models=repr(self.commission_models),
+            slippage_models=repr(self.account.slippage_models),
+            commission_models=repr(self.account.commission_models),
             account=repr(self.account),
         )
 
 
-class AlgorithmIterator(object, DateTimeMixin):
+class AlgorithmIterator(DateTimeMixin):
     """
     AlgoIterator并不是一个迭代器, 而是Iterable, 你可以把他看作sim_engine的增强
     """
@@ -417,7 +426,6 @@ class AlgorithmIterator(object, DateTimeMixin):
     ):
         self.algo = algo
         DateTimeMixin.__init__(self, datetime_manager)
-
         self.data_portal = data_portal
         self.current_data = data_portal
         self.restrictions = restrictions
@@ -425,9 +433,11 @@ class AlgorithmIterator(object, DateTimeMixin):
         self.sim_engine = sim_engine
         self.benchmark_source = benchmark_source
 
-    def on_bar(self, dt):
+    def on_bar(self, dt: pd.Timestamp):
         # 调用的时间是15:00:00, 今晚下单, 明晚成交
-        self.algo.on_dt_changed(dt)
+        self.set_dt(dt)
+        self.algo.account.update_ledger()
+        # self.algo.on_dt_changed(dt)
 
         blotter = self.algo.account.orders_tracker
         new_transactions, new_commissions, closed_orders = blotter.get_transactions(self.current_data)
@@ -436,45 +446,50 @@ class AlgorithmIterator(object, DateTimeMixin):
         for transaction in new_transactions:
             self.algo.account.handle_transaction(transaction)
             order = blotter.data[transaction.order_id]
-            self.algo.account.handle_order(order) # process order仅仅只是把订单放到对应的数据结构中
+            self.algo.account.handle_order(order)  # process order仅仅只是把订单放到对应的数据结构中
 
         for commission in new_commissions:
             self.algo.account.handle_commission(commission)
 
-        self.algo._handle_data()
+        self.algo._handle_data()  # 这里可能会下单了
 
-        # 这里可能会下单了
         new_orders = blotter.get_new_orders()
         blotter.sweep_new_orders()
 
-        # if we have any new get_orders, record them so that we know
+        # 将new_order放入对应的数据结构中
         for new_order in new_orders:
             self.algo.account.handle_order(new_order)
 
-    def once_a_day(self, dt):
+    def on_session_start(self, dt: pd.Timestamp):
+        """
+        """
         # 在半夜调用这个 00:00:00
-        self.algo.on_dt_changed(dt)
+        self.set_dt(dt)
+        # self.algo.on_dt_changed(dt)
 
-        self.algo.account.handle_market_open(
+        self.algo.metrics_tracker.handle_start_of_session(
             dt,
             self.algo.data_portal,
         )
 
-        # handle any splits that impact any positions or any open get_orders.
-        assets_we_care_about = (
-                self.algo.account.data.keys() | self.algo.blotter.open_orders.keys()
+    def on_session_end(self, dt):
+        """
+        执行订单取消政策
+        """
+        # execute_order_cancellation_policy()
+        # algo.validate_account_controls()
+        # TODO: 这里更新了账户信息, 想想怎么分离
+        perf_message = self.algo.metrics_tracker.handle_end_of_session(
+            dt,
+            self.data_portal,
         )
-
-        if assets_we_care_about:
-            splits = self.data_portal.get_splits(assets_we_care_about, dt)
-            if splits:
-                # 订单要进行分割, metrics_tracker也能进行分割???? 其中谁发挥了作用
-                self.algo.account.handle_splits(splits)
+        perf_message["daily_perf"]["recorded_vars"] = self.algo.recorded_vars
+        return perf_message
 
     def on_before_trading_start(self, dt):
-        self.algo.on_dt_changed(dt)
+        self.set_dt(dt)
+        # self.algo.on_dt_changed(dt)
         self.algo._before_trading_start()
-
 
     def on_exit(self):
         """
@@ -503,8 +518,9 @@ class AlgorithmIterator(object, DateTimeMixin):
         elif self.algo.data_frequency == "daily":
 
             def execute_order_cancellation_policy():
-                self.algo.account.execute_daily_cancel_policy(EVENT_TYPE.SESSION_END)
-
+                # self.algo.account.execute_daily_cancel_policy(EVENT_TYPE.SESSION_END)
+                # TODO: implement it
+                return None
             def calculate_minute_capital_changes(dt):
                 return []
 
@@ -524,12 +540,14 @@ class AlgorithmIterator(object, DateTimeMixin):
                     self.on_bar(dt)
 
                 elif event == EVENT_TYPE.SESSION_START:
-                    self.once_a_day(dt)
+                    self.on_session_start(dt)
 
                 elif event == EVENT_TYPE.SESSION_END:
                     positions = self.algo.account.positions
                     execute_order_cancellation_policy()
-                    self.algo.validate_account_controls()
+                    # TODO:
+                    # self.algo.validate_account_controls()
+                    yield self._get_daily_message(dt, self.algo, self.algo.metrics_tracker)
 
                 elif event == EVENT_TYPE.MINUTE_START:
                     raise NotImplementedError
@@ -542,7 +560,6 @@ class AlgorithmIterator(object, DateTimeMixin):
 
             except StopIteration:
                 break
-
 
     def _cleanup_expired_assets(self, dt, position_assets):
         """
@@ -562,7 +579,9 @@ class AlgorithmIterator(object, DateTimeMixin):
         """
         Get a perf message for the given datetime.
         """
-        pass
+        perf_message = metrics_tracker.handle_end_of_session(dt, self.data_portal)
+        perf_message["daily_perf"]["recorded_vars"] = algo.recorded_vars
+        return perf_message
 
     def _get_minute_message(self, dt, algo, metrics_tracker):
         """
@@ -584,5 +603,7 @@ class TestAlgo(TradingAlgorithm):
     def analyze(self):
         pass
 
+
 if __name__ == "__main__":
     test = TestAlgo()
+

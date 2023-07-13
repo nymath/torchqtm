@@ -21,8 +21,8 @@ def handle_data(context: TradingAlgorithm, data: BarData):
     data.history(context.sym, ['open', 'close', 'high', 'low'], 4, '1d')
     if context.i == 1:
         print("Now we can buy APPLE")
-        context.order_target(context.sym[0], 1000, limit_price=100)
-        context.order_target(context.sym[1], 1000, limit_price=100)
+        context.order_target(context.sym[0], 1000)
+        context.order_target(context.sym[1], 1000)
 
     print(context.portfolio)
     # # Compute averages

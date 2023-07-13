@@ -33,7 +33,7 @@ def convert_dt_to_session_label(dt: pd.Timestamp):
     return pd.Timestamp(year=dt.year, month=dt.month, day=dt.day)
 
 
-class DataPortal(object, DateTimeMixin):
+class DataPortal(DateTimeMixin):
     # TODO: add cache for quick access to history data
     def __init__(self,
                  data_source=ReadersTracker(),
@@ -91,8 +91,10 @@ class DataPortal(object, DateTimeMixin):
         bars = self._data_source.get_bar(asset, session_label, "1d")
         if bars is None:
             return None
+        elif field == "price":
+            return float(bars["close"].values)
         else:
-            return float(bars[field])
+            return float(bars[field].values)
 
     def get_spot_value(
             self,
@@ -105,7 +107,7 @@ class DataPortal(object, DateTimeMixin):
         >>>self.get_spot_value([asset], 'close', dt, 'daily')
         106.25
         """
-        if data_frequency != '1d':
+        if data_frequency != 'daily':
             raise NotImplementedError
 
         if data_frequency == "daily":
@@ -211,7 +213,20 @@ class DataPortal(object, DateTimeMixin):
         """
         不太明白
         """
-        pass
+    def history_bars(
+            self,
+            asset,
+            field,
+            bar_count,
+            frequency,
+    ):
+        return self._data_source.history_true_bars(
+            asset=asset,
+            fields=field,
+            bar_count=bar_count,
+            frequency=frequency,
+            dt=self.current_dt,
+        )
 
     def _get_minute_window_data(self, assets, field, minutes_for_window):
         pass
@@ -225,7 +240,7 @@ class DataPortal(object, DateTimeMixin):
     def get_splits(self, assets, dt):
         """
         """
-        pass
+        return None
 
     def get_stock_dividends(self, sid, trading_days):
         pass

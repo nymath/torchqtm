@@ -10,7 +10,7 @@ class DateTimeManager:
 
     def set_dt(self, dt: pd.Timestamp):
         if isinstance(dt, pd.Timestamp):
-            assert self.datetime < dt, "Reverse backtest is not allowed"
+            assert self.datetime <= dt, "Reverse backtest is not allowed"
             self.datetime = dt
         else:
             raise TypeError("dt should be a pd.Timestamp object")
