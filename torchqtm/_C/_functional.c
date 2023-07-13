@@ -4,6 +4,7 @@
 {
     "distutils": {
         "depends": [],
+        "language": "c",
         "name": "torchqtm._C._functional",
         "sources": [
             "torchqtm/_C/_functional.pyx"

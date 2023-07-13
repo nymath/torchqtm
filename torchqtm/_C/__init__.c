@@ -3,6 +3,7 @@
 /* BEGIN: Cython Metadata
 {
     "distutils": {
+        "language": "c",
         "name": "torchqtm._C.__init__",
         "sources": [
             "torchqtm/_C/__init__.pyx"

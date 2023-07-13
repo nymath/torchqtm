@@ -1,4 +1,4 @@
-# cython: language_level=3
+# distutils: language=c++
 # https://cython.readthedocs.io/en/stable/src/userguide/numpy_tutorial.html
 cimport numpy
 import numpy as np

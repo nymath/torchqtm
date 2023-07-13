@@ -1,3 +1,4 @@
+# distutils: language=c++
 from typing import Type
 
 import numpy as np
